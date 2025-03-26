@@ -1,6 +1,7 @@
 import { useState } from "react";
 import logo from "./logo.svg";
-import "./App.css";
+import Inventory from "./views/Inventory";
+
 
 function App() {
   const [screen, setScreen] = useState("home");
@@ -14,9 +15,9 @@ function App() {
         {screen === "cashier-drinks" && <CashierDrinkScreen setScreen={setScreen} />}
         {/* manager */}
         {screen === "manager" && <ManagerScreen setScreen={setScreen} />}
+        {screen === "inventory" && <Inventory setScreen={setScreen} />}
         {/* customer */}
         {screen === "customer" && <CustomerHomeScreen setScreen={setScreen} />}
-        
       </header>
     </div>
   );
@@ -67,19 +68,23 @@ function CashierDrinkScreen({ setScreen }) {
 }
 
 //////////////// Manager Pages ////////////////////////////////////////
-function ManagerScreen({ setScreen }) { // Sara made this you can delete but needed something here
+function ManagerScreen({ setScreen }) {
   return (
-      <Button text="Logout" onClick={() => setScreen("home")} />
-      
+    <>
+      <h1>Manager Dashboard</h1>
+      <div className="manager-menu">
+        <Button text="View Inventory" onClick={() => setScreen("inventory")} />
+        <Button text="Logout" onClick={() => setScreen("home")} />
+      </div>
+    </>
   );
 }
 ///////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////Customer Pages//////////////////////////
-function CustomerHomeScreen({ setScreen }) { // Sara made this you can delete but needed something here
+function CustomerHomeScreen({ setScreen }) {
   return (
       <Button text="Home" onClick={() => setScreen("home")} />
-      
   );
 }
 ///////////////////////////////////////////////////////////////////////
