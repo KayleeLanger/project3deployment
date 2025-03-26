@@ -19,7 +19,8 @@ function OrderTrends({ setScreen }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch("http://localhost:8080/api/xreport");
+            //const response = await fetch("http://localhost:8080/api/xreport");
+            const response = fetch(`${process.env.REACT_APP_API_URL}/api/invent`);
             if (!response.ok) throw new Error("Failed to get X-Report");
            
             const data = await response.json();
@@ -71,7 +72,8 @@ function OrderTrends({ setScreen }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch("http://localhost:8080/api/zreport");
+            //const response = await fetch("http://localhost:8080/api/zreport");
+            const response = fetch(`${process.env.REACT_APP_API_URL}/api/invent`);
             if (!response.ok) throw new Error("Failed to get Z-Report");
            
             const data = await response.json();

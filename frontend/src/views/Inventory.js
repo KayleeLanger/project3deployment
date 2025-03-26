@@ -9,7 +9,7 @@ function Inventory({ setScreen }) {
 		const fetchInventory = async () => {
 			try {
 			//const response = await fetch("http://localhost:8080/api/invent"); // connects to index.js
-			const response = fetch(`${process.env.REACT_APP_API_URL}/api/invent`)
+			const response = fetch(`${process.env.REACT_APP_API_URL}/api/invent`);
 
 			if (!response.ok) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
