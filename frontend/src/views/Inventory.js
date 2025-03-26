@@ -8,7 +8,7 @@ function Inventory({ setScreen }) {
     useEffect(() => {
 		const fetchInventory = async () => {
 			try {
-			//const response = await fetch("http://localhost:8080/api/invent"); // connects to index.js
+			//const response = await fetch("http://localhost:8080/api/invent"); // connects to index.js //
 			const response = await fetch(`${process.env.REACT_APP_API_URL}/api/invent`);
 
 			if (!response.ok) {
