@@ -36,6 +36,57 @@ app.get('/api/invent', async (req, res) => {
     }
 });
 
+// x-report
+app.get('/api/xreport', async (req, res) => {
+    try {
+        const query = `
+            SELECT EXTRACT(HOUR FROM o.orderDate) AS hour,
+                ROUND(SUM(oi.quantity * d.drinkPrice)::numeric, 2) AS total_sales,
+                COUNT(o.orderId) AS total_orders,
+                COUNT(DISTINCT o.employeeId) AS total_employees,
+                SUM(oi.quantity) AS total_items,
+                COUNT(CASE WHEN o.orderId % 2 != 0 THEN 1 END) AS apple_pay_count,
+                COUNT(CASE WHEN o.orderId % 2 = 0 THEN 1 END) AS card_count
+            FROM orders o
+            JOIN order_items oi ON o.orderId = oi.orderId
+            JOIN drink d ON oi.drinkId = d.drinkId
+            WHERE o.orderDate::DATE = CURRENT_DATE
+            AND EXTRACT(HOUR FROM o.orderDate) < EXTRACT(HOUR FROM CURRENT_TIMESTAMP)
+            GROUP BY hour
+            ORDER BY hour;
+        `;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('X-Report Database error:', err);
+        res.status(500).json({ error: 'Failed to get X-Report: ' + err.message });
+    }
+});
+
+// z-report
+app.get('/api/zreport', async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                ROUND(SUM(oi.quantity * d.drinkPrice)::numeric, 2) AS total_sales, 
+                COUNT(o.orderId) AS total_orders, 
+                COUNT(DISTINCT o.employeeId) AS total_employees, 
+                SUM(oi.quantity) AS total_items, 
+                COUNT(CASE WHEN o.orderId % 2 != 0 THEN 1 END) AS apple_pay_count, 
+                COUNT(CASE WHEN o.orderId % 2 = 0 THEN 1 END) AS card_count 
+            FROM orders o 
+            JOIN order_items oi ON o.orderId = oi.orderId 
+            JOIN drink d ON oi.drinkId = d.drinkId 
+            WHERE o.orderDate::DATE = CURRENT_DATE;
+        `;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Z-Report Database error:', err);
+        res.status(500).json({ error: 'Failed to get Z-Report: ' + err.message });
+    }
+});
+
 // Start server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
