@@ -18,7 +18,7 @@ const pool = new Pool({
     database: process.env.PSQL_DATABASE,
     password: process.env.PSQL_PASSWORD,
     port: process.env.PSQL_PORT,
-    sl: {rejectUnauthorized: false}
+    ssl: {rejectUnauthorized: false}
     //ssl: isRender ? { rejectUnauthorized: false } : false
 });
 
