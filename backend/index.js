@@ -90,6 +90,63 @@ app.get('/api/zreport', async (req, res) => {
     }
 });
 
+// Get all employees
+app.get('/api/employees', async (req, res) => {
+    try {
+        const result = await pool.query("SELECT employeeName, employeeRole FROM employee;");
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).json({ error: 'Database error: ' + err.message });
+    }
+});
+
+// Add a new employee
+app.post('/api/employees', async (req, res) => {
+    try {
+        const { employeeName, employeeRole = 'Cashier' } = req.body;
+        if (!employeeName) {
+            return res.status(400).json({ error: 'Employee name is required' });
+        }
+        
+        // Based on the query from queries.txt
+        const query = `
+            WITH max_id AS (
+                SELECT COALESCE(MAX(employeeId), 0) + 1 AS next_employee_id 
+                FROM employee
+            )
+            INSERT INTO employee (employeeId, employeeName, employeeRole)
+            SELECT next_employee_id, $1, $2
+            FROM max_id
+            RETURNING *;
+        `;
+        
+        const result = await pool.query(query, [employeeName, employeeRole]);
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).json({ error: 'Database error: ' + err.message });
+    }
+});
+
+// Delete an employee
+app.delete('/api/employees/:name', async (req, res) => {
+    try {
+        const { name } = req.params;
+        const query = 'DELETE FROM employee WHERE employeeName = $1 RETURNING *;';
+        const result = await pool.query(query, [name]);
+        
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Employee not found' });
+        }
+        
+        res.json({ message: 'Employee deleted successfully' });
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).json({ error: 'Database error: ' + err.message });
+    }
+});
+
 // Start server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

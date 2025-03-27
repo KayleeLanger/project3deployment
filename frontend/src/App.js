@@ -2,6 +2,7 @@ import { useState } from "react";
 import logo from "./logo.svg";
 import Inventory from "./views/Inventory";
 import OrderTrends from "./views/OrderTrends";
+import Employees from "./views/Employees"; // New import for Employee Management
 
 function App() {
 	const [screen, setScreen] = useState("home");
@@ -17,6 +18,7 @@ function App() {
 			{screen === "manager" && <ManagerScreen setScreen={setScreen} />}
 			{screen === "inventory" && <Inventory setScreen={setScreen} />}
 			{screen === "order-trends" && <OrderTrends setScreen={setScreen} />}
+			{screen === "employees" && <Employees setScreen={setScreen} />}
 			{/* customer */}
 			{screen === "customer" && <CustomerHomeScreen setScreen={setScreen} />}
 		</header>
@@ -46,7 +48,6 @@ function Button({ text, onClick }) {
 	return <button onClick={onClick}>{text}</button>;
 }
 
-
 /////////////////////// Cashier Pages ///////////////////////
 function CashierCategoriesScreen({ setScreen }) {
 	return (
@@ -73,9 +74,15 @@ function ManagerScreen({ setScreen }) {
 	return (
 		<>
 		<h1>Manager Dashboard</h1>
-		<div className="manager-menu">
+		<div className="manager-menu" style={{ 
+			display: 'flex', 
+			flexDirection: 'column',
+			gap: '10px',
+			maxWidth: '300px'
+		}}>
 			<Button text="View Inventory" onClick={() => setScreen("inventory")} />
 			<Button text="View Order Trends" onClick={() => setScreen("order-trends")} />
+			<Button text="Employee Management" onClick={() => setScreen("employees")} />
 			<Button text="Logout" onClick={() => setScreen("home")} />
 		</div>
 		</>
