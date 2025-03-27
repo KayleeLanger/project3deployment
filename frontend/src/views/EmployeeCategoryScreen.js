@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./Employee.css"; // Import the CSS file
+import "./Employee.css"; 
 
 function EmployeeCategoryScreen({ setScreen }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
@@ -59,16 +59,26 @@ function EmployeeCategoryScreen({ setScreen }) {
 
 
       {/* Main content */}
-
+	  <div className="container">
       <div className="main">
 	  	<h1>Cashier Categories<br></br></h1>
-
+		<div className = "mainBody">
 		  {/* loop through Categories */}
-		  {categories.map(categories=> (
-			<Button>text={categories.name} onClick={() => setScreen("cashier-drinks")}</Button>
+		  {categories.map(category=> (
+			<div class= "buttonBox">
+			<CategoryButton
+				 key={category.name} 
+				 text={category.name} 
+				 onClick={() => setScreen("cashier-drinks")} 
+				 
+				 ></CategoryButton> </div>
 		  ))}
+		 
+
+		</div>
         
       </div>
+	  </div>
 
 
 
@@ -77,6 +87,12 @@ function EmployeeCategoryScreen({ setScreen }) {
 	  <div className="order">
         <h1>Order Summary</h1>
 		{/* loop through order items and display */}
+
+		<Button text="Checkout" 
+		onClick={() => {
+			setScreen("home"); 
+			alert("Thanks for the order!");
+		}} />
 
 
       </div>
@@ -87,6 +103,15 @@ function EmployeeCategoryScreen({ setScreen }) {
 function Button({ text, onClick }) {
   return <button onClick={onClick}>{text}</button>;
 }
+function CategoryButton({ text, onClick }) {
+	return <button 
+	style={{ 
+		backgroundColor: "rgb(19, 90, 120)", 
+		color: "white" ,
+		width: "150px", 
+		height: "50px"}} 
+	    onClick={onClick}>{text}</button>;
+  }
 
 
 
