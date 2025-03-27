@@ -17,7 +17,8 @@ function App() {
 			{/* cashier */}
 			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen} />}
 			{screen === "cashier-drinks" && <EmployeeDrinks setScreen={setScreen} />}
-			{screen === "cashier-customization"} && <EmployeeCustomization setScreen={setScreen} />
+			{screen === "cashier-customization" && <EmployeeCustomization setScreen={setScreen} />}
+
 			
 			{/* manager */}
 			{screen === "manager" && <ManagerScreen setScreen={setScreen} />}

@@ -48,7 +48,7 @@ function EmployeeDrinks({ setScreen }) {
 		
 		</tr><tr>
 			{/* still need cancel order function */}
-	    <Button text="Cancel Order" onClick={() => setScreen("home")} />
+	    <Button text="Cancel Order" onClick={() => setScreen("cashier")} />
 		</tr><tr>
         <Button text="Logout" onClick={() => setScreen("home")} />
 		</tr></table>
