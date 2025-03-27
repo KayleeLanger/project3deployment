@@ -14,17 +14,24 @@
 }
 
 /* main (container holds everything else) */
+.container{
+    background-color:black;
+}
+.container-drink{
+    background-color: rgb(19, 90, 120);
+}
 .main {
     margin-left: 250px; 
     width: calc(65% - 250px); /* width */
     padding:20px;
-    background-color:black;
+    
     min-height: 100vh;
      display: flex;
     flex-wrap:wrap;
     flex-direction: column;
     /* justify-content: center; */
     align-items:center;
+    border-bottom: 20px solid black;
 }
 .main h1{
     color:white;
@@ -35,6 +42,8 @@
     grid-template-columns: repeat(3, 1fr);
 }
 
+
+
 /* order section*/
 .order {
     position: fixed;
@@ -44,7 +53,7 @@
     height: 100vh;
     background-color: white;
     padding: 20px;
-    border-left: 2px solid black;
+    border: 20px solid black;
 
     display: flex; 
     flex-direction: column;

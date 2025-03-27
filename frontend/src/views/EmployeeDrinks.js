@@ -59,8 +59,9 @@ function EmployeeDrinks({ setScreen }) {
 
 
       {/* Main content */}
-	  <div className="container">
+	  <div className="container-drink">
       <div className="main">
+	  	<XButton text="X" onClick={() => setScreen("cashier")} />
 	  	<h1>Cashier Drinks<br></br></h1>
 		<div className = "mainBody">
 		  {/* loop through Categories */}
@@ -103,13 +104,23 @@ function EmployeeDrinks({ setScreen }) {
 function Button({ text, onClick }) {
   return <button onClick={onClick}>{text}</button>;
 }
+function XButton({ text, onClick }) {
+	return <button 
+	style={{ 
+		backgroundColor: "red",
+		borderRadius: "50px",
+		
+		}} onClick={onClick}>{text}</button>;
+  }
 function DrinkButton({ text, onClick }) {
 	return <button 
 	style={{ 
-		backgroundColor: "rgb(19, 90, 120)", 
+		backgroundColor: "rgb(120, 19, 78)", 
 		color: "white" ,
-		width: "150px", 
-		height: "50px",
+		width: "200px", 
+		height: "200px",
+		margin: "20px",
+		padding: "20px"
 		}} 
 	    onClick={onClick}>{text}</button>;
   }

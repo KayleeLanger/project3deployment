@@ -3,11 +3,10 @@ import "./Employee.css";
 
 function EmployeeCategoryScreen({ setScreen }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
-
 	// const [currentOrder, setState]=useState()
 
 	/// BACKEND NEEDS TO UPDATE THIS(category list)
-	const categories = [{name: "cat1"}, {name: "cat2"}, {name: "cat3"}, {name: "cat4"}];
+	const categories = [{name: "cat1"}, {name: "A very long Drink name "}, {name: "cat3"}, {name: "cat4"},{name: "cat1"}];
 
 	//clock setup
 	useEffect(() => {
@@ -108,8 +107,10 @@ function CategoryButton({ text, onClick }) {
 	style={{ 
 		backgroundColor: "rgb(19, 90, 120)", 
 		color: "white" ,
-		width: "150px", 
-		height: "50px",
+		width: "200px", 
+		height: "200px",
+		margin: "20px",
+		padding: "20px"
 		}} 
 	    onClick={onClick}>{text}</button>;
   }
