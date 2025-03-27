@@ -7,6 +7,7 @@ function OrderTrends({ setScreen }) {
     const [error, setError] = useState(null);
     const [currentTime, setCurrentTime] = useState(new Date());
     const [activeReport, setActiveReport] = useState(null);
+    const [zReportRan, setZReportRan] = useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -19,12 +20,32 @@ function OrderTrends({ setScreen }) {
         setLoading(true);
         setError(null);
         try {
+            if (zReportRan) {
+                // If Z-report was run, show zeroed out results with hour = 0
+                const zeroedReport = [{
+                    hour: 0,
+                    total_sales: 0,
+                    total_orders: 0,
+                    total_employees: 0,
+                    total_items: 0,
+                    apple_pay_count: 0,
+                    card_count: 0
+                }];
+                
+                setXReport(zeroedReport);
+                setActiveReport('x');
+                setZReport(null);
+                
+                alert("Z-report has already been run today. X-Report is reset to zero.");
+                return;
+            }
+    
             const response = await fetch("http://localhost:8080/api/xreport");
             if (!response.ok) throw new Error("Failed to get X-Report");
            
             const data = await response.json();
             if (data.error) throw new Error(data.error);
-
+    
             // Process and validate data
             const processedData = data.map(item => ({
                 hour: Number(item.hour) || 0,
@@ -35,9 +56,9 @@ function OrderTrends({ setScreen }) {
                 apple_pay_count: Number(item.apple_pay_count) || 0,
                 card_count: Number(item.card_count) || 0
             }));
-
+    
             const currentHour = currentTime.getHours();
-            const openingHour = 9; // TODO: Change to actual opening hour
+            const openingHour = 9;
             
             // Array of all hours opening to current hour
             const hoursInDay = Array.from({length: currentHour - openingHour + 1}, (_, i) => openingHour + i);
@@ -66,8 +87,13 @@ function OrderTrends({ setScreen }) {
             setLoading(false);
         }
     };
-       
+
     const fetchZReport = async () => {
+        if (zReportRan) {
+            alert("Z-report has already been run for today.");
+            return;
+        }
+
         setLoading(true);
         setError(null);
         try {
@@ -90,6 +116,7 @@ function OrderTrends({ setScreen }) {
             setZReport(processedData);
             setActiveReport('z');
             setXReport([]);
+            setZReportRan(true);
         } catch (err) {
             setError(err.message);
             console.error("Z-Report Error:", err);
@@ -104,167 +131,285 @@ function OrderTrends({ setScreen }) {
         setActiveReport(null);
         setError(null);
     };
-   
+    
+    const formatTime = (date) => {
+        return date.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+    };
+    
+    const formatDate = (date) => {
+        return date.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
+
     return (
-        <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-            <h1>Order Trends</h1>
-            <div>
-                <h3>{currentTime.toLocaleDateString()} {currentTime.toLocaleTimeString()}</h3>
-            </div>
-   
-            <div style={{ margin: '20px 0' }}>
-                <button
-                    onClick={fetchXReport}
-                    disabled={loading}
-                    style={{
-                        marginRight: '10px',
-                        padding: '8px 16px',
-                        backgroundColor: activeReport === 'x' ? 'green' : '#D3D3D3',
-                        color: activeReport === 'x' ? 'white' : 'black',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                    }}
-                >
-                    Generate X-Report
-                </button>
-                <button
-                    onClick={fetchZReport}
-                    disabled={loading}
-                    style={{
-                        marginRight: '10px',
-                        padding: '8px 16px',
-                        backgroundColor: activeReport === 'z' ? 'green' : '#D3D3D3',
-                        color: activeReport === 'z' ? 'white' : 'black',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                    }}
-                >
-                    Generate Z-Report
-                </button>
-                <button
-                    onClick={resetReports}
-                    style={{
-                        marginRight: '10px',
-                        padding: '8px 16px',
-                        backgroundColor: 'red',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                    }}
-                >
-                    Clear Reports
-                </button>
+        <div style={{ 
+            display: 'flex', 
+            minHeight: '100vh',
+            backgroundColor: 'white'
+        }}>
+            {/* Sidebar */}
+            <div style={{
+                width: '150px',
+                backgroundColor: '#D3D3D3',
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+            }}>
+                <div style={{ 
+                    textAlign: 'center',
+                    marginBottom: '20px'
+                }}>
+                    <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{formatTime(currentTime)}</div>
+                    <div style={{ fontSize: '14px' }}>{formatDate(currentTime)}</div>
+                </div>
+                
                 <button
                     onClick={() => setScreen("manager")}
                     style={{
-                        padding: '8px 16px',
+                        marginTop: 'auto',
+                        padding: '10px',
                         backgroundColor: 'black',
                         color: 'white',
                         border: 'none',
                         borderRadius: '4px',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        width: '100%'
                     }}
                 >
-                    Back to Manager
+                    Back
                 </button>
             </div>
-               
-            {loading && <p>Loading data...</p>}
-            {error && <p style={{ color: "red" }}>Error: {error}</p>}
-   
-            {/* X-Report Table */}
-            {activeReport === 'x' && (
-                <div style={{ marginTop: '30px' }}>
-                    <h2>X-Report (Updated: {currentTime.toLocaleTimeString()})</h2>
-                    <table style={{ 
-                        borderCollapse: 'collapse', 
-                        width: '100%',
-                        border: '1px solid',
-                    }}>
-                        <thead>
-                            <tr style={{ 
-                                backgroundColor: 'grey',
-                                color: 'white'
-                            }}>
-                                <th style={tableHeaderStyle}>Hour</th>
-                                <th style={tableHeaderStyle}>Employees</th>
-                                <th style={tableHeaderStyle}>Orders</th>
-                                <th style={tableHeaderStyle}>Items Sold</th>
-                                <th style={tableHeaderStyle}>Total Sales ($)</th>
-                                <th style={tableHeaderStyle}>Apple Pay</th>
-                                <th style={tableHeaderStyle}>Credit/Debit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {xReport.length > 0 ? (
-                                xReport.map((row, index) => (
-                                    <tr key={index} style={{ 
-                                        borderBottom: '1px solid',
-                                        backgroundColor: 'white'
-                                    }}>
-                                        <td style={tableCellStyle}>{row.hour}:00</td>
-                                        <td style={tableCellStyle}>{row.total_employees}</td>
-                                        <td style={tableCellStyle}>{row.total_orders}</td>
-                                        <td style={tableCellStyle}>{row.total_items}</td>
-                                        <td style={tableCellStyle}>${row.total_sales.toFixed(2)}</td>
-                                        <td style={tableCellStyle}>{row.apple_pay_count}</td>
-                                        <td style={tableCellStyle}>{row.card_count}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="7" style={{ 
-                                        textAlign: 'center', 
-                                        padding: '12px',
-                                        color: 'grey'
-                                    }}>
-                                        No order data available for today
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+            
+            {/* Main Content */}
+            <div style={{ 
+                flex: 1,
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+                <h1 style={{ marginBottom: '20px' }}>Order Trends</h1>
+                
+                <div style={{ 
+                    display: 'flex',
+                    gap: '10px',
+                    marginBottom: '20px'
+                }}>
+                    <button
+                        onClick={fetchXReport}
+                        disabled={loading}
+                        style={{
+                            padding: '10px 15px',
+                            backgroundColor: activeReport === 'x' ? 'green' : '#D3D3D3',
+                            color: activeReport === 'x' ? 'white' : 'black',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        X-Report
+                    </button>
+                    <button
+                        onClick={fetchZReport}
+                        disabled={loading}
+                        style={{
+                            padding: '10px 15px',
+                            backgroundColor: activeReport === 'z' ? 'green' : '#D3D3D3',
+                            color: activeReport === 'z' ? 'white' : 'black',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Z-Report
+                    </button>
+                    <button
+                        onClick={() => setScreen("graph")}
+                        style={{
+                            padding: '10px 15px',
+                            backgroundColor: 'blue',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Product Usage Chart
+                    </button>
+                    <button
+                        onClick={resetReports}
+                        style={{
+                            padding: '10px 15px',
+                            backgroundColor: 'red',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            marginLeft: 'auto'
+                        }}
+                    >
+                        Clear
+                    </button>
                 </div>
-            )}
-   
-            {/* Z-Report */}
-            {activeReport === 'z' && zReport && (
-                <div style={{ marginTop: '30px' }}>
-                    <h2>Z-Report (Updated: {currentTime.toLocaleTimeString()})</h2>
+                
+                {loading && <div style={{ margin: '20px 0' }}>Loading data...</div>}
+                {error && <div style={{ color: "red", margin: '20px 0' }}>Error: {error}</div>}
+                
+                {/* X-Report Table */}
+                {activeReport === 'x' && (
                     <div style={{ 
-                        backgroundColor: 'grey', 
-                        padding: '20px', 
-                        color: 'white',
+                        flex: 1,
+                        backgroundColor: 'white',
+                        borderRadius: '4px',
+                        overflow: 'hidden'
                     }}>
-                        <p style={zReportStyle}><strong>Total Sales:</strong> ${zReport.total_sales.toFixed(2)}</p>
-                        <p style={zReportStyle}><strong>Total Orders:</strong> {zReport.total_orders}</p>
-                        <p style={zReportStyle}><strong>Total Employees:</strong> {zReport.total_employees}</p>
-                        <p style={zReportStyle}><strong>Total Items Sold:</strong> {zReport.total_items}</p>
-                        <p style={zReportStyle}><strong>Apple Pay Transactions:</strong> {zReport.apple_pay_count}</p>
-                        <p style={zReportStyle}><strong>Credit/Debit Transactions:</strong> {zReport.card_count}</p>
+                        <h2 style={{ 
+                            padding: '15px',
+                            backgroundColor: '#333333',
+                            color: 'white',
+                            margin: 0
+                        }}>
+                            X-Report (Updated: {formatTime(currentTime)})
+                        </h2>
+                        <div style={{ overflowX: 'auto' }}>
+                            <table style={{ 
+                                width: '100%',
+                                borderCollapse: 'collapse'
+                            }}>
+                                <thead>
+                                    <tr style={{ 
+                                        backgroundColor: '#D3D3D3',
+                                        fontWeight: 'bold'
+                                    }}>
+                                        <th style={tableHeaderStyle}>Hour</th>
+                                        <th style={tableHeaderStyle}>Employees</th>
+                                        <th style={tableHeaderStyle}>Orders</th>
+                                        <th style={tableHeaderStyle}>Items Sold</th>
+                                        <th style={tableHeaderStyle}>Total Sales ($)</th>
+                                        <th style={tableHeaderStyle}>Apple Pay</th>
+                                        <th style={tableHeaderStyle}>Credit/Debit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {xReport.length > 0 ? (
+                                        xReport.map((row, index) => (
+                                            <tr key={index} style={{ 
+                                                borderBottom: '1px solid'
+                                            }}>
+                                                <td style={tableCellStyle}>{row.hour === 0 ? "0:00" : `${row.hour}:00`}</td>
+                                                <td style={tableCellStyle}>{row.total_employees}</td>
+                                                <td style={tableCellStyle}>{row.total_orders}</td>
+                                                <td style={tableCellStyle}>{row.total_items}</td>
+                                                <td style={tableCellStyle}>${row.total_sales.toFixed(2)}</td>
+                                                <td style={tableCellStyle}>{row.apple_pay_count}</td>
+                                                <td style={tableCellStyle}>{row.card_count}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="7" style={{ 
+                                                textAlign: 'center', 
+                                                padding: '20px',
+                                            }}>
+                                                No order data available for today
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+                
+                {/* Z-Report */}
+                {activeReport === 'z' && zReport && (
+                    <div style={{ 
+                        flex: 1,
+                        backgroundColor: 'white',
+                        borderRadius: '4px',
+                        overflow: 'hidden'
+                    }}>
+                        <h2 style={{ 
+                            padding: '15px',
+                            backgroundColor: 'grey',
+                            color: 'white',
+                            margin: 0
+                        }}>
+                            Z-Report (Updated: {formatTime(currentTime)})
+                        </h2>
+                        <div style={{ 
+                            padding: '20px',
+                            backgroundColor: '#D3D3D3'
+                        }}>
+                            <div style={zReportItemStyle}>
+                                <span style={zReportLabelStyle}>Total Sales:</span>
+                                <span style={zReportValueStyle}>${zReport.total_sales.toFixed(2)}</span>
+                            </div>
+                            <div style={zReportItemStyle}>
+                                <span style={zReportLabelStyle}>Total Orders:</span>
+                                <span style={zReportValueStyle}>{zReport.total_orders}</span>
+                            </div>
+                            <div style={zReportItemStyle}>
+                                <span style={zReportLabelStyle}>Total Employees:</span>
+                                <span style={zReportValueStyle}>{zReport.total_employees}</span>
+                            </div>
+                            <div style={zReportItemStyle}>
+                                <span style={zReportLabelStyle}>Total Items Sold:</span>
+                                <span style={zReportValueStyle}>{zReport.total_items}</span>
+                            </div>
+                            <div style={zReportItemStyle}>
+                                <span style={zReportLabelStyle}>Apple Pay Transactions:</span>
+                                <span style={zReportValueStyle}>{zReport.apple_pay_count}</span>
+                            </div>
+                            <div style={zReportItemStyle}>
+                                <span style={zReportLabelStyle}>Credit/Debit Transactions:</span>
+                                <span style={zReportValueStyle}>{zReport.card_count}</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
 
 const tableHeaderStyle = {
     padding: '12px',
-    textAlign: 'center',
+    textAlign: 'left',
+    borderBottom: '1px solid'
 };
 
 const tableCellStyle = {
     padding: '12px',
-    textAlign: 'center',
+    textAlign: 'left',
+    borderBottom: '1px solid'
 };
 
-const zReportStyle = {
-    margin: '10px 0',
-    fontSize: '16px',
+const zReportItemStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '10px',
+    padding: '10px',
+    backgroundColor: 'white',
+    borderRadius: '4px',
+};
+
+const zReportLabelStyle = {
+    fontWeight: 'bold',
+    color: '#333333'
+};
+
+const zReportValueStyle = {
+    color: 'black'
 };
 
 export default OrderTrends;
