@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import "./Employee.css"; 
 
-function EmployeeCategoryScreen({ setScreen }) {
+function EmployeeDrinks({ setScreen }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
 
 	// const [currentOrder, setState]=useState()
 
-	/// BACKEND NEEDS TO UPDATE THIS(category list)
-	const categories = [{name: "cat1"}, {name: "cat2"}, {name: "cat3"}, {name: "cat4"}];
+	/// BACKEND NEEDS TO UPDATE THIS(drink list)
+	const drinks = [{name: "drink1", price: "5.00"}, {name: "drink2", price: "5.00"}, {name: "drink3", price: "5.00"}, {name: "drink4", price: "5.00"}];
 
 	//clock setup
 	useEffect(() => {
@@ -61,17 +61,17 @@ function EmployeeCategoryScreen({ setScreen }) {
       {/* Main content */}
 	  <div className="container">
       <div className="main">
-	  	<h1>Cashier Categories<br></br></h1>
+	  	<h1>Cashier Drinks<br></br></h1>
 		<div className = "mainBody">
 		  {/* loop through Categories */}
-		  {categories.map(category=> (
+		  {drinks.map(drink=> (
 			<div class= "buttonBox">
-			<CategoryButton
-				 key={category.name} 
-				 text={category.name} 
+			<DrinkButton
+				 key={drink.name} 
+				 text={drink.name} 
 				 onClick={() => setScreen("cashier-drinks")} 
 				 
-				 ></CategoryButton> </div>
+				 ></DrinkButton> </div>
 		  ))}
 		 
 
@@ -103,7 +103,7 @@ function EmployeeCategoryScreen({ setScreen }) {
 function Button({ text, onClick }) {
   return <button onClick={onClick}>{text}</button>;
 }
-function CategoryButton({ text, onClick }) {
+function DrinkButton({ text, onClick }) {
 	return <button 
 	style={{ 
 		backgroundColor: "rgb(19, 90, 120)", 
@@ -116,4 +116,4 @@ function CategoryButton({ text, onClick }) {
 
 
 
-export default EmployeeCategoryScreen;
+export default EmployeeDrinks;

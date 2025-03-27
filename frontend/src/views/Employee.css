@@ -29,14 +29,13 @@
 .main h1{
     color:white;
 }
-/* main table*/
+/* main table (where all catagories are) 3 columns*/
 .mainBody{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
 }
 
-
-/* Order summary*/
+/* order section*/
 .order {
     position: fixed;
     right: 0;
@@ -46,6 +45,15 @@
     background-color: white;
     padding: 20px;
     border-left: 2px solid black;
+
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between; /* pushes button to  very bottom */
+    
+}
+/* order button is on the bottom, but is still a little space below */
+.order button{
+    margin-bottom: 50px;
 }
 
 /* default button styling (sidebar) */
@@ -59,11 +67,12 @@ button {
     border-radius: 5px;
     font-size: 16px;
 }
-
-
-
-button:hover {
-    background-color: #0056b3;
+/* need to fix */
+.category-button{
+    background-color: "rgb(19, 90, 120)"; 
+	color: "white" ;
+	width: "150px";
+	height: "50px";
 }
 
 
@@ -77,12 +86,22 @@ button:hover {
     border-radius: 10px;
     margin-bottom: 20px;
 }
-
+/* top time */
 .time-box h2 {
     margin: 0;
     font-size: 24px;
 }
-
+/* date */
 .time-box strong {
     font-size: 16px;
+}
+
+
+/* Fun tings :) */
+/* Button colors */
+button:hover {
+    background-color: #0056b3;
+}
+.category-button:hover {
+    background-color: rgb(15, 75, 100); 
 }
