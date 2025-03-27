@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import "./Employee.css"; 
 
-function EmployeeDrinks({ setScreen }) {
+function EmployeeCustomization({ setScreen }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
 
 	// const [currentOrder, setState]=useState()
 
-	/// BACKEND NEEDS TO UPDATE THIS(drink list)
-	const drinks = [{name: "drink1", price: "5.00"}, {name: "drink2", price: "5.00"}, {name: "drink3", price: "5.00"}, {name: "drink4", price: "5.00"}];
 
 	//clock setup
 	useEffect(() => {
@@ -61,18 +59,11 @@ function EmployeeDrinks({ setScreen }) {
       {/* Main content */}
 	  <div className="container">
       <div className="main">
-	  	<h1>Cashier Drinks<br></br></h1>
+		 {/* TODO: ADD CUSTOMIZATION FRONTEND HERE!!!  */}
+	  	<h1>Customization<br></br></h1>
 		<div className = "mainBody">
-		  {/* loop through Categories */}
-		  {drinks.map(drink=> (
-			<div class= "buttonBox">
-			<DrinkButton
-				 key={drink.name} 
-				 text={drink.name} 
-				 onClick={() => setScreen("cashier-customization")} 
-				 
-				 ></DrinkButton> </div>
-		  ))}
+		 
+		  
 		 
 
 		</div>
@@ -100,20 +91,12 @@ function EmployeeDrinks({ setScreen }) {
   );
 }
 
+// sidebar button used to do control buttons
 function Button({ text, onClick }) {
   return <button onClick={onClick}>{text}</button>;
 }
-function DrinkButton({ text, onClick }) {
-	return <button 
-	style={{ 
-		backgroundColor: "rgb(19, 90, 120)", 
-		color: "white" ,
-		width: "150px", 
-		height: "50px",
-		}} 
-	    onClick={onClick}>{text}</button>;
-  }
 
 
 
-export default EmployeeDrinks;
+
+export default EmployeeCustomization;
