@@ -1,6 +1,7 @@
 import { useState } from "react";
 import logo from "./logo.svg";
 import Inventory from "./views/Inventory";
+import EmployeeCategoryScreen from "./views/EmployeeCategoryScreen";
 import OrderTrends from "./views/OrderTrends";
 
 function App() {
@@ -11,8 +12,8 @@ function App() {
 		<header className="App-header">
 			{screen === "home" && <HomeScreen setScreen={setScreen} />}
 			{/* cashier */}
-			{screen === "cashier" && <CashierCategoriesScreen setScreen={setScreen} />}
-			{screen === "cashier-drinks" && <CashierDrinkScreen setScreen={setScreen} />}
+			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen} />}
+			
 			{/* manager */}
 			{screen === "manager" && <ManagerScreen setScreen={setScreen} />}
 			{screen === "inventory" && <Inventory setScreen={setScreen} />}
@@ -48,25 +49,16 @@ function Button({ text, onClick }) {
 
 
 /////////////////////// Cashier Pages ///////////////////////
-function CashierCategoriesScreen({ setScreen }) {
-	return (
-		<>
-		<h1>Cashier Categories</h1>
-		
-		<Button text="Logout" onClick={() => setScreen("home")} />
-		<Button text="Go to Drinks" onClick={() => setScreen("cashier-drinks")} />
-		</>
-	);
-}
 
-function CashierDrinkScreen({ setScreen }) {
-	return (
-		<>
-		<h1>Cashier - Drinks</h1>
-		<Button text="Back to Categories" onClick={() => setScreen("cashier")} />
-		</>
-	);
-}
+
+// function CashierDrinkScreen({ setScreen }) {
+// 	return (
+// 		<>
+// 		<h1>Cashier - Drinks</h1>
+// 		<Button text="Back to Categories" onClick={() => setScreen("cashier")} />
+// 		</>
+// 	);
+// }
 
 //////////////// Manager Pages ////////////////////////////////////////
 function ManagerScreen({ setScreen }) {
