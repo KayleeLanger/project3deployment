@@ -22,6 +22,28 @@ function Prices({ setScreen }) {
     fetchPrices();
   }, []);
 
+  const handleEdit = (drink) => {
+    const newPrice = prompt(`Enter new price for ${drink.drinkname}:`, drink.drinkprice);
+    if (newPrice !== null) {
+      fetch(`${process.env.REACT_APP_API_URL}/api/prices/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          drinkName: drink.drinkname,
+          newPrice: parseFloat(newPrice)
+        })
+      }).then(() => {
+        setPrices(prev =>
+          prev.map(p =>
+            p.drinkname === drink.drinkname
+              ? { ...p, drinkprice: parseFloat(newPrice) }
+              : p
+          )
+        );
+      });
+    }
+  };
+
   if (loading) return <div>Loading prices...</div>;
   if (error) return <div>Error loading prices: {error}</div>;
 
@@ -42,19 +64,7 @@ function Prices({ setScreen }) {
               <td>{drink.drinkname}</td>
               <td>${parseFloat(drink.drinkprice).toFixed(2)}</td>
               <td>
-                <button onClick={() => {
-                  const newPrice = prompt(`Enter new price for ${drink.drinkname}:`, drink.drinkprice);
-                  if (newPrice !== null) {
-                    fetch(`${process.env.REACT_APP_API_URL}/api/prices/update`, {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        drinkName: drink.drinkname,
-                        newPrice: parseFloat(newPrice)
-                      })
-                    }).then(() => window.location.reload());
-                  }
-                }}>Edit</button>
+                <button onClick={() => handleEdit(drink)}>Edit</button>
               </td>
             </tr>
           ))}
