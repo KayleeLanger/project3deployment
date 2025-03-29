@@ -4,6 +4,7 @@ import Inventory from "./views/Inventory";
 import OrderTrends from "./views/OrderTrends";
 import Employees from "./views/Employees"; // New import for Employee Management
 import HomeScreen from "./views/HomeScreen"; //homescreen
+import Prices from './views/Prices';
 import Button from './Button';
 
 
