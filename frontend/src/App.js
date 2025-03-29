@@ -28,7 +28,7 @@ function App() { //main function, will be mostly imports eventually
 			{screen === "employees" && <Employees setScreen={setScreen} />}
 			{screen === "prices" && <Prices setScreen={setScreen} />}
 			{screen === "menu" && <Menu setScreen={setScreen} />}
-			{screen === "graph" && <Menu setScreen={setScreen} />}
+			{screen === "graph" && <Graph setScreen={setScreen} />}
 			{/*{screen === "categories" && <Categories setScreen={setScreen} />}*/}
 
 			{/* customer */}

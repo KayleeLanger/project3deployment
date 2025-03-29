@@ -56,7 +56,7 @@ function Graph({ setScreen }) {
           </PieChart>
         </ResponsiveContainer>
       </div>
-      <button onClick={() => setScreen("orderTrends")}>Back</button>
+      <button onClick={() => setScreen("order-trends")}>Back</button>
     </div>
   );
 }
