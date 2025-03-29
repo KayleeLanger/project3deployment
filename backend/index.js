@@ -131,6 +131,75 @@ app.get('/api/prices', async (req, res) => {
 	}
 });
 
+app.post('/api/inventory/update', async (req, res) => {
+	const { inventoryId, newQuantity } = req.body;
+	if (!inventoryId || newQuantity == null) {
+		return res.status(400).json({ error: 'Missing inventoryId or newQuantity' });
+	}
+	try {
+		await pool.query(
+			`UPDATE inventory SET remainingInStock = $1 WHERE inventoryId = $2`,
+			[newQuantity, inventoryId]
+		);
+		res.json({ message: 'Inventory updated' });
+	} catch (err) {
+		console.error('Inventory update error:', err);
+		res.status(500).json({ error: 'Failed to update inventory' });
+	}
+});
+
+
+app.post('/api/inventory/add', async (req, res) => {
+	const { itemName } = req.body;
+	if (!itemName) return res.status(400).json({ error: "Item name required" });
+
+	const query = `
+		WITH max_id AS (
+			SELECT COALESCE(MAX(inventoryId), 0) + 1 AS next_id FROM inventory
+		)
+		INSERT INTO inventory (inventoryId, itemName, soldForDay, remainingInStock)
+		SELECT next_id, $1, 0, 0 FROM max_id;
+	`;
+
+	try {
+		await pool.query(query, [itemName]);
+		res.json({ message: "Item added" });
+	} catch (err) {
+		console.error('Add error:', err);
+		res.status(500).json({ error: "Failed to add item" });
+	}
+});
+
+app.delete('/api/inventory/delete/:id', async (req, res) => {
+	const { id } = req.params;
+	try {
+		await pool.query('DELETE FROM inventory WHERE inventoryId = $1', [id]);
+		res.json({ message: 'Item deleted' });
+	} catch (err) {
+		console.error('Delete error:', err);
+		res.status(500).json({ error: 'Failed to delete item' });
+	}
+});
+
+app.post('/api/prices/update', async (req, res) => {
+	const { drinkName, newPrice } = req.body;
+
+	if (!drinkName || newPrice == null) {
+		return res.status(400).json({ error: 'Missing drinkName or newPrice' });
+	}
+
+	try {
+		await pool.query(
+			`UPDATE drink SET drinkPrice = $1 WHERE drinkName = $2`,
+			[newPrice, drinkName]
+		);
+		res.json({ message: 'Price updated' });
+	} catch (err) {
+		console.error('Price update error:', err);
+		res.status(500).json({ error: 'Failed to update price' });
+	}
+});
+
 
 // Get all employees
 app.get('/api/employees', async (req, res) => {
