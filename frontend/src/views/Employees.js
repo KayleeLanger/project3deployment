@@ -22,7 +22,7 @@ function Employees({ setScreen }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch("http://localhost:8080/api/employees");
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/employees`);
             if (!response.ok) throw new Error("Failed to get employees");
             
             const data = await response.json();
@@ -45,7 +45,7 @@ function Employees({ setScreen }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch("http://localhost:8080/api/employees", {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/employees`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -79,7 +79,7 @@ function Employees({ setScreen }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://localhost:8080/api/employees/${employeeName}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/employees/${employeeName}`, {
                 method: "DELETE",
             });
 
