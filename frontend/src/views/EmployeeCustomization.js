@@ -12,6 +12,13 @@ function EmployeeCustomization({ setScreen }) {
 			}, 1000);
 			return () => clearInterval(interval);
 		}, []);
+
+		// needed variables for the backend (Felicia's tasks)
+		const [size, setSize] = useState("");
+		const [ice, setIce] = useState("");
+		const [sweetness, setSweetness] = useState("");
+
+
 	  return (
 		<>
 		  
@@ -58,8 +65,29 @@ function EmployeeCustomization({ setScreen }) {
 		  <div className="container">
 		  <div className="main">
 			<h1>Customization<br></br></h1>
-			<div className = "mainBody">
+			<div className = "customization-options">
 			 {/* TODO: ADD CUSTOMIZATION FRONTEND! */}
+			 <SizeSelector selectedSize={size} setSelectedSize={setSize} />
+			 <IceSelector selectedIce={ice} setSelectedIce={setIce} />
+			 <SweetnessSelector selectedSweetness={sweetness} setSelectedSweetness={setSweetness} />
+
+			 <button onClick={() => setScreen("cashier-toppings")}
+  				style={{
+    				padding: "10px 20px",
+    				borderRadius: "15px",
+    				backgroundColor: "#38bdf8",
+    				color: "white",
+    				border: "none",
+    				fontWeight: "bold",
+    				cursor: "pointer",
+    				width: "fit-content",
+    				marginTop: "10px"
+  				}}
+			>
+  				Select Toppings
+			</button>
+
+
 			 
 	
 			</div>
@@ -91,6 +119,85 @@ function EmployeeCustomization({ setScreen }) {
 function Button({ text, onClick }) {
   return <button onClick={onClick}>{text}</button>;
 }
+
+
+
+function SizeSelector({ selectedSize, setSelectedSize }) {
+	return (
+	  <div className="option-row">
+		<div className="option-label">Size</div>
+		<div className="option-buttons">
+		  <button
+			className={selectedSize === "regular" ? "selected" : ""}
+			onClick={() => setSelectedSize("regular")}
+		  >
+			Regular
+		  </button>
+		  <button
+			className={selectedSize === "large" ? "selected" : ""}
+			onClick={() => setSelectedSize("large")}
+		  >
+			Large
+		  </button>
+		</div>
+	  </div>
+	);
+  }
+  
+  function IceSelector({ selectedIce, setSelectedIce }) {
+	return (
+	  <div className="option-row">
+		<div className="option-label">Ice</div>
+		<div className="option-buttons">
+		  <button
+			className={selectedIce === "no" ? "selected" : ""}
+			onClick={() => setSelectedIce("no")}
+		  >
+			No
+		  </button>
+		  <button
+			className={selectedIce === "less" ? "selected" : ""}
+			onClick={() => setSelectedIce("less")}
+		  >
+			Less
+		  </button>
+		  <button
+			className={selectedIce === "regular" ? "selected" : ""}
+			onClick={() => setSelectedIce("regular")}
+		  >
+			Regular
+		  </button>
+		</div>
+	  </div>
+	);
+  }
+  
+
+function SweetnessSelector() {
+	const [selectedSweetness, setSelectedSweetness] = useState("");
+  
+	const sweetnessOptions = ["0%", "25%", "50%", "75%", "100%"];
+  
+	return (
+	  <div className="option-row">
+		<div className="option-label">Sweetness</div>
+  
+		<div className="option-buttons">
+		  {sweetnessOptions.map(option => (
+			<button
+			  key={option}
+			  onClick={() => setSelectedSweetness(option)}
+			  className={selectedSweetness === option ? "selected" : ""}
+			>
+			  {option}
+			</button>
+		  ))}
+		</div>
+	  </div>
+	);
+  }
+  
+  
 
 
 

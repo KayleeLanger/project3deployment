@@ -81,6 +81,9 @@ function EmployeeCategoryScreen({ setScreen }) {
 
 
 
+	<div style={{ padding: "20px" }}>
+  		<Button text="Go to Customization Page" onClick={() => setScreen("cashier-customization")} />
+	</div>
 
 	  {/* Order Results */}
 	  <div className="order">
@@ -114,6 +117,8 @@ function CategoryButton({ text, onClick }) {
 		}} 
 	    onClick={onClick}>{text}</button>;
   }
+
+  
 
 
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import logo from "./logo.svg";
 import Inventory from "./views/Inventory";
 import EmployeeCategoryScreen from "./views/EmployeeCategoryScreen";
+import EmployeeToppingsScreen from "./views/EmployeeToppingsScreen";
 import EmployeeDrinks from "./views/EmployeeDrinks";
 import EmployeeCustomization from "./views/EmployeeCustomization";
 import OrderTrends from "./views/OrderTrends";
@@ -18,6 +19,8 @@ function App() {
 			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen} />}
 			{screen === "cashier-drinks" && <EmployeeDrinks setScreen={setScreen} />}
 			{screen === "cashier-customization" && <EmployeeCustomization setScreen={setScreen} />}
+			{screen === "cashier-toppings" && <EmployeeToppingsScreen setScreen={setScreen} />}
+
 
 			
 			{/* manager */}
