@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../logo.svg'; // adjust path if needed
-import './HomeScreen.css'; // make sure to create or update this CSS file
-import Button from '../Button'; // assuming you have a custom Button component
+import logo from '../logo.svg';
+import './HomeScreen.css';
+import Button from '../Button';
 
 function HomeScreen({ setScreen }) {
 	const [currentTime, setCurrentTime] = useState(new Date());

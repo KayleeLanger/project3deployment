@@ -90,6 +90,37 @@ app.get('/api/zreport', async (req, res) => {
     }
 });
 
+//sales report by date range
+app.get('/api/sales-report', async (req, res) => {
+    const { start, end } = req.query;
+
+    if (!start || !end) {
+        return res.status(400).json({ error: 'Start and end dates are required' });
+    }
+
+    const query = `
+        SELECT 
+            drink.drinkName, 
+            SUM(order_items.quantity) AS totalSold, 
+            SUM(order_items.quantity * drink.drinkPrice) AS totalRevenue
+        FROM order_items
+        JOIN drink ON order_items.drinkId = drink.drinkId
+        JOIN orders ON order_items.orderId = orders.orderId
+        WHERE orders.orderDate BETWEEN $1 AND $2
+        GROUP BY drink.drinkName
+        ORDER BY totalSold DESC;
+    `;
+
+    try {
+        const result = await pool.query(query, [start, end]);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Sales Report Database error:', err);
+        res.status(500).json({ error: 'Failed to generate sales report: ' + err.message });
+    }
+});
+
+
 // Get all employees
 app.get('/api/employees', async (req, res) => {
     try {
