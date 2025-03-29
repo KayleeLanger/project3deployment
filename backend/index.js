@@ -243,6 +243,31 @@ app.delete('/api/menu/delete/:name', async (req, res) => {
     }
 });
 
+app.get('/api/inventory-usage', async (req, res) => {
+    const { start, end } = req.query;
+    if (!start || !end) {
+        return res.status(400).json({ error: 'Start and end dates are required' });
+    }
+
+    const query = `
+        SELECT 
+            (SELECT SUM(oi.quantity) 
+             FROM order_items oi 
+             JOIN orders o ON oi.orderId = o.orderId 
+             WHERE o.orderDate BETWEEN $1 AND $2) AS used,
+            (SELECT SUM(remainingInStock) 
+             FROM inventory) AS instock;
+    `;
+
+    try {
+        const result = await pool.query(query, [start, end]);
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Inventory usage query error:', err);
+        res.status(500).json({ error: 'Failed to get inventory usage data' });
+    }
+});
+
 
 // Get all employees
 app.get('/api/employees', async (req, res) => {
