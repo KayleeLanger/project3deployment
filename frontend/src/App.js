@@ -6,6 +6,7 @@ import Employees from "./views/Employees"; // New import for Employee Management
 import HomeScreen from "./views/HomeScreen"; //homescreen
 import Prices from './views/Prices';
 import Menu from './views/Menu';
+import Graph from './views/Graph';
 //import Categories from './views/Categories';
 import Button from './Button';
 
@@ -27,6 +28,7 @@ function App() { //main function, will be mostly imports eventually
 			{screen === "employees" && <Employees setScreen={setScreen} />}
 			{screen === "prices" && <Prices setScreen={setScreen} />}
 			{screen === "menu" && <Menu setScreen={setScreen} />}
+			{screen === "graph" && <Menu setScreen={setScreen} />}
 			{/*{screen === "categories" && <Categories setScreen={setScreen} />}*/}
 
 			{/* customer */}
