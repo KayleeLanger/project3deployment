@@ -120,6 +120,17 @@ app.get('/api/sales-report', async (req, res) => {
     }
 });
 
+//prices
+app.get('/api/prices', async (req, res) => {
+	try {
+		const result = await pool.query('SELECT drinkName, drinkPrice FROM drink ORDER BY drinkName;');
+		res.json(result.rows);
+	} catch (err) {
+		console.error('Prices DB error:', err);
+		res.status(500).json({ error: 'Failed to load drink prices: ' + err.message });
+	}
+});
+
 
 // Get all employees
 app.get('/api/employees', async (req, res) => {

@@ -22,6 +22,7 @@ function App() {
 			{screen === "inventory" && <Inventory setScreen={setScreen} />}
 			{screen === "order-trends" && <OrderTrends setScreen={setScreen} />}
 			{screen === "employees" && <Employees setScreen={setScreen} />}
+			{screen === "prices" && <Prices setScreen={setScreen} />}
 			{/* customer */}
 			{screen === "customer" && <CustomerHomeScreen setScreen={setScreen} />}
 		</header>
@@ -86,6 +87,7 @@ function ManagerScreen({ setScreen }) {
 			<Button text="View Inventory" onClick={() => setScreen("inventory")} />
 			<Button text="View Order Trends" onClick={() => setScreen("order-trends")} />
 			<Button text="Employee Management" onClick={() => setScreen("employees")} />
+			<Button text="Prices" onClick={() => setScreen("prices")} />
 			<Button text="Logout" onClick={() => setScreen("home")} />
 		</div>
 		</>
