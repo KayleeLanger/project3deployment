@@ -68,7 +68,7 @@ function OrderTrends({ setScreen }) {
         }
     };
        
-    const fetchZReport = async () => {
+    const fetchZReport = async () => { //this needs to include the reset functionality from project 2
         setLoading(true);
         setError(null);
         try {
