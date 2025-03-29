@@ -67,14 +67,14 @@ function Inventory({ setScreen }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemName: name })
       }).then(() => {
-        fetchInventory(); // Refresh the list after adding
+        fetchInventory(); //Refresh the list after adding
       });
     }
   };
 
   const generateSalesReport = async () => {
     if (!startDate || !endDate) {
-      setReportError("Start and end dates are required.");
+      setReportError("Start and end dates are required");
       return;
     }
 
@@ -89,7 +89,7 @@ function Inventory({ setScreen }) {
       setReportError(null);
     } catch (err) {
       console.error(err);
-      setReportError("Could not generate sales report.");
+      setReportError("Could not generate sales report");
     }
   };
 

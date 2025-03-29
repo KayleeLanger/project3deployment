@@ -5,6 +5,7 @@ import OrderTrends from "./views/OrderTrends";
 import Employees from "./views/Employees"; // New import for Employee Management
 import HomeScreen from "./views/HomeScreen"; //homescreen
 import Prices from './views/Prices';
+import Menu from './views/Menu';
 import Button from './Button';
 
 
@@ -24,6 +25,8 @@ function App() {
 			{screen === "order-trends" && <OrderTrends setScreen={setScreen} />}
 			{screen === "employees" && <Employees setScreen={setScreen} />}
 			{screen === "prices" && <Prices setScreen={setScreen} />}
+			{screen === "menu" && <Menu setScreen={setScreen} />}
+
 			{/* customer */}
 			{screen === "customer" && <CustomerHomeScreen setScreen={setScreen} />}
 		</header>
@@ -89,6 +92,7 @@ function ManagerScreen({ setScreen }) {
 			<Button text="View Order Trends" onClick={() => setScreen("order-trends")} />
 			<Button text="Employee Management" onClick={() => setScreen("employees")} />
 			<Button text="Prices" onClick={() => setScreen("prices")} />
+			<Button text="Menu" onClick={() => setScreen("menu")} />
 			<Button text="Logout" onClick={() => setScreen("home")} />
 		</div>
 		</>

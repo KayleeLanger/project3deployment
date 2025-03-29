@@ -200,6 +200,49 @@ app.post('/api/prices/update', async (req, res) => {
 	}
 });
 
+app.post('/api/menu/add', async (req, res) => {
+    const { drinkName, drinkPrice, drinkCategory = 'Uncategorized' } = req.body;
+
+    if (!drinkName || drinkPrice == null) {
+        return res.status(400).json({ error: "Missing drinkName or drinkPrice" });
+    }
+
+    try {
+        // Get next available drinkId
+        const idResult = await pool.query('SELECT COALESCE(MAX(drinkId), 0) + 1 AS next_id FROM drink');
+        const nextId = idResult.rows[0].next_id;
+
+        // Insert into drink table
+        const insertQuery = `
+            INSERT INTO drink (drinkId, drinkName, drinkPrice, drinkCategory)
+            VALUES ($1, $2, $3, $4)
+        `;
+        await pool.query(insertQuery, [nextId, drinkName, drinkPrice, drinkCategory]);
+
+        res.json({ message: "Drink added" });
+    } catch (err) {
+        console.error("Add drink error:", err);
+        res.status(500).json({ error: "Failed to add drink" });
+    }
+});
+
+app.delete('/api/menu/delete/:name', async (req, res) => {
+    const { name } = req.params;
+
+    try {
+        const result = await pool.query('DELETE FROM drink WHERE drinkName = $1', [name]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Drink not found' });
+        }
+
+        res.json({ message: "Drink deleted" });
+    } catch (err) {
+        console.error("Delete drink error:", err);
+        res.status(500).json({ error: "Failed to delete drink" });
+    }
+});
+
 
 // Get all employees
 app.get('/api/employees', async (req, res) => {
