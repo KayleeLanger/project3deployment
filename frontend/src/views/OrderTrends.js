@@ -40,7 +40,8 @@ function OrderTrends({ setScreen }) {
                 return;
             }
     
-            const response = await fetch("http://localhost:8080/api/xreport");
+            //const response = await fetch("http://localhost:8080/api/xreport");
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/xreport`);
             if (!response.ok) throw new Error("Failed to get X-Report");
            
             const data = await response.json();
