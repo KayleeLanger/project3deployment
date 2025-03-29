@@ -67,7 +67,7 @@ function Inventory({ setScreen }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemName: name })
       }).then(() => {
-        fetchInventory(); //Refresh the list after adding
+        fetchInventory(); //refresh the list after adding
       });
     }
   };

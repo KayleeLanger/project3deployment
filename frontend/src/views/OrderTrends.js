@@ -80,7 +80,7 @@ function OrderTrends({ setScreen }) { //order trends
 
     const fetchZReport = async () => {
         if (zReportRan) {
-            alert("Z-report has already been run for today.");
+            alert("Z-report has already been run for today");
             return;
         }
 

@@ -61,7 +61,7 @@ function Employees({ setScreen }) { //employees
                 throw new Error(errorData.error || "Failed to add employee");
             }
 
-            //Reset form/update employee list
+            //reset form/update employee list
             setNewEmployeeName("");
             fetchEmployees();
         } catch (err) {
@@ -88,7 +88,7 @@ function Employees({ setScreen }) { //employees
                 throw new Error(errorData.error || "Failed to delete employee");
             }
 
-            //Refresh employee list
+            //refresh employee list
             fetchEmployees();
         } catch (err) {
             setError(err.message);
@@ -122,7 +122,7 @@ function Employees({ setScreen }) { //employees
             minHeight: '100vh',
             backgroundColor: 'white'
         }}>
-            {/* Sidebar */}
+            {/*Sidebar*/}
             <div style={{
                 width: '150px',
                 backgroundColor: '#D3D3D3',

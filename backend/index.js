@@ -208,11 +208,11 @@ app.post('/api/menu/add', async (req, res) => {
     }
 
     try {
-        // Get next available drinkId
+        //get next available drinkId
         const idResult = await pool.query('SELECT COALESCE(MAX(drinkId), 0) + 1 AS next_id FROM drink');
         const nextId = idResult.rows[0].next_id;
 
-        // Insert into drink table
+        //insert into drink table
         const insertQuery = `
             INSERT INTO drink (drinkId, drinkName, drinkPrice, drinkCategory)
             VALUES ($1, $2, $3, $4)
@@ -269,7 +269,7 @@ app.get('/api/inventory-usage', async (req, res) => {
 });
 
 
-// Get all employees
+//get all employees
 app.get('/api/employees', async (req, res) => {
     try {
         const result = await pool.query("SELECT employeeName, employeeRole FROM employee;");
@@ -280,7 +280,7 @@ app.get('/api/employees', async (req, res) => {
     }
 });
 
-// Add a new employee
+//add a new employee
 app.post('/api/employees', async (req, res) => {
     try {
         const { employeeName, employeeRole = 'Cashier' } = req.body;
@@ -288,7 +288,7 @@ app.post('/api/employees', async (req, res) => {
             return res.status(400).json({ error: 'Employee name is required' });
         }
         
-        // Based on the query from queries.txt
+        //based on the query from queries.txt
         const query = `
             WITH max_id AS (
                 SELECT COALESCE(MAX(employeeId), 0) + 1 AS next_employee_id 
@@ -308,7 +308,7 @@ app.post('/api/employees', async (req, res) => {
     }
 });
 
-// Delete an employee
+//delete an employee
 app.delete('/api/employees/:name', async (req, res) => {
     try {
         const { name } = req.params;
@@ -326,7 +326,7 @@ app.delete('/api/employees/:name', async (req, res) => {
     }
 });
 
-// Start server
+//start server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

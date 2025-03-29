@@ -11,7 +11,7 @@ function Graph({ setScreen }) {
 
   const fetchGraphData = async () => {
     if (!startDate || !endDate) {
-      setError("Please enter both start and end dates.");
+      setError("Please enter both start and end dates");
       return;
     }
 
@@ -29,7 +29,7 @@ function Graph({ setScreen }) {
       ]);
       setError("");
     } catch (err) {
-      setError("Failed to load data.");
+      setError("Failed to load data");
       console.error(err);
     }
   };
