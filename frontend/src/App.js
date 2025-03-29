@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react"; 
 import logo from "./logo.svg";
 import Inventory from "./views/Inventory";
 import OrderTrends from "./views/OrderTrends";
@@ -10,7 +10,7 @@ import Menu from './views/Menu';
 import Button from './Button';
 
 
-function App() {
+function App() { //main function, will be mostly imports eventually
 	const [screen, setScreen] = useState("home");
 
 	return (

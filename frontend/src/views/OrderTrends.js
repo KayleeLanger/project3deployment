@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function OrderTrends({ setScreen }) {
+function OrderTrends({ setScreen }) { //order trends
     const [xReport, setXReport] = useState([]);
     const [zReport, setZReport] = useState(null);
     const [loading, setLoading] = useState(false);

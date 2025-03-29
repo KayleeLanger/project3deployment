@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function Employees({ setScreen }) {
+function Employees({ setScreen }) { //employees
     const [employees, setEmployees] = useState([]);
     const [newEmployeeName, setNewEmployeeName] = useState("");
     const [loading, setLoading] = useState(false);
@@ -61,7 +61,7 @@ function Employees({ setScreen }) {
                 throw new Error(errorData.error || "Failed to add employee");
             }
 
-            // Reset form/update employee list
+            //Reset form/update employee list
             setNewEmployeeName("");
             fetchEmployees();
         } catch (err) {
@@ -88,7 +88,7 @@ function Employees({ setScreen }) {
                 throw new Error(errorData.error || "Failed to delete employee");
             }
 
-            // Refresh employee list
+            //Refresh employee list
             fetchEmployees();
         } catch (err) {
             setError(err.message);
@@ -156,7 +156,7 @@ function Employees({ setScreen }) {
                 </button>
             </div>
             
-            {/* Main Content */}
+            {/*Main Content*/}
             <div style={{ 
                 flex: 1,
                 padding: '20px',
@@ -165,7 +165,7 @@ function Employees({ setScreen }) {
             }}>
                 <h1 style={{ marginBottom: '20px' }}>Employee Management</h1>
                 
-                {/* Add Employee Form */}
+                {/*Add Employee Form*/}
                 <div style={{ marginBottom: '30px' }}>
                     <h2>Add New Employee</h2>
                     <form onSubmit={(e) => addEmployee(e, 'Cashier')}>

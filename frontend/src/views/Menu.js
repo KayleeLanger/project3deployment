@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Menu({ setScreen }) {
+function Menu({ setScreen }) { //menu
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,7 +28,6 @@ function Menu({ setScreen }) {
     const price = prompt("Enter drink price:");
     if (!name || !price) return alert("Name and price required");
 
-    // Optional: Add category prompt if your DB expects it
     const category = prompt("Enter drink category:", "Milk Tea");
 
     try {
@@ -39,7 +38,7 @@ function Menu({ setScreen }) {
       });
 
       if (!res.ok) throw new Error("Failed to add drink");
-      fetchMenu(); // refresh list
+      fetchMenu(); //refresh list
     } catch (err) {
       alert("Error adding drink");
       console.error(err);
@@ -56,7 +55,7 @@ function Menu({ setScreen }) {
       });
 
       if (!res.ok) throw new Error("Failed to delete drink");
-      fetchMenu(); // refresh list
+      fetchMenu(); //refresh list
     } catch (err) {
       alert("Error deleting drink");
       console.error(err);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"; //prices screen
 
 function Prices({ setScreen }) {
   const [prices, setPrices] = useState([]);
