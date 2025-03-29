@@ -108,9 +108,9 @@ function Inventory({ setScreen }) {
 						<tbody>
 							{salesReport.map((entry, index) => (
 								<tr key={index}>
-									<td>{entry.drinkName}</td>
-									<td>{entry.totalSold}</td>
-									<td>{entry.totalRevenue}</td>
+									<td>{entry.drinkname}</td>
+									<td>{entry.totalsold}</td>
+									<td>{entry.totalrevenue}</td>
 								</tr>
 							))}
 						</tbody>
