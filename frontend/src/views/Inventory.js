@@ -6,21 +6,67 @@ function Inventory({ setScreen }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchInventory = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/invent`);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        const data = await response.json();
-        setInventory(data);
-      } catch (err) {
-        console.error(err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchInventory();
   }, []);
+
+  const fetchInventory = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/invent`);
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+      const data = await response.json();
+      setInventory(data);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (item) => {
+    const newQty = prompt(`Enter new quantity for ${item.itemname}:`, item.remaininginstock);
+    if (newQty !== null) {
+      fetch(`${process.env.REACT_APP_API_URL}/api/inventory/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          inventoryId: item.inventoryid,
+          newQuantity: parseInt(newQty)
+        })
+      }).then(() => {
+        setInventory(prev =>
+          prev.map(i =>
+            i.inventoryid === item.inventoryid
+              ? { ...i, remaininginstock: parseInt(newQty) }
+              : i
+          )
+        );
+      });
+    }
+  };
+
+  const handleDelete = (item) => {
+    if (window.confirm(`Delete ${item.itemname}?`)) {
+      fetch(`${process.env.REACT_APP_API_URL}/api/inventory/delete/${item.inventoryid}`, {
+        method: 'DELETE'
+      }).then(() => {
+        setInventory(prev => prev.filter(i => i.inventoryid !== item.inventoryid));
+      });
+    }
+  };
+
+  const handleAdd = () => {
+    const name = prompt("Enter new item name:");
+    if (name) {
+      fetch(`${process.env.REACT_APP_API_URL}/api/inventory/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemName: name })
+      }).then(() => {
+        fetchInventory(); // fetch the updated list
+      });
+    }
+  };
 
   if (loading) return <div>Loading inventory data...</div>;
   if (error) return <div>Error loading inventory: {error}</div>;
@@ -47,30 +93,15 @@ function Inventory({ setScreen }) {
               <td>{item.soldforday}</td>
               <td>{item.remaininginstock}</td>
               <td>
-                {item.remaininginstock < 10 ? "Low Stock!" :
-                 item.remaininginstock < 20 ? "Order Soon" : "OK"}
+                {item.remaininginstock < 10
+                  ? "Low Stock!"
+                  : item.remaininginstock < 20
+                  ? "Order Soon"
+                  : "OK"}
               </td>
               <td>
-                <button onClick={() => {
-                  const newQty = prompt(`Enter new quantity for ${item.itemname}:`, item.remaininginstock);
-                  if (newQty !== null) {
-                    fetch(`${process.env.REACT_APP_API_URL}/api/inventory/update`, {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        inventoryId: item.inventoryid,
-                        newQuantity: parseInt(newQty)
-                      })
-                    }).then(() => window.location.reload());
-                  }
-                }}>Edit</button>
-                <button onClick={() => {
-                  if (window.confirm(`Delete ${item.itemname}?`)) {
-                    fetch(`${process.env.REACT_APP_API_URL}/api/inventory/delete/${item.inventoryid}`, {
-                      method: 'DELETE'
-                    }).then(() => window.location.reload());
-                  }
-                }}>Delete</button>
+                <button onClick={() => handleEdit(item)}>Edit</button>
+                <button onClick={() => handleDelete(item)}>Delete</button>
               </td>
             </tr>
           ))}
@@ -78,16 +109,7 @@ function Inventory({ setScreen }) {
       </table>
 
       <div>
-        <button onClick={() => {
-          const name = prompt("Enter new item name:");
-          if (name) {
-            fetch(`${process.env.REACT_APP_API_URL}/api/inventory/add`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ itemName: name })
-            }).then(() => window.location.reload());
-          }
-        }}>Add Item</button>
+        <button onClick={handleAdd}>Add Item</button>
       </div>
 
       <div>
