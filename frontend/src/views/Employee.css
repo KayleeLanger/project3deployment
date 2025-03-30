@@ -1,0 +1,158 @@
+/* sidebar */
+.sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #333;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+/* main (container holds everything else) */
+.container{
+    background-color:black;
+}
+.container-drink{
+    background-color: rgb(19, 90, 120);
+}
+.main {
+    margin-left: 250px; 
+    width: calc(65% - 250px); /* width */
+    padding:20px;
+    
+    min-height: 100vh;
+     display: flex;
+    flex-wrap:wrap;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items:center;
+    border-bottom: 20px solid black;
+}
+.main h1{
+    color:white;
+}
+/* main table (where all catagories are) 3 columns*/
+.mainBody{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+
+
+/* order section*/
+.order {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 30%;
+    height: 100vh;
+    background-color: white;
+    padding: 20px;
+    border: 20px solid black;
+
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between; /* pushes button to  very bottom */
+    
+}
+/* order button is on the bottom, but is still a little space below */
+.order button{
+    margin-bottom: 50px;
+}
+
+/* default button styling (sidebar) */
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+/* need to fix */
+.category-button{
+    background-color: "rgb(19, 90, 120)"; 
+	color: "white" ;
+	width: "150px";
+	height: "50px";
+}
+
+/* Customization screen's style -Long */
+
+.customization-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+  
+.option-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.option-label {
+    width: 150px;
+    font-weight: bold;
+    color: white;
+}
+
+.option-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+.option-buttons button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    white-space: nowrap;
+    background-color: #a3a3a3;
+    color: white;
+}
+
+.option-buttons button.selected {
+    background-color: #3b82f6;
+}
+
+
+
+/* Clock */
+.time-box {
+    background-color: #a1c2fa;
+    padding: 15px;
+    width: 80%;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+/* top time */
+.time-box h2 {
+    margin: 0;
+    font-size: 24px;
+}
+/* date */
+.time-box strong {
+    font-size: 16px;
+}
+
+
+/* Fun tings :) */
+/* Button colors */
+button:hover {
+    background-color: #0056b3;
+}
+.category-button:hover {
+    background-color: rgb(15, 75, 100); 
+}
