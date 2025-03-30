@@ -31,12 +31,12 @@ function App() { //main function, will be mostly imports eventually
 			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										OrderDetails={orderDetails}
-										setorderDetail={setOrderDetails} />}
+										setorderDetails={setOrderDetails} />}
 			{screen === "cashier-drinks" && <EmployeeDrinks setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
-										setorderDetail={setOrderDetails} />}
+										setorderDetails={setOrderDetails} />}
 			{screen === "cashier-customization" && <EmployeeCustomization setScreen={setScreen} />}
 			{screen === "cashier-toppings" && <EmployeeToppingsScreen setScreen={setScreen} />}
 

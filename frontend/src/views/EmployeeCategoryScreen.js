@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./Employee.css";
 
 
-function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, setorderDetail }) {
+function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, setorderDetails }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     // const [currentOrder, setState]=useState()
 
@@ -13,7 +13,10 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
 
     // TODO: Update order details
     //const orderdetails= [{name: "Item1", price: "4.00", ice: "25%", sweetness:"100%", toppings:"boba"}, {name: "Item2", price: "2.00", ice: "50%", sweetness:"109%", toppings:"creama"}];
-    const orderdetails = [];
+    let orderdetails = [];
+    if (OrderDetails.length > 0) {
+      orderdetails = OrderDetails;
+    }
 
     //clock setup
     useEffect(() => {

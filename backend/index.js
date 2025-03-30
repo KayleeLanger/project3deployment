@@ -131,6 +131,7 @@ app.get('/api/prices', async (req, res) => {
 	}
 });
 
+//inventory
 app.post('/api/inventory/update', async (req, res) => {
 	const { inventoryId, newQuantity } = req.body;
 	if (!inventoryId || newQuantity == null) {
@@ -323,6 +324,25 @@ app.delete('/api/employees/:name', async (req, res) => {
     } catch (err) {
         console.error('Database error:', err);
         res.status(500).json({ error: 'Database error: ' + err.message });
+    }
+});
+
+// get drinks for category
+app.get('/api/drinks/category/:category', async (req, res) => {
+    try {
+        const { category } = req.params;
+
+        const query = 'SELECT drinkName , drinkPrice FROM drink WHERE drinkCategory = $1;';
+        const result = await pool.query(query, [category]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({error: 'No drinks found for this category'});
+        }
+
+        res.json(result.rows); // return list of drinks in category
+    } catch (err) {
+        console.error('Database error: ' , err);
+        res.status(500).json({error: 'Database error: ' + err.message});
     }
 });
 

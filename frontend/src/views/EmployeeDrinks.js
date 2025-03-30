@@ -4,16 +4,40 @@ import "./Employee.css";
 
 function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDetails }) {
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [drinks, setDrinks] = useState([]);
 
+    //const [currentOrder, setState]=useState([]);
 
-    // const [currentOrder, setState]=useState()
+    // get drinks for category
+    useEffect(() => {
+      if (selectedCategory) {
+        getDrinks(selectedCategory);
+      }
+    }, [selectedCategory]); // rerun function when category changes
+
+    const getDrinks = async (category) => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/drinks/category/${category}`);
+        if (!response.ok) throw new Error ("Failed to fetch drinks");
+        const data = await response.json();
+        console.log("data: ", data);
+        setDrinks(data); // set drinks state with data
+      } catch (error) {
+        console.error(error);
+        setDrinks([]);  // reset drinks if error
+      }
+    };
 
 
     /// TODO:BACKEND NEEDS TO UPDATE THIS(drink list)
-    const drinks = [{name: "drink1", price: "5.00"}, {name: "drink2", price: "5.00"}, {name: "drink3", price: "5.00"}, {name: "drink4", price: "5.00"}];
+    //const drinks = [{name: "drink1", price: "5.00"}, {name: "drink2", price: "5.00"}, {name: "drink3", price: "5.00"}, {name: "drink4", price: "5.00"}];
 
-	// TODO: Update order details
-    const orderdetails= [{name: "Item1", price: "4.00", ice: "25%", sweetness:"100%", toppings:"boba"}, {name: "Item2", price: "2.00", ice: "50%", sweetness:"109%", toppings:"creama"}];
+	  // TODO: Update order details
+    //const orderdetails= [{name: "Item1", price: "4.00", ice: "25%", sweetness:"100%", toppings:"boba"}, {name: "Item2", price: "2.00", ice: "50%", sweetness:"109%", toppings:"creama"}];
+    let orderdetails = [];
+    if (OrderDetails.length > 0) {
+      orderdetails = OrderDetails;
+    }
 
 
 
@@ -24,11 +48,10 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
         }, 1000);
         return () => clearInterval(interval);
     }, []);
+
+
   return (
     <>
-     
-
-
       {/* Sidebar (logout, time, cancel order)*/}
       <div className="sidebar">
         <table><tr>
@@ -75,26 +98,34 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
 
       {/* Main content */}
       <div className="container-drink">
-      <div className="main">
-        <XButton text="X" onClick={() => setScreen("cashier")} />
-        <h1>{selectedCategory}</h1>
-        <div className = "mainBody">
-          {/* loop through Categories */}
-          {drinks.map(drink=> (
-            <div class= "buttonBox">
-            <DrinkButton
-                 key={drink.name}
-                 text={drink.name}
-                 onClick={() => setScreen("cashier-customization")}
-                 
-                 ></DrinkButton> </div>
-          ))}
-         
-
-
+        <div className="main">
+          <XButton text="X" onClick={() => setScreen("cashier")} />
+          <h1>{selectedCategory}</h1>
+          <div className = "mainBody">
+            {/* loop through Categories */}
+            {drinks.length > 0 ? (
+              drinks.map(drink => (
+                <div className ="buttonBox" key={drink.name}>
+                  <DrinkButton
+                    text = {drink.drinkname}
+                    onClick={() => {
+                      setorderDetails([{
+                        name: drink.drinkname, 
+                        price: drink.drinkprice, 
+                        ice: "",
+                        sweetness: "",
+                        toppings: ""
+                      }]);
+                      setScreen("cashier-customization");
+                    }}
+                  ></DrinkButton> 
+                </div>
+            ))
+            ) : (
+              <p> No drinks in this category for now. Check back later!</p>
+            )}
+          </div>
         </div>
-       
-      </div>
       </div>
 
 
