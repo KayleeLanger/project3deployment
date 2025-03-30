@@ -2,7 +2,7 @@ import { useState } from "react";
 import logo from "./logo.svg";
 import Inventory from "./views/Inventory";
 import EmployeeCategoryScreen from "./views/EmployeeCategoryScreen";
-import EmployeeToppingsScreen from "./views/EmployeeToppingsScreen";
+import EmployeeToppingsScreen from "./views/EmployeeToppingsScreen.js";
 import EmployeeDrinks from "./views/EmployeeDrinks";
 import EmployeeCustomization from "./views/EmployeeCustomization";
 import OrderTrends from "./views/OrderTrends";
