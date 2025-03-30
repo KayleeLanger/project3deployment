@@ -10,14 +10,24 @@ import OrderTrends from "./views/OrderTrends";
 
 function App() {
 	const [screen, setScreen] = useState("home");
+	const [selectedCategory, setSelectedCategory] = useState(""); 
+	const [orderDetails, setOrderDetails] = useState([]); 
+	
 
 	return (
 		<div className="App">
 		<header className="App-header">
 			{screen === "home" && <HomeScreen setScreen={setScreen} />}
 			{/* cashier */}
-			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen} />}
-			{screen === "cashier-drinks" && <EmployeeDrinks setScreen={setScreen} />}
+			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen}
+										setSelectedCategory={setSelectedCategory}
+										OrderDetails={orderDetails}
+										setorderDetail={setOrderDetails} />}
+			{screen === "cashier-drinks" && <EmployeeDrinks setScreen={setScreen}
+										setSelectedCategory={setSelectedCategory}
+										selectedCategory={selectedCategory} 
+										OrderDetails={orderDetails}
+										setorderDetail={setOrderDetails} />}
 			{screen === "cashier-customization" && <EmployeeCustomization setScreen={setScreen} />}
 			{screen === "cashier-toppings" && <EmployeeToppingsScreen setScreen={setScreen} />}
 
