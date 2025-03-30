@@ -62,29 +62,28 @@ function App() { //main function, will be mostly imports eventually
 
 
 /////////////////////// Home Screen ///////////////////////
-function HomeScreen({ setScreen }) {
-	return (
-		<>
-		<img src={logo} className="App-logo" alt="logo" />
-		<p>Edit <code>src/App.js</code> and save to reload. (THIS WILL BE THE HOMESCREEN EVENTUALLY)</p>
+// function HomeScreen({ setScreen }) {
+// 	return (
+// 		<>
+// 		<img src={logo} className="App-logo" alt="logo" />
+// 		<p>Edit <code>src/App.js</code> and save to reload. (THIS WILL BE THE HOMESCREEN EVENTUALLY)</p>
 
-		<Button text="Go to Cashier" onClick={() => setScreen("cashier")} />
-		<Button text="Go to Manager" onClick={() => setScreen("manager")} />
-		<Button text="Go to Customer" onClick={() => setScreen("customer")} />
+// 		<Button text="Go to Cashier" onClick={() => setScreen("cashier")} />
+// 		<Button text="Go to Manager" onClick={() => setScreen("manager")} />
+// 		<Button text="Go to Customer" onClick={() => setScreen("customer")} />
 
-		<a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-			Learn React
-		</a>
-		</>
-	);
-}
-/////////////////////// Reusable Design Components ///////////////////////
-function Button({ text, onClick }) {
-	return <button onClick={onClick}>{text}</button>;
-}
+// 		<a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
+// 			Learn React
+// 		</a>
+// 		</>
+// 	);
+// }
+// /////////////////////// Reusable Design Components ///////////////////////
+// function Button({ text, onClick }) {
+// 	return <button onClick={onClick}>{text}</button>;
+// }
 
 
-=======
 /////////////////////// Cashier Pages ///////////////////////
 function CashierCategoriesScreen({ setScreen }) {
 	return (

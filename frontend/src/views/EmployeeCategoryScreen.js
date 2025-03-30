@@ -7,8 +7,8 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
     // const [currentOrder, setState]=useState()
 
 
-    /// TODO:BACKEND NEEDS TO UPDATE THIS(category list)
-    const categories = [{name: "cat1"}, {name: "A very long Drink name "}, {name: "cat3"}, {name: "cat4"},{name: "cat1"}];
+    /// category list: hardcoded since categories won't change, only drinks
+    const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "MISC."}];
 
 
     // TODO: Update order details

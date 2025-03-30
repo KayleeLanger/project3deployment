@@ -43,19 +43,19 @@ app.get('/api/xreport', async (req, res) => {
     try {
         const query = `
             SELECT EXTRACT(HOUR FROM o.orderDate) AS hour,
-         ROUND(SUM(oi.quantity * d.drinkPrice)::numeric, 2) AS total_sales,
-         COUNT(o.orderId) AS total_orders,
-         COUNT(DISTINCT o.employeeId) AS total_employees,
-         SUM(oi.quantity) AS total_items,
-         COUNT(CASE WHEN o.orderId % 2 != 0 THEN 1 END) AS apple_pay_count,
-         COUNT(CASE WHEN o.orderId % 2 = 0 THEN 1 END) AS card_count
-  FROM orders o
-  JOIN order_items oi ON o.orderId = oi.orderId
-  JOIN drink d ON oi.drinkId = d.drinkId
-  WHERE o.orderDate::DATE = '2024-03-05'
-    AND EXTRACT(HOUR FROM o.orderDate) < EXTRACT(HOUR FROM CURRENT_TIMESTAMP)
-  GROUP BY hour
-  ORDER BY hour;
+            ROUND(SUM(oi.quantity * d.drinkPrice)::numeric, 2) AS total_sales,
+            COUNT(o.orderId) AS total_orders,
+            COUNT(DISTINCT o.employeeId) AS total_employees,
+            SUM(oi.quantity) AS total_items,
+            COUNT(CASE WHEN o.orderId % 2 != 0 THEN 1 END) AS apple_pay_count,
+            COUNT(CASE WHEN o.orderId % 2 = 0 THEN 1 END) AS card_count
+            FROM orders o
+            JOIN order_items oi ON o.orderId = oi.orderId
+            JOIN drink d ON oi.drinkId = d.drinkId
+            WHERE o.orderDate::DATE = '2024-03-05'
+            AND EXTRACT(HOUR FROM o.orderDate) < EXTRACT(HOUR FROM CURRENT_TIMESTAMP)
+            GROUP BY hour
+            ORDER BY hour;
         `;
         //change to current hour possibly?
         const result = await pool.query(query);
