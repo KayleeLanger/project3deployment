@@ -102,10 +102,6 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 			>
   				Select Toppings
 			</button>
-
-
-			 
-	
 			</div>
 			
 		  </div>

@@ -371,6 +371,23 @@ app.post('/api/checkout', async (req, res) => {
     }
 });
 
+// get toppings
+// app.get('/api/toppings', async (req, res) => {
+//     try {
+//         const query = 'SELECT otherName , otherPrice FROM toppings_other;';
+//         const result = await pool.query(query);
+
+//         if (result.rows.length === 0) {
+//             return res.status(404).json({error: 'No toppings found'});
+//         }
+
+//         res.json(result.rows); // return list of toppings
+//     } catch (err) {
+//         console.error('Database error: ' , err);
+//         res.status(500).json({error: 'Database error: ' + err.message});
+//     }
+// });
+
 //start server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

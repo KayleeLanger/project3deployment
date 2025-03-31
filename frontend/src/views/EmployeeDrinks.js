@@ -29,11 +29,6 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
     };
 
 
-    /// TODO:BACKEND NEEDS TO UPDATE THIS(drink list)
-    //const drinks = [{name: "drink1", price: "5.00"}, {name: "drink2", price: "5.00"}, {name: "drink3", price: "5.00"}, {name: "drink4", price: "5.00"}];
-
-	  // TODO: Update order details
-    //const orderdetails= [{name: "Item1", price: "4.00", ice: "25%", sweetness:"100%", toppings:"boba"}, {name: "Item2", price: "2.00", ice: "50%", sweetness:"109%", toppings:"creama"}];
     let orderdetails = [];
     if (OrderDetails.length > 0) {
       orderdetails = OrderDetails;
@@ -99,13 +94,6 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
 
 
 
-
-
-
-
-
-
-
       {/* Main content */}
       <div className="container-drink">
         <div className="main">
@@ -140,9 +128,6 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
           </div>
         </div>
       </div>
-
-
-
 
 
 
@@ -190,8 +175,6 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
           alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
           setorderDetails([]);
         }} />
-
-
       </div>
     </>
   );

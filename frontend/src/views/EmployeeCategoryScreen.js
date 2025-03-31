@@ -151,19 +151,17 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
         )}
   
 
-  <Button text="Add More" 
-		onClick={() => {
-			setScreen("cashier"); 
-		}} />
-	<Button text="Checkout" 
-		onClick={() => {
-      checkout(orderdetails.length , total.toFixed(2));
-			setScreen("cashier"); 
-			alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
-      setorderDetails([]);
-		}} />
-
-
+        <Button text="Add More" 
+          onClick={() => {
+            setScreen("cashier"); 
+          }} />
+        <Button text="Checkout" 
+          onClick={() => {
+            checkout(orderdetails.length , total.toFixed(2));
+            setScreen("cashier"); 
+            alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
+            setorderDetails([]);
+          }} />
       </div>
     </>
   );
@@ -173,6 +171,7 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
 function Button({ text, onClick }) {
   return <button onClick={onClick}>{text}</button>;
 }
+
 function CategoryButton({ text, onClick }) {
     return <button
     style={{
