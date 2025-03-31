@@ -39,7 +39,13 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
       orderdetails = OrderDetails;
     }
 
-
+    const subtotal = orderdetails.reduce((subtotal, order) => {
+      const price = parseFloat(order.price);
+      return !isNaN(price) ? subtotal + price: subtotal;
+    }, 0);
+  
+    const tax = subtotal * 0.08;
+    const total = subtotal + tax;
 
     //clock setup
     useEffect(() => {
@@ -117,7 +123,7 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
                         ...prevDetails,
                         {
                           name: drink.drinkname, 
-                          price: drink.drinkprice, 
+                          price: drink.drinkprice.toFixed(2), 
                           size: "",
                           ice: "",
                           sweetness: "",
@@ -146,28 +152,32 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
       <div className="order">
         <h1>Order Summary</h1>
         {/* loop through order items and display */}
-		    {orderdetails && orderdetails.length > 0 ? (
-          orderdetails.map((orderdetails, index) => ( <>
-          <div className="order-item">
-            <div className="order-header">
-              <h3>{orderdetails.name}</h3>
-              <h3>${orderdetails.price}</h3>
+		    {orderdetails && orderdetails.length > 0 ? ( 
+          <>
+            {orderdetails.map((orderdetails, index) => (
+              <div className="order-item">
+                <div className="order-header">
+                    <h3>{orderdetails.name}</h3>
+                    <h3>${orderdetails.price}</h3>
+                </div>
+                <p>
+                    <strong>Size:</strong> {orderdetails.size} <br />
+                    <strong>Ice:</strong> {orderdetails.ice} <br />
+                    <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
+                    <strong>Toppings:</strong> {orderdetails.toppings}
+                </p>
+              </div>
+            ))}
+            {/* display order totals */}
+            <div className = "order-total">
+              <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
+              <h3>Tax: ${tax.toFixed(2)} </h3>
+              <h2>Total: ${total.toFixed(2)}</h2>
             </div>
-            <p>
-                <strong>Size:</strong> {orderdetails.size} <br />
-                <strong>Ice:</strong> {orderdetails.ice} <br />
-                <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
-                <strong>Toppings:</strong> {orderdetails.toppings}
-            </p>
-          </div>
-        </>
-
-
-        ))) : (
-        <p>No items</p>
+          </>
+        ) : (
+          <p>Add a Drink To Get Started!</p>
         )}
-  
-
         
       <Button text="Add More" 
 				onClick={() => {
@@ -175,11 +185,10 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
 				}} />
 			<Button text="Checkout" 
 				onClick={() => {
-					setScreen("home"); 
-					alert("Thanks for the order!");
+					setScreen("cashier"); 
+					alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
+          setorderDetails([]);
 				}} />
-
-
 
 
       </div>

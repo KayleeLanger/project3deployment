@@ -22,6 +22,14 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 		orderdetails = OrderDetails;
 	}
 
+	const subtotal = orderdetails.reduce((subtotal, order) => {
+		const price = parseFloat(order.price);
+		return !isNaN(price) ? subtotal + price: subtotal;
+	}, 0);
+
+	const tax = subtotal * 0.08;
+	const total = subtotal + tax;
+
 	return (
 	<>
 		{/* Sidebar (logout, time, cancel order)*/}
@@ -105,7 +113,7 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 	
 	
 	
-	
+			
 		{/* Order Results */}
 		<div className="order">
 			<h1>Order Summary</h1>
@@ -125,11 +133,15 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 				</p>
 			</div>
 			</>
-
-
 			))) : (
 			<p>No items</p>
 			)}
+			{/* display order totals */}
+			<div className = "order-total">
+				<h3>Subtotal: ${subtotal.toFixed(2)} </h3>
+				<h3>Tax: ${tax.toFixed(2)} </h3>
+				<h2>Total: ${total.toFixed(2)}</h2>
+			</div>
 	
 			<Button text="Add More" 
 				onClick={() => {
@@ -137,8 +149,9 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 				}} />
 			<Button text="Checkout" 
 				onClick={() => {
-					setScreen("home"); 
-					alert("Thanks for the order!");
+					setScreen("cashier"); 
+					alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
+					setorderDetails([]);
 				}} />
 	
 	

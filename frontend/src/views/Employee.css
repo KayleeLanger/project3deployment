@@ -54,7 +54,6 @@
     background-color: white;
     padding: 20px;
     border: 20px solid black;
-
     display: flex; 
     flex-direction: column;
     justify-content: space-between; /* pushes button to  very bottom */
