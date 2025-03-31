@@ -346,6 +346,31 @@ app.get('/api/drinks/category/:category', async (req, res) => {
     }
 });
 
+// push order to database
+app.post('/api/checkout', async (req, res) => {
+    try {
+        const { numItems, orderTotal, orderDate, employeeId } = req.body;
+        console.log('Received data: ', req.body);
+
+        // get next orderId
+        const id = await pool.query('SELECT COALESCE(MAX(orderId), 0) + 1 AS next_order_id FROM orders');
+        const nextId = id.rows[0].next_order_id;
+
+        // insert into order table
+        const query = `
+                    INSERT INTO orders (orderId, numItems, orderPrice, orderDate, employeeId)
+                    VALUES ($1, $2, $3, $4, $5);`;
+
+        const result = await pool.query(query, [parseInt(nextId), parseInt(numItems), parseFloat(orderTotal), orderDate, parseInt(employeeId)]);
+
+        console.log("Order placed successfully");
+        res.status(200).json({message: 'Order successfully placed', result});
+    } catch (err) {
+        console.log('Database error: ' , err.message);
+        res.status(500).json({error: 'Database error: ' + err.message});
+    }
+});
+
 //start server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

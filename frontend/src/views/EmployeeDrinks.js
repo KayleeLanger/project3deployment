@@ -184,11 +184,12 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
 					setScreen("cashier"); 
 				}} />
 			<Button text="Checkout" 
-				onClick={() => {
-					setScreen("cashier"); 
-					alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
+        onClick={() => {
+          checkout(orderdetails.length , total.toFixed(2));
+          setScreen("cashier"); 
+          alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
           setorderDetails([]);
-				}} />
+        }} />
 
 
       </div>
@@ -206,7 +207,6 @@ function XButton({ text, onClick }) {
         backgroundColor: "rgb(120, 19, 19)",
         color: "white",
         borderRadius: "50px",
-       
         }} onClick={onClick}>{text}</button>;
   }
 function DrinkButton({ text, onClick }) {
@@ -220,14 +220,48 @@ function DrinkButton({ text, onClick }) {
         padding: "20px"
         }}
         onClick={onClick}>{text}</button>;
+}
+
+function checkout (numItems, orderTotal) {
+  const executeCheckout = async () => {
+    try {
+      const orderDate = getCurrentDateTime();
+      console.log(orderDate);
+      const employeeId = '123460';                // NEED TO FILL WITH PROPER ID
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          numItems,
+          orderTotal,
+          orderDate,
+          employeeId,
+        }),
+      });
+      if (!response.ok) throw new Error ("Failed to place order");
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
+  executeCheckout();
+}
 
+function getCurrentDateTime() {
+  const currentDate = new Date();
 
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const day = String(currentDate.getDate()).padStart(2, '0');
 
+  const hours = String(currentDate.getHours()).padStart(2, '0');
+  const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+  const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
-
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 
 export default EmployeeDrinks;
-
-
-
