@@ -79,10 +79,15 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
 
 
         </tr><tr>
-            {/* still need cancel order function */}
-        <Button text="Cancel Order" onClick={() => setScreen("cashier")} />
+            <Button text="Remove Current Item" onClick={() => setScreen("cashier")} />
         </tr><tr>
-        <Button text="Logout" onClick={() => setScreen("home")} />
+            {/* Clear order and start over */}
+            <Button text="Clear Order" onClick={() => {
+              setScreen("cashier");
+              setorderDetails([]);
+            }} />
+        </tr><tr>
+          <Button text="Logout" onClick={() => setScreen("home")} />
         </tr></table>
       </div>
 
@@ -161,12 +166,16 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
         )}
   
 
-
-        <Button text="Checkout"
-        onClick={() => {
-            setScreen("home");
-            alert("Thanks for the order!");
-        }} />
+        
+      <Button text="Add More" 
+				onClick={() => {
+					setScreen("cashier"); 
+				}} />
+			<Button text="Checkout" 
+				onClick={() => {
+					setScreen("home"); 
+					alert("Thanks for the order!");
+				}} />
 
 
 

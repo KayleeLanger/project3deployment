@@ -58,10 +58,13 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
 
        
         </tr><tr>
-            {/* still need cancel order function */}
-        <Button text="Cancel Order" onClick={() => setScreen("cashier")} />
+            {/* Clear order and start over */}
+            <Button text="Clear Order" onClick={() => {
+              setScreen("cashier");
+              setorderDetails([]);
+            }} />
         </tr><tr>
-        <Button text="Logout" onClick={() => setScreen("home")} />
+          <Button text="Logout" onClick={() => setScreen("home")} />
         </tr></table>
       </div>
 
@@ -127,20 +130,20 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
         </p>
 </div>
 </>
-           
-
 
         ))) : (
         <p>Add a Drink To Get Started!</p>
         )}
-   
-    <Button text="Checkout"
-        onClick={() => {
-            setScreen("home");
-            alert("Thanks for the order!");
-        }} />
-
-
+  
+  <Button text="Add More" 
+		onClick={() => {
+			setScreen("cashier"); 
+		}} />
+	<Button text="Checkout" 
+		onClick={() => {
+			setScreen("home"); 
+			alert("Thanks for the order!");
+		}} />
 
 
       </div>

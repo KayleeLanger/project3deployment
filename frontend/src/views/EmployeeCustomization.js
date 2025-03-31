@@ -50,10 +50,18 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 			</tr><tr><h1>   </h1>
 			
 			</tr><tr>
-				{/* still need cancel order function */}
-			<Button text="Cancel Order" onClick={() => setScreen("cashier")} />
+				<Button text="Remove Current Item" onClick={() => {
+					setorderDetails(orderdetails.slice(0, orderdetails.length-1));
+					setScreen("cashier");
+				}} />
 			</tr><tr>
-			<Button text="Logout" onClick={() => setScreen("home")} />
+				{/* Clear order and start over */}
+				<Button text="Clear Order" onClick={() => {
+					setScreen("cashier");
+					setorderDetails([]);
+				}} />
+			</tr><tr>
+				<Button text="Logout" onClick={() => setScreen("home")} />
 			</tr></table>
 		</div>
 	
@@ -123,11 +131,15 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 			<p>No items</p>
 			)}
 	
+			<Button text="Add More" 
+				onClick={() => {
+					setScreen("cashier"); 
+				}} />
 			<Button text="Checkout" 
-			onClick={() => {
-				setScreen("home"); 
-				alert("Thanks for the order!");
-			}} />
+				onClick={() => {
+					setScreen("home"); 
+					alert("Thanks for the order!");
+				}} />
 	
 	
 		  </div>
