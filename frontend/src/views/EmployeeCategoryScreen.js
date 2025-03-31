@@ -27,7 +27,7 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
     }, []);
   return (
     <>
-     
+    
 
 
       {/* Sidebar (logout, time, cancel order)*/}

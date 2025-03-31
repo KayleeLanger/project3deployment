@@ -113,13 +113,15 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
                   <DrinkButton
                     text = {drink.drinkname}
                     onClick={() => {
-                      setorderDetails([{
-                        name: drink.drinkname, 
-                        price: drink.drinkprice, 
-                        size: "",
-                        ice: "",
-                        sweetness: "",
-                        toppings: ""
+                      setorderDetails(prevDetails => [
+                        ...prevDetails,
+                        {
+                          name: drink.drinkname, 
+                          price: drink.drinkprice, 
+                          size: "",
+                          ice: "",
+                          sweetness: "",
+                          toppings: ""
                       }]);
                       setScreen("cashier-customization");
                     }}
