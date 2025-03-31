@@ -8,7 +8,7 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
 
 
     /// category list: hardcoded since categories won't change, only drinks
-    const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "MISC."}];
+    const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "Miscellaneous"}];
 
 
     // TODO: Update order details
@@ -120,6 +120,7 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
             <h3>${orderdetails.price}</h3>
         </div>
         <p>
+            <strong>Size:</strong> {orderdetails.size} <br />
             <strong>Ice:</strong> {orderdetails.ice} <br />
             <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
             <strong>Toppings:</strong> {orderdetails.toppings}

@@ -327,7 +327,7 @@ app.delete('/api/employees/:name', async (req, res) => {
     }
 });
 
-// get drinks for category
+// get drinks details for category
 app.get('/api/drinks/category/:category', async (req, res) => {
     try {
         const { category } = req.params;

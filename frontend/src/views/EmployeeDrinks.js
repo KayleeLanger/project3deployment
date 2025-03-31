@@ -78,7 +78,6 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
         </tr><tr><h1>   </h1>
 
 
-       
         </tr><tr>
             {/* still need cancel order function */}
         <Button text="Cancel Order" onClick={() => setScreen("cashier")} />
@@ -112,6 +111,7 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
                       setorderDetails([{
                         name: drink.drinkname, 
                         price: drink.drinkprice, 
+                        size: "",
                         ice: "",
                         sweetness: "",
                         toppings: ""
@@ -139,27 +139,27 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
       <div className="order">
         <h1>Order Summary</h1>
         {/* loop through order items and display */}
-		{orderdetails && orderdetails.length > 0 ? (
-            orderdetails.map((orderdetails, index) => ( <>
-            <div className="order-item">
-        <div className="order-header">
-            <h3>{orderdetails.name}</h3>
-            <h3>${orderdetails.price}</h3>
-        </div>
-        <p>
-            <strong>Ice:</strong> {orderdetails.ice} <br />
-            <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
-            <strong>Toppings:</strong> {orderdetails.toppings}
-        </p>
-</div>
-</>
-           
+		    {orderdetails && orderdetails.length > 0 ? (
+          orderdetails.map((orderdetails, index) => ( <>
+          <div className="order-item">
+            <div className="order-header">
+              <h3>{orderdetails.name}</h3>
+              <h3>${orderdetails.price}</h3>
+            </div>
+            <p>
+                <strong>Size:</strong> {orderdetails.size} <br />
+                <strong>Ice:</strong> {orderdetails.ice} <br />
+                <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
+                <strong>Toppings:</strong> {orderdetails.toppings}
+            </p>
+          </div>
+        </>
 
 
         ))) : (
         <p>No items</p>
         )}
-   
+  
 
 
         <Button text="Checkout"

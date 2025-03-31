@@ -37,7 +37,11 @@ function App() { //main function, will be mostly imports eventually
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
 										setorderDetails={setOrderDetails} />}
-			{screen === "cashier-customization" && <EmployeeCustomization setScreen={setScreen} />}
+			{screen === "cashier-customization" && <EmployeeCustomization setScreen={setScreen}
+										setSelectedCategory={setSelectedCategory}
+										selectedCategory={selectedCategory} 
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails} />}
 			{screen === "cashier-toppings" && <EmployeeToppingsScreen setScreen={setScreen} />}
 
 
