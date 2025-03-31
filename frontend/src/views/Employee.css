@@ -26,7 +26,7 @@
     padding:20px;
     
     min-height: 100vh;
-     display: flex;
+    display: flex;
     flex-wrap:wrap;
     flex-direction: column;
     /* justify-content: center; */
@@ -54,11 +54,10 @@
     background-color: white;
     padding: 20px;
     border: 20px solid black;
-
     display: flex; 
     flex-direction: column;
     justify-content: space-between; /* pushes button to  very bottom */
-    
+    overflow-y: auto; /* makes it scrollable */
 }
 /* order button is on the bottom, but is still a little space below */
 .order button{
@@ -85,7 +84,6 @@ button {
 }
 
 /* Customization screen's style -Long */
-
 .customization-options {
     display: flex;
     flex-direction: column;
@@ -126,7 +124,30 @@ button {
     background-color: #3b82f6;
 }
 
-
+/* For Employee Toppings Screen -Long*/
+.toppings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .topping-button {
+    background-color: #f4a261;
+    border: none;
+    border-radius: 15px;
+    padding: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    color: black;
+    transition: background-color 0.2s;
+  }
+  
+  .topping-button.selected {
+    background-color: #2a9d8f;
+    color: white;
+  }
+  
 
 /* Clock */
 .time-box {

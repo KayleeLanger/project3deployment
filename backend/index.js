@@ -43,19 +43,19 @@ app.get('/api/xreport', async (req, res) => {
     try {
         const query = `
             SELECT EXTRACT(HOUR FROM o.orderDate) AS hour,
-         ROUND(SUM(oi.quantity * d.drinkPrice)::numeric, 2) AS total_sales,
-         COUNT(o.orderId) AS total_orders,
-         COUNT(DISTINCT o.employeeId) AS total_employees,
-         SUM(oi.quantity) AS total_items,
-         COUNT(CASE WHEN o.orderId % 2 != 0 THEN 1 END) AS apple_pay_count,
-         COUNT(CASE WHEN o.orderId % 2 = 0 THEN 1 END) AS card_count
-  FROM orders o
-  JOIN order_items oi ON o.orderId = oi.orderId
-  JOIN drink d ON oi.drinkId = d.drinkId
-  WHERE o.orderDate::DATE = '2024-03-05'
-    AND EXTRACT(HOUR FROM o.orderDate) < EXTRACT(HOUR FROM CURRENT_TIMESTAMP)
-  GROUP BY hour
-  ORDER BY hour;
+            ROUND(SUM(oi.quantity * d.drinkPrice)::numeric, 2) AS total_sales,
+            COUNT(o.orderId) AS total_orders,
+            COUNT(DISTINCT o.employeeId) AS total_employees,
+            SUM(oi.quantity) AS total_items,
+            COUNT(CASE WHEN o.orderId % 2 != 0 THEN 1 END) AS apple_pay_count,
+            COUNT(CASE WHEN o.orderId % 2 = 0 THEN 1 END) AS card_count
+            FROM orders o
+            JOIN order_items oi ON o.orderId = oi.orderId
+            JOIN drink d ON oi.drinkId = d.drinkId
+            WHERE o.orderDate::DATE = '2024-03-05'
+            AND EXTRACT(HOUR FROM o.orderDate) < EXTRACT(HOUR FROM CURRENT_TIMESTAMP)
+            GROUP BY hour
+            ORDER BY hour;
         `;
         //change to current hour possibly?
         const result = await pool.query(query);
@@ -131,6 +131,7 @@ app.get('/api/prices', async (req, res) => {
 	}
 });
 
+//inventory
 app.post('/api/inventory/update', async (req, res) => {
 	const { inventoryId, newQuantity } = req.body;
 	if (!inventoryId || newQuantity == null) {
@@ -325,6 +326,67 @@ app.delete('/api/employees/:name', async (req, res) => {
         res.status(500).json({ error: 'Database error: ' + err.message });
     }
 });
+
+// get drinks details for category
+app.get('/api/drinks/category/:category', async (req, res) => {
+    try {
+        const { category } = req.params;
+
+        const query = 'SELECT drinkName , drinkPrice FROM drink WHERE drinkCategory = $1;';
+        const result = await pool.query(query, [category]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({error: 'No drinks found for this category'});
+        }
+
+        res.json(result.rows); // return list of drinks in category
+    } catch (err) {
+        console.error('Database error: ' , err);
+        res.status(500).json({error: 'Database error: ' + err.message});
+    }
+});
+
+// push order to database
+app.post('/api/checkout', async (req, res) => {
+    try {
+        const { numItems, orderTotal, orderDate, employeeId } = req.body;
+        console.log('Received data: ', req.body);
+
+        // get next orderId
+        const id = await pool.query('SELECT COALESCE(MAX(orderId), 0) + 1 AS next_order_id FROM orders');
+        const nextId = id.rows[0].next_order_id;
+
+        // insert into order table
+        const query = `
+                    INSERT INTO orders (orderId, numItems, orderPrice, orderDate, employeeId)
+                    VALUES ($1, $2, $3, $4, $5);`;
+
+        const result = await pool.query(query, [parseInt(nextId), parseInt(numItems), parseFloat(orderTotal), orderDate, parseInt(employeeId)]);
+
+        console.log("Order placed successfully");
+        res.status(200).json({message: 'Order successfully placed', result});
+    } catch (err) {
+        console.log('Database error: ' , err.message);
+        res.status(500).json({error: 'Database error: ' + err.message});
+    }
+});
+
+// get toppings
+// app.get('/api/toppings', async (req, res) => {
+//     try {
+//         const query = 'SELECT otherName , otherPrice FROM toppings_other;';
+//         const result = await pool.query(query);
+
+//         if (result.rows.length === 0) {
+//             return res.status(404).json({error: 'No toppings found'});
+//         }
+
+//         res.json(result.rows); // return list of toppings
+//     } catch (err) {
+//         console.error('Database error: ' , err);
+//         res.status(500).json({error: 'Database error: ' + err.message});
+//     }
+// });
 
 //start server
 app.listen(port, () => {
