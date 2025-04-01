@@ -134,18 +134,24 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                     }]);
                   } else {
                     setorderDetails(prevDetails => {
-                      return prevDetails.map((order) => {
-                        const newToppings = order.toppings === "none"
-                          ? `${name} (+$${price.toFixed(2)})`  // if "none", replace
-                          : order.toppings
-                          ? `${order.toppings}, ${name} (+$${price.toFixed(2)})`  // add to existing toppings
-                          : `${name} (+$${price.toFixed(2)})`;  // if no toppings, set new topping
-                        const newPrice = parseFloat(order.price) + price;
-                        return {
-                          ...order,
-                          price: newPrice.toFixed(2),
-                          toppings: newToppings,
-                        };
+                      return prevDetails.map((order, index) => {
+                        if (index === prevDetails.length - 1) {
+                          const newToppings = order.toppings === "none"
+                            ? `${name} (+$${price.toFixed(2)})`  // if "none", replace
+                            : order.toppings
+                            ? `${order.toppings}, ${name} (+$${price.toFixed(2)})`  // add to existing toppings
+                            : `${name} (+$${price.toFixed(2)})`;  // if no toppings, set new topping
+                            
+                          const newPrice = parseFloat(order.price) + price;
+                          return {
+                            ...order,
+                            price: newPrice.toFixed(2),
+                            toppings: newToppings,
+                          };
+                        }
+                    
+                        // return other orders without modification
+                        return order;
                       });
                     });
                   }
