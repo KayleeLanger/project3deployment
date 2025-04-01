@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Employee.css";
 
-function EmployeeToppingsScreen({ setScreen , setSelectedCategory, OrderDetails, setorderDetails }) {
+function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, setorderDetails }) {
   const [selectedToppings, setSelectedToppings] = useState([]);
   //const [toppings, setToppings] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -121,17 +121,30 @@ function EmployeeToppingsScreen({ setScreen , setSelectedCategory, OrderDetails,
                 className={`topping-button ${selectedToppings.includes(name) ? "selected" : ""}`}
                 onClick={() => {
                   toggleTopping(name);
-                  setorderDetails(prevDetails => {
-                    return prevDetails.map((order) => {
-                      const newToppings = order.toppings ? `${order.toppings}, ${name} (+$${price.toFixed(2)})` : `${name} (+$${price.toFixed(2)})`;
-                      const newPrice = parseFloat(order.price) + price;
-                      return {
-                        ...order,
-                        price: newPrice.toFixed(2),
-                        toppings: newToppings,
-                      };
+                  if (selectedCategory === "Toppings") {
+                    setorderDetails(prevDetails => [
+                      ...prevDetails,
+                      {
+                        name: name, 
+                        price: price.toFixed(2), 
+                        size: "n/a",
+                        ice: "n/a",
+                        sweetness: "n/a",
+                        toppings: "n/a"
+                    }]);
+                  } else {
+                    setorderDetails(prevDetails => {
+                      return prevDetails.map((order) => {
+                        const newToppings = order.toppings ? `${order.toppings}, ${name} (+$${price.toFixed(2)})` : `${name} (+$${price.toFixed(2)})`;
+                        const newPrice = parseFloat(order.price) + price;
+                        return {
+                          ...order,
+                          price: newPrice.toFixed(2),
+                          toppings: newToppings,
+                        };
+                      });
                     });
-                  });
+                  }
                 }}
               >
                 {name} (+${price.toFixed(2)})
@@ -153,12 +166,14 @@ function EmployeeToppingsScreen({ setScreen , setSelectedCategory, OrderDetails,
                     <h3>{orderdetails.name}</h3>
                     <h3>${orderdetails.price}</h3>
                 </div>
-                <p>
+                {orderdetails.ice !== "n/a" && (
+                  <p>
                     <strong>Size:</strong> {orderdetails.size} <br />
                     <strong>Ice:</strong> {orderdetails.ice} <br />
                     <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
                     <strong>Toppings:</strong> {orderdetails.toppings}
-                </p>
+                  </p>
+                )}
               </div>
             ))}
             {/* display order totals */}
