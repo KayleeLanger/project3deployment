@@ -94,7 +94,10 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
 			</tr><tr><h1>   </h1>
 			
 			</tr><tr>
-        <Button text="Back to Customization" onClick={() => setScreen("cashier-customization")} />
+        {selectedCategory !== "Toppings" && (
+          <Button text="Back to Customization" onClick={() => setScreen("cashier-customization")} />
+        )}
+
 				<Button text="Remove Current Item" onClick={() => {
 					setorderDetails(orderdetails.slice(0, orderdetails.length-1));
 					setScreen("cashier");
@@ -122,16 +125,39 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                 onClick={() => {
                   toggleTopping(name);
                   if (selectedCategory === "Toppings") {
-                    setorderDetails(prevDetails => [
-                      ...prevDetails,
-                      {
-                        name: name, 
-                        price: price.toFixed(2), 
-                        size: "n/a",
-                        ice: "n/a",
-                        sweetness: "n/a",
-                        toppings: "n/a"
-                    }]);
+                    setorderDetails(prevDetails => {
+                      // check if last item is "Topping Only"
+                      if (prevDetails.length > 0 && prevDetails[prevDetails.length - 1].name === "Topping Only") {
+                        // if last item is "Topping Only", overwrite it
+                        return prevDetails.map((order, index) => {
+                          if (index === prevDetails.length - 1) {
+                            return {
+                              ...order,
+                              name: name, 
+                              price: price.toFixed(2), 
+                              size: "n/a",
+                              ice: "n/a",
+                              sweetness: "n/a",
+                              toppings: "n/a"
+                            };
+                          }
+                          return order;
+                        });
+                      } else {
+                        // if not, add new item
+                        return [
+                          ...prevDetails,
+                          {
+                            name: name,
+                            price: price.toFixed(2),
+                            size: "n/a",
+                            ice: "n/a",
+                            sweetness: "n/a",
+                            toppings: "n/a"
+                          }
+                        ];
+                      }
+                    });
                   } else {
                     setorderDetails(prevDetails => {
                       return prevDetails.map((order, index) => {
@@ -168,26 +194,30 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
       <div className="order">
         <h1>Order Summary</h1>
         {/* loop through order items and display */}
-		    {orderdetails && orderdetails.length > 0 ? ( 
+        {orderdetails && orderdetails.length > 0 ? ( 
           <>
             {orderdetails.map((orderdetails, index) => (
               <div className="order-item">
                 <div className="order-header">
-                    <h3>{orderdetails.name}</h3>
-                    <h3>${orderdetails.price}</h3>
+                  {orderdetails.name !== "Topping Only" && (
+                    <>
+                      <h3>{orderdetails.name}</h3>
+                      <h3>${orderdetails.price}</h3>
+                      {orderdetails.ice !== "n/a" && (
+                        <p>
+                          <strong>Size:</strong> {orderdetails.size} <br />
+                          <strong>Ice:</strong> {orderdetails.ice} <br />
+                          <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
+                          <strong>Toppings:</strong> {orderdetails.toppings}
+                        </p>
+                      )}
+                    </>
+                  )}
                 </div>
-                {orderdetails.ice !== "n/a" && (
-                  <p>
-                    <strong>Size:</strong> {orderdetails.size} <br />
-                    <strong>Ice:</strong> {orderdetails.ice} <br />
-                    <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
-                    <strong>Toppings:</strong> {orderdetails.toppings}
-                  </p>
-                )}
               </div>
             ))}
             {/* display order totals */}
-            <div className = "order-total">
+            <div className = "order-total" style={{ textAlign: "right" }}>
               <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
               <h3>Tax: ${tax.toFixed(2)} </h3>
               <h2>Total: ${total.toFixed(2)}</h2>

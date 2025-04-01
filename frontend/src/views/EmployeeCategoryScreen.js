@@ -100,6 +100,16 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
                     setSelectedCategory(category.name); //update cat and switch page
                     if (category.name === "Toppings") {
                       setScreen("cashier-toppings");
+                      setorderDetails(prevDetails => [ // add in place holder for topping only
+                        ...prevDetails,
+                        {
+                          name: "Topping Only", 
+                          price: "", 
+                          size: "n/a",
+                          ice: "n/a",
+                          sweetness: "n/a",
+                          toppings: "n/a"
+                        }]);
                     } else {
                       setScreen("cashier-drinks");
                     }
@@ -146,7 +156,7 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
               </div>
             ))}
             {/* display order totals */}
-            <div className = "order-total">
+            <div className = "order-total" style={{ textAlign: "right" }}>
               <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
               <h3>Tax: ${tax.toFixed(2)} </h3>
               <h2>Total: ${total.toFixed(2)}</h2>
