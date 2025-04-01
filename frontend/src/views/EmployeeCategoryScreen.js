@@ -160,10 +160,12 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
         <Button text="Add More" 
           onClick={() => {
             setScreen("cashier"); 
+            defaultVal(orderdetails, setorderDetails);
           }} />
         <Button text="Checkout" 
           onClick={() => {
             checkout(orderdetails.length , total.toFixed(2));
+            defaultVal(orderdetails, setorderDetails);
             setScreen("cashier"); 
             alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
             setorderDetails([]);
@@ -191,12 +193,35 @@ function CategoryButton({ text, onClick }) {
         onClick={onClick}>{text}</button>;
 }
 
+function defaultVal (orders, setOrders) {
+	// copy of orderdetails
+	const updatedOrderDetails = [...orders];
+	
+	// last item in order
+	const lastOrder = updatedOrderDetails[updatedOrderDetails.length - 1];
+	
+	if (lastOrder.size === "") {
+		lastOrder.size = "regular";
+	}
+	if (lastOrder.ice === "") {
+		lastOrder.ice = "regular";
+	}
+	if (lastOrder.sweetness === "") {
+		lastOrder.sweetness = "100%";
+	}
+	if (lastOrder.toppings === "") {
+		lastOrder.toppings = "none";
+	}
+
+	setOrders(updatedOrderDetails);
+}
+
 function checkout (numItems, orderTotal) {
   const executeCheckout = async () => {
     try {
       const orderDate = getCurrentDateTime();
       console.log(orderDate);
-      const employeeId = '123460';                // NEED TO FILL WITH PROPER ID
+      const employeeId = '123460';
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/checkout`, {
         method: 'POST',
         headers: {
