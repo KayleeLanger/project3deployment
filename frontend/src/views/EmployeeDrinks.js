@@ -145,12 +145,14 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
                     <h3>{orderdetails.name}</h3>
                     <h3>${orderdetails.price}</h3>
                 </div>
-                <p>
+                {orderdetails.ice !== "n/a" && (
+                  <p>
                     <strong>Size:</strong> {orderdetails.size} <br />
                     <strong>Ice:</strong> {orderdetails.ice} <br />
                     <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
                     <strong>Toppings:</strong> {orderdetails.toppings}
-                </p>
+                  </p>
+                )}
               </div>
             ))}
             {/* display order totals */}

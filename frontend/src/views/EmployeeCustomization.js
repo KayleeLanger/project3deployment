@@ -121,12 +121,14 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 				<h3>{orderdetails.name}</h3>
 				<h3>${orderdetails.price}</h3>
 				</div>
-				<p>
-					<strong>Size:</strong> {orderdetails.size} <br />
-					<strong>Ice:</strong> {orderdetails.ice} <br />
-					<strong>Sweetness:</strong> {orderdetails.sweetness} <br />
-					<strong>Toppings:</strong> {orderdetails.toppings}
-				</p>
+				{orderdetails.ice !== "n/a" && (
+                	<p>
+						<strong>Size:</strong> {orderdetails.size} <br />
+						<strong>Ice:</strong> {orderdetails.ice} <br />
+						<strong>Sweetness:</strong> {orderdetails.sweetness} <br />
+						<strong>Toppings:</strong> {orderdetails.toppings}
+                	</p>
+                )}
 			</div>
 			</>
 			))) : (
