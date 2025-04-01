@@ -135,7 +135,11 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                   } else {
                     setorderDetails(prevDetails => {
                       return prevDetails.map((order) => {
-                        const newToppings = order.toppings ? `${order.toppings}, ${name} (+$${price.toFixed(2)})` : `${name} (+$${price.toFixed(2)})`;
+                        const newToppings = order.toppings === "none"
+                          ? `${name} (+$${price.toFixed(2)})`  // if "none", replace
+                          : order.toppings
+                          ? `${order.toppings}, ${name} (+$${price.toFixed(2)})`  // add to existing toppings
+                          : `${name} (+$${price.toFixed(2)})`;  // if no toppings, set new topping
                         const newPrice = parseFloat(order.price) + price;
                         return {
                           ...order,
@@ -190,10 +194,12 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
       <Button text="Add More" 
 				onClick={() => {
 					setScreen("cashier"); 
+          defaultVal(orderdetails, setorderDetails);
 				}} />
 			<Button text="Checkout" 
         onClick={() => {
           checkout(orderdetails.length , total.toFixed(2));
+          defaultVal(orderdetails, setorderDetails);
           setScreen("cashier"); 
           alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
           setorderDetails([]);
@@ -207,12 +213,35 @@ function Button({ text, onClick }) {
   return <button onClick={onClick}>{text}</button>;
 }
 
+function defaultVal (orders, setOrders) {
+	// copy of orderdetails
+	const updatedOrderDetails = [...orders];
+	
+	// last item in order
+	const lastOrder = updatedOrderDetails[updatedOrderDetails.length - 1];
+	
+	if (lastOrder.size === "") {
+		lastOrder.size = "regular";
+	}
+	if (lastOrder.ice === "") {
+		lastOrder.ice = "regular";
+	}
+	if (lastOrder.sweetness === "") {
+		lastOrder.sweetness = "100%";
+	}
+	if (lastOrder.toppings === "") {
+		lastOrder.toppings = "none";
+	}
+
+	setOrders(updatedOrderDetails);
+}
+
 function checkout (numItems, orderTotal) {
   const executeCheckout = async () => {
     try {
       const orderDate = getCurrentDateTime();
       console.log(orderDate);
-      const employeeId = '123460';                // NEED TO FILL WITH PROPER ID
+      const employeeId = '123460';
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/checkout`, {
         method: 'POST',
         headers: {

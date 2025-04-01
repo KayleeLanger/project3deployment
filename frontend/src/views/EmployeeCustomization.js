@@ -87,7 +87,10 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 			 <IceSelector selectedIce={ice} setSelectedIce={setIce} details={orderdetails} setDetails={setorderDetails} />
 			 <SweetnessSelector selectedSweetness={sweetness} setSelectedSweetness={setSweetness} details={orderdetails} setDetails={setorderDetails} />
 
-			 <button onClick={() => setScreen("cashier-toppings")}
+			 <button onClick={() => ( 
+				setScreen("cashier-toppings"), 
+				defaultVal(orderdetails, setorderDetails)
+				)}
   				style={{
     				padding: "10px 20px",
     				borderRadius: "15px",
@@ -143,11 +146,14 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 	
 			<Button text="Add More" 
 				onClick={() => {
-					setScreen("cashier"); 
+					setScreen("cashier");
+					defaultVal(orderdetails, setorderDetails);
 				}} />
+
 			<Button text="Checkout" 
 				onClick={() => {
 					checkout(orderdetails.length , total.toFixed(2));
+					defaultVal(orderdetails, setorderDetails);
 					setScreen("cashier"); 
 					alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
 					setorderDetails([]);
@@ -169,6 +175,29 @@ function customize(option, custom, details , setDetails) {
 		[option]: custom,
 	};
 	setDetails(details);
+}
+
+function defaultVal (orders, setOrders) {
+	// copy of orderdetails
+	const updatedOrderDetails = [...orders];
+	
+	// last item in order
+	const lastOrder = updatedOrderDetails[updatedOrderDetails.length - 1];
+	
+	if (lastOrder.size === "") {
+		lastOrder.size = "regular";
+	}
+	if (lastOrder.ice === "") {
+		lastOrder.ice = "regular";
+	}
+	if (lastOrder.sweetness === "") {
+		lastOrder.sweetness = "100%";
+	}
+	if (lastOrder.toppings === "") {
+		lastOrder.toppings = "none";
+	}
+
+	setOrders(updatedOrderDetails);
 }
 
 function SizeSelector({ selectedSize, setSelectedSize , details , setDetails }) {
@@ -267,7 +296,7 @@ function checkout (numItems, orderTotal) {
     try {
       const orderDate = getCurrentDateTime();
       console.log(orderDate);
-      const employeeId = '123460';                // NEED TO FILL WITH PROPER ID
+      const employeeId = '123460';
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/checkout`, {
         method: 'POST',
         headers: {
