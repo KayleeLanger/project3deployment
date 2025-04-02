@@ -1,19 +1,19 @@
-
 export function Button({ text, onClick }) {
     return <button onClick={onClick}>{text}</button>;
 }
 
 export function CategoryButton({ text, onClick }) {
     return <button
-    style={{
-        backgroundColor: "rgb(19, 90, 120)",
-        color: "white" ,
-        width: "200px",
-        height: "200px",
-        margin: "20px",
-        padding: "20px"
-        }}
-        onClick={onClick}>{text}</button>;
+        style={{
+            backgroundColor: "rgb(19, 90, 120)",
+            color: "white" ,
+            width: "200px",
+            height: "200px",
+            margin: "20px",
+            padding: "20px"
+            }}
+            onClick={onClick}>{text}
+    </button>;
 }
 
 export function defaultVal (orders, setOrders) {
