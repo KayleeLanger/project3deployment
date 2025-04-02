@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState } from "react"; // might have to also use useEffect for backend purposes
 import "./Employee.css";
 
 function EmployeeToppingsScreen({ setScreen }) {
   const [selectedToppings, setSelectedToppings] = useState([]);
 
-  // Hardcoded toppings for now — backend will replace this later
+  // Hardcoded toppings for now, backend will replace this later
   const toppings = [
     { name: "Pearl", price: 0.50 },
     { name: "Mini Pearl", price: 0.50 },
