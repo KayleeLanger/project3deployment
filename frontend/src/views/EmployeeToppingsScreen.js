@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Employee.css";
+import * as functions from "./functions.js";
 
 function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, setorderDetails }) {
   const [selectedToppings, setSelectedToppings] = useState([]);
@@ -95,21 +96,21 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
 			
 			</tr><tr>
         {selectedCategory !== "Toppings" && (
-          <Button text="Back to Customization" onClick={() => setScreen("cashier-customization")} />
+          <functions.Button text="Back to Customization" onClick={() => setScreen("cashier-customization")} />
         )}
 
-				<Button text="Remove Current Item" onClick={() => {
+				<functions.Button text="Remove Current Item" onClick={() => {
 					setorderDetails(orderdetails.slice(0, orderdetails.length-1));
 					setScreen("cashier");
 				}} />
 			</tr><tr>
 				{/* Clear order and start over */}
-				<Button text="Clear Order" onClick={() => {
+				<functions.Button text="Clear Order" onClick={() => {
 					setScreen("cashier");
 					setorderDetails([]);
 				}} />
 			</tr><tr>
-				<Button text="Logout" onClick={() => setScreen("home")} />
+				<functions.Button text="Logout" onClick={() => setScreen("home")} />
 			</tr></table>
 		</div>
 
@@ -227,15 +228,15 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
           <p>Add a Drink To Get Started!</p>
         )}
         
-      <Button text="Add More" 
+      <functions.Button text="Add More" 
 				onClick={() => {
 					setScreen("cashier"); 
-          defaultVal(orderdetails, setorderDetails);
+          functions.defaultVal(orderdetails, setorderDetails);
 				}} />
-			<Button text="Checkout" 
+			<functions.Button text="Checkout" 
         onClick={() => {
-          checkout(orderdetails.length , total.toFixed(2));
-          defaultVal(orderdetails, setorderDetails);
+          functions.checkout(orderdetails.length , total.toFixed(2));
+          functions.defaultVal(orderdetails, setorderDetails);
           setScreen("cashier"); 
           alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
           setorderDetails([]);
@@ -243,75 +244,6 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
       </div>
     </>
   );
-}
-
-function Button({ text, onClick }) {
-  return <button onClick={onClick}>{text}</button>;
-}
-
-function defaultVal (orders, setOrders) {
-	// copy of orderdetails
-	const updatedOrderDetails = [...orders];
-	
-	// last item in order
-	const lastOrder = updatedOrderDetails[updatedOrderDetails.length - 1];
-	
-	if (lastOrder.size === "") {
-		lastOrder.size = "regular";
-	}
-	if (lastOrder.ice === "") {
-		lastOrder.ice = "regular";
-	}
-	if (lastOrder.sweetness === "") {
-		lastOrder.sweetness = "100%";
-	}
-	if (lastOrder.toppings === "") {
-		lastOrder.toppings = "none";
-	}
-
-	setOrders(updatedOrderDetails);
-}
-
-function checkout (numItems, orderTotal) {
-  const executeCheckout = async () => {
-    try {
-      const orderDate = getCurrentDateTime();
-      console.log(orderDate);
-      const employeeId = '123460';
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          numItems,
-          orderTotal,
-          orderDate,
-          employeeId,
-        }),
-      });
-      if (!response.ok) throw new Error ("Failed to place order");
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  executeCheckout();
-}
-
-function getCurrentDateTime() {
-  const currentDate = new Date();
-
-  const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  const day = String(currentDate.getDate()).padStart(2, '0');
-
-  const hours = String(currentDate.getHours()).padStart(2, '0');
-  const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-  const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
 export default EmployeeToppingsScreen;
