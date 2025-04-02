@@ -124,6 +124,14 @@ button {
     background-color: #3b82f6;
 }
 
+.selected {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    border: 2px solid white;
+    box-shadow: 0 0 8px rgba(0, 0,0, 0.3);
+}
+
 /* For Employee Toppings Screen -Long*/
 .toppings-grid {
     display: grid;
