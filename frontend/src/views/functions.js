@@ -16,6 +16,27 @@ export function CategoryButton({ text, onClick }) {
     </button>;
 }
 
+
+export function SideButton({ text, onClick }) {
+    return <button
+        style={{
+            backgroundColor: "rgb(99, 99, 99)",
+            color: "white" ,
+            fontFamily: "Verdana, Tahoma, sans-serif",
+            width: "250px",
+            height: "45px",
+            padding: "20px", 
+            margin: "5px",
+            border: "3px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            }}
+            onClick={onClick}>{text}
+    </button>;
+}
+
 export function defaultVal (orders, setOrders) {
     // copy of orderdetails
     const updatedOrderDetails = [...orders];
