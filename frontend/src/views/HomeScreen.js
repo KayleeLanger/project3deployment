@@ -29,6 +29,7 @@ function HomeScreen({ setScreen }) {
 				<Button text="Go to Cashier" onClick={() => setScreen("cashier")} />
 				<Button text="Go to Manager" onClick={() => setScreen("manager")} />
 				<Button text="Go to Customer" onClick={() => setScreen("customer")} />
+				<Button text="Go to Menu Board" onClick={() => setScreen("menu-board")} />
 			</div>
 		</div>
 	);
