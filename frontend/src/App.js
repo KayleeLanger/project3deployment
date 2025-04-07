@@ -1,5 +1,6 @@
 import { useState } from "react"; 
 import CustomerHome from "./views/CustomerHome.js";
+import CustomerDrinks from "./views/CustomerDrinks.js";
 import Inventory from "./views/Inventory";
 import EmployeeCategoryScreen from "./views/EmployeeCategoryScreen";
 import EmployeeToppingsScreen from "./views/EmployeeToppingsScreen.js";
@@ -64,6 +65,11 @@ function App() { //main function, will be mostly imports eventually
 			{/* customer */}
 			{screen === "customer" && <CustomerHome setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails} />}
+			{screen === "customer-drinks" && <CustomerDrinks setScreen={setScreen}
+										setSelectedCategory={setSelectedCategory}
+										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
 										setorderDetails={setOrderDetails} />}
 		</header>
