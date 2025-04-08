@@ -16,6 +16,48 @@ export function CategoryButton({ text, onClick }) {
     </button>;
 }
 
+
+export function SideButton({ text, onClick }) {
+    return <button
+        style={{
+            backgroundColor: "rgb(99, 99, 99)",
+            color: "white" ,
+            fontFamily: "Verdana, Tahoma, sans-serif",
+            width: "250px",
+            height: "45px",
+            padding: "20px", 
+            margin: "5px",
+            border: "3px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            }}
+            onClick={onClick}>{text}
+    </button>;
+}
+
+
+export function SpecialSideButton({ text, onClick }) {
+    return <button
+        style={{
+            backgroundColor: "rgb(50, 50, 50)",
+            color: "white" ,
+            fontFamily: "Verdana, Tahoma, sans-serif",
+            width: "250px",
+            height: "45px",
+            padding: "20px", 
+            margin: "5px",
+            border: "3px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            }}
+            onClick={onClick}>{text}
+    </button>;
+}
+
 export function defaultVal (orders, setOrders) {
     // copy of orderdetails
     const updatedOrderDetails = [...orders];
@@ -103,6 +145,52 @@ export function DrinkButton({ text, onClick }) {
     }}
     onClick={onClick}>{text}</button>;
 }
+
+export function CustomerDrinkButton({ text, image, onClick }) {
+    return (
+      <button
+        style={{
+         // Colors
+          backgroundColor: "#39D6DE",
+          color: "black",
+         // Button Spacing
+          width: "300px",
+          height: "300px",
+          margin: "20px",
+          padding: "10px",
+        // allowing for image
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        // rounded  edges/ border
+          border: "4px",
+          borderColor: "black",
+          borderRadius: "10px",
+        }}
+        onClick={onClick}
+      >
+        {/* IMAGE: Long you may need to edit this to get dimensions right for photos */}
+        {image && (
+          <img
+            src={image}
+            alt={text}
+            style={{
+              width: "100px",
+              height: "100px",
+              objectFit: "contain",
+              marginBottom: "10px"
+            }}
+          />
+        )}
+        <span style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}>
+          {text}
+        </span>
+      </button>
+    );
+  }
+  
+
 
 export function SizeSelector({ selectedSize, setSelectedSize , details , setDetails }) {
 	return (

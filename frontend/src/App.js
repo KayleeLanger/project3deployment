@@ -1,5 +1,6 @@
 import { useState } from "react"; 
-import logo from "./logo.svg";
+import CustomerHome from "./views/CustomerHome.js";
+import CustomerDrinks from "./views/CustomerDrinks.js";
 import Inventory from "./views/Inventory";
 import EmployeeCategoryScreen from "./views/EmployeeCategoryScreen";
 import EmployeeToppingsScreen from "./views/EmployeeToppingsScreen.js";
@@ -63,7 +64,15 @@ function App() { //main function, will be mostly imports eventually
 			
 
 			{/* customer */}
-			{screen === "customer" && <CustomerHomeScreen setScreen={setScreen} />}
+			{screen === "customer" && <CustomerHome setScreen={setScreen}
+										setSelectedCategory={setSelectedCategory}
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails} />}
+			{screen === "customer-drinks" && <CustomerDrinks setScreen={setScreen}
+										setSelectedCategory={setSelectedCategory}
+										selectedCategory={selectedCategory} 
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails} />}
 
 			{/* menu board */}
 			{screen === "menu-board" && <MenuBoard setScreen={setScreen} />}
@@ -97,16 +106,16 @@ function App() { //main function, will be mostly imports eventually
 
 
 /////////////////////// Cashier Pages ///////////////////////
-function CashierCategoriesScreen({ setScreen }) {
-	return (
-		<>
-		<h1>Cashier Categories</h1>
+// function CashierCategoriesScreen({ setScreen }) {
+// 	return (
+// 		<>
+// 		<h1>Cashier Categories</h1>
 		
-		<Button text="Logout" onClick={() => setScreen("home")} />
-		<Button text="Go to Drinks" onClick={() => setScreen("cashier-drinks")} />
-		</>
-	);
-}
+// 		<Button text="Logout" onClick={() => setScreen("home")} />
+// 		<Button text="Go to Drinks" onClick={() => setScreen("cashier-drinks")} />
+// 		</>
+// 	);
+// }
 
 
 
@@ -134,11 +143,5 @@ function ManagerScreen({ setScreen }) {
 }
 ///////////////////////////////////////////////////////////////////////
 
-////////////////////////////////Customer Pages//////////////////////////
-function CustomerHomeScreen({ setScreen }) {
-	return (
-		<Button text="Home" onClick={() => setScreen("home")} />
-	);
-}
-///////////////////////////////////////////////////////////////////////
+
 export default App;
