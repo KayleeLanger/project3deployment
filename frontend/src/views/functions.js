@@ -38,10 +38,10 @@ export function SideButton({ text, onClick }) {
 }
 
 
-export function SideButton2({ text, onClick }) {
+export function SpecialSideButton({ text, onClick }) {
     return <button
         style={{
-            backgroundColor: "rgb(189, 18, 18)",
+            backgroundColor: "rgb(50, 50, 50)",
             color: "white" ,
             fontFamily: "Verdana, Tahoma, sans-serif",
             width: "250px",

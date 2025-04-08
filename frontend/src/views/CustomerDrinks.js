@@ -59,10 +59,10 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                 <strong>{currentTime.toLocaleDateString()}</strong>
             </div>
 
-            {/* DRINK CATEGORIES if selected darker (SideButton1 vs SideButton2(special one)*/}
+            {/* DRINK CATEGORIES if selected darker (SideButton vs SpecialSideButton(special one)*/}
             {categories.map((category) =>
-              category.name === selectedCategory.name ? (
-                <functions.SideButton
+              category.name === selectedCategory ? (
+                <functions.SpecialSideButton
                 key={category.name}
                 text={category.name}
                 onClick={() => {
@@ -70,7 +70,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                 setScreen("customer-drinks");
               }}/>
             ) : (
-                <functions.SideButton2
+                <functions.SideButton
                   key={category.name}
                   text={category.name}
                   onClick={() => {
