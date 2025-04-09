@@ -139,7 +139,8 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                               size: "n/a",
                               ice: "n/a",
                               sweetness: "n/a",
-                              toppings: "n/a"
+                              toppings: "n/a",
+                              quantity: "1"
                             };
                           }
                           return order;
@@ -154,7 +155,8 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                             size: "n/a",
                             ice: "n/a",
                             sweetness: "n/a",
-                            toppings: "n/a"
+                            toppings: "n/a",
+                            quantity: "1"
                           }
                         ];
                       }
