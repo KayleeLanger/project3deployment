@@ -23,6 +23,7 @@ function App() { //main function, will be mostly imports eventually
 	const [screen, setScreen] = useState("home");
 	const [selectedCategory, setSelectedCategory] = useState(""); 
 	const [orderDetails, setOrderDetails] = useState([]); 
+	const [currentEditIdx, setCurrentEditIdx] = useState(null);
 	
 
 	return (
@@ -33,22 +34,28 @@ function App() { //main function, will be mostly imports eventually
 			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} />}
+										setorderDetails={setOrderDetails}
+										setCurrentEditIdx={setCurrentEditIdx} />}
 			{screen === "cashier-drinks" && <EmployeeDrinks setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} />}
+										setorderDetails={setOrderDetails}
+										setCurrentEditIdx={setCurrentEditIdx} />}
 			{screen === "cashier-customization" && <EmployeeCustomization setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} />}
+										setorderDetails={setOrderDetails}
+										currentEditIdx={currentEditIdx}
+										setCurrentEditIdx={setCurrentEditIdx} />}
 			{screen === "cashier-toppings" && <EmployeeToppingsScreen setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} />}
+										setorderDetails={setOrderDetails}
+										currentEditIdx={currentEditIdx}
+										setCurrentEditIdx={setCurrentEditIdx} />}
 
 
 			

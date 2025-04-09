@@ -3,11 +3,9 @@ import "./Employee.css";
 import * as functions from "./functions.js";
 
 
-function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDetails }) {
+function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDetails, setCurrentEditIdx }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [drinks, setDrinks] = useState([]);
-
-    //const [currentOrder, setState]=useState([]);
 
     // get drinks for category
     useEffect(() => {
@@ -28,7 +26,6 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
         setDrinks([]);  // reset drinks if error
       }
     };
-
 
     let orderdetails = [];
     if (OrderDetails.length > 0) {
@@ -141,20 +138,74 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
         {/* loop through order items and display */}
 		    {orderdetails && orderdetails.length > 0 ? ( 
           <>
-            {orderdetails.map((orderdetails, index) => (
+            {orderdetails.map((order, index) => (
               <div className="order-item">
-                <div className="order-header">
-                    <h3>{orderdetails.name}</h3>
-                    <h3>${orderdetails.price}</h3>
+                <div className = "order-left">
+                  {/* Delete button */}
+                  <functions.Button text="X" 
+                    onClick={() => {
+                      functions.deleteItem(index, orderdetails, setorderDetails);
+                      console.log("Delete button clicked for", order.name);
+                    }} 
+                  />
+                  <div className = "quantity">
+                    <button
+                      onClick={() => {
+                        const updated = [...orderdetails];
+                        const currentQty = parseInt(order.quantity) || 1;
+                        updated[index].quantity = Math.max(1, currentQty - 1);
+                        setorderDetails(updated);
+                      }}
+                    >
+                      –
+                    </button>
+
+                    <input
+                      type="number"
+                      min="1"
+                      className="quantity-input"
+                      value={order.quantity}
+                      onChange={(e) => {
+                        const newQty = parseInt(e.target.value) || 1;
+                        const updated = [...orderdetails];
+                        updated[index].quantity = newQty;
+                        setorderDetails(updated);
+                      }}
+                    />
+
+                    <button
+                      onClick={() => {
+                        const updated = [...orderdetails];
+                        const currentQty = parseInt(order.quantity) || 1;
+                        updated[index].quantity = currentQty + 1;
+                        setorderDetails(updated);
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-                {orderdetails.ice !== "n/a" && (
-                  <p>
-                    <strong>Size:</strong> {orderdetails.size} <br />
-                    <strong>Ice:</strong> {orderdetails.ice} <br />
-                    <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
-                    <strong>Toppings:</strong> {orderdetails.toppings}
-                  </p>
-                )}
+                <div className = "order-content">
+                  <div className="order-header">
+                      <h3>{order.name}</h3>
+                      <h3>${order.price}</h3>
+                  </div>
+                  {order.ice !== "n/a" && (
+                    <p>
+                      <strong>Size:</strong> {order.size} <br />
+                      <strong>Ice:</strong> {order.ice} <br />
+                      <strong>Sweetness:</strong> {order.sweetness} <br />
+                      <strong>Toppings:</strong> {order.toppings}
+                    </p>
+                  )}
+                </div>
+                {/* Edit item button */}
+                <functions.Button text="Edit" 
+                  onClick={() => {
+                    functions.editItem(index, setCurrentEditIdx, setScreen);
+                    console.log("Edit button clicked for", order.name);
+                  }} 
+                />
               </div>
             ))}
             {/* display order totals */}

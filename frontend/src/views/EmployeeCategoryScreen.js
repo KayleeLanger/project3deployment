@@ -3,9 +3,8 @@ import "./Employee.css";
 import * as functions from "./functions.js";
 
 
-function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, setorderDetails }) {
+function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, setorderDetails, setCurrentEditIdx}) {
     const [currentTime, setCurrentTime] = useState(new Date());
-    // const [currentOrder, setState]=useState()
 
 
     /// category list: hardcoded since categories won't change, only drinks
@@ -13,7 +12,6 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
 
 
     // TODO: Update order details
-    //const orderdetails= [{name: "Item1", price: "4.00", ice: "25%", sweetness:"100%", toppings:"boba"}, {name: "Item2", price: "2.00", ice: "50%", sweetness:"109%", toppings:"creama"}];
     let orderdetails = [];
     if (OrderDetails.length > 0) {
       orderdetails = OrderDetails;
@@ -144,7 +142,6 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
                   {/* Delete button */}
                   <functions.Button text="X" 
                     onClick={() => {
-                      // Example logic: move item up or edit
                       functions.deleteItem(index, orderdetails, setorderDetails);
                       console.log("Delete button clicked for", order.name);
                     }} 
@@ -168,7 +165,7 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
                       value={order.quantity}
                       onChange={(e) => {
                         const newQty = parseInt(e.target.value) || 1;
-                        const updated = [...order];
+                        const updated = [...orderdetails];
                         updated[index].quantity = newQty;
                         setorderDetails(updated);
                       }}
@@ -203,8 +200,8 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
                 {/* Edit item button */}
                 <functions.Button text="Edit" 
                   onClick={() => {
-                    functions.editItem(index, orderdetails, setorderDetails);
-                    console.log("Right button clicked for", order.name);
+                    functions.editItem(index, setCurrentEditIdx, setScreen);
+                    console.log("Edit button clicked for", order.name);
                   }} 
                 />
               </div>
@@ -228,7 +225,8 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
           }} />
         <functions.Button text="Checkout" 
           onClick={() => {
-            functions.checkout(orderdetails.length , total.toFixed(2));
+            const totalItems = orderdetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
+            functions.checkout(totalItems , total.toFixed(2));
             functions.defaultVal(orderdetails, setorderDetails);
             setScreen("cashier"); 
             alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));

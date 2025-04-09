@@ -148,51 +148,51 @@ export function DrinkButton({ text, onClick }) {
 
 export function CustomerDrinkButton({ text, image, onClick }) {
     return (
-      <button
-        style={{
-         // Colors
-          backgroundColor: "#39D6DE",
-          color: "black",
-         // Button Spacing
-          width: "300px",
-          height: "300px",
-          margin: "20px",
-          padding: "10px",
-        // allowing for image
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        // rounded  edges/ border
-          border: "4px",
-          borderColor: "black",
-          borderRadius: "10px",
-        }}
-        onClick={onClick}
-      >
+        <button
+            style={{
+            // Colors
+            backgroundColor: "#39D6DE",
+            color: "black",
+            // Button Spacing
+            width: "300px",
+            height: "300px",
+            margin: "20px",
+            padding: "10px",
+            // allowing for image
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            // rounded  edges/ border
+            border: "4px",
+            borderColor: "black",
+            borderRadius: "10px",
+            }}
+            onClick={onClick}
+        >
         {/* IMAGE: Long you may need to edit this to get dimensions right for photos */}
         {image && (
-          <img
-            src={image}
-            alt={text}
-            style={{
-              width: "100px",
-              height: "100px",
-              objectFit: "contain",
-              marginBottom: "10px"
-            }}
-          />
+            <img
+                src={image}
+                alt={text}
+                style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "contain",
+                    marginBottom: "10px"
+                }}
+            />
         )}
         <span style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}>
-          {text}
+            
         </span>
-      </button>
+        </button>
     );
-  }
-  
+}
 
 
-export function SizeSelector({ selectedSize, setSelectedSize , details , setDetails }) {
+
+export function SizeSelector({ selectedSize, setSelectedSize , details , setDetails, currentEditIdx }) {
 	return (
 	    <div className="option-row">
             <div className="option-label">Size</div>
@@ -201,7 +201,7 @@ export function SizeSelector({ selectedSize, setSelectedSize , details , setDeta
                 className={selectedSize === "regular" ? "selected" : ""}
                 onClick={() => {
                     setSelectedSize("regular");
-                    customize("size", "regular", details, setDetails);
+                    customize("size", "regular", details, setDetails, currentEditIdx);
                 }}
             >
                 Regular
@@ -210,7 +210,7 @@ export function SizeSelector({ selectedSize, setSelectedSize , details , setDeta
                 className={selectedSize === "large" ? "selected" : ""}
                 onClick={() => {
                     setSelectedSize("large");
-                    customize("size", "large", details, setDetails);
+                    customize("size", "large", details, setDetails, currentEditIdx);
                 }}
             >
                 Large
@@ -220,7 +220,7 @@ export function SizeSelector({ selectedSize, setSelectedSize , details , setDeta
     );
 }
 
-export function IceSelector({ selectedIce, setSelectedIce , details , setDetails }) {
+export function IceSelector({ selectedIce, setSelectedIce , details , setDetails, currentEditIdx }) {
 	return (
 	    <div className="option-row">
             <div className="option-label">Ice</div>
@@ -229,7 +229,7 @@ export function IceSelector({ selectedIce, setSelectedIce , details , setDetails
                 className={selectedIce === "no" ? "selected" : ""}
                 onClick={() => {
                     setSelectedIce("no");
-                    customize("ice", "no" , details, setDetails);
+                    customize("ice", "no" , details, setDetails, currentEditIdx);
                 }}
             >
                 No
@@ -238,7 +238,7 @@ export function IceSelector({ selectedIce, setSelectedIce , details , setDetails
                 className={selectedIce === "less" ? "selected" : ""}
                 onClick={() => {
                     setSelectedIce("less");
-                    customize("ice", "less" , details, setDetails);
+                    customize("ice", "less" , details, setDetails, currentEditIdx);
                 }}
             >
                 Less
@@ -247,7 +247,7 @@ export function IceSelector({ selectedIce, setSelectedIce , details , setDetails
                 className={selectedIce === "regular" ? "selected" : ""}
                 onClick={() => {
                     setSelectedIce("regular");
-                    customize("ice", "regular" , details, setDetails);
+                    customize("ice", "regular" , details, setDetails, currentEditIdx);
                 }}
             >
                 Regular
@@ -257,11 +257,11 @@ export function IceSelector({ selectedIce, setSelectedIce , details , setDetails
 	);
 }
 
-export function SweetnessSelector({selectedSweetness, setSelectedSweetness, details , setDetails}) {  
+export function SweetnessSelector({selectedSweetness, setSelectedSweetness, details , setDetails, currentEditIdx}) {  
 	const sweetnessOptions = ["0%", "25%", "50%", "75%", "100%"];
 
 	return (
-	    <div className="option-row">
+        <div className="option-row">
             <div className="option-label">Sweetness</div>
 
             <div className="option-buttons">
@@ -270,7 +270,7 @@ export function SweetnessSelector({selectedSweetness, setSelectedSweetness, deta
                 key={option}
                 onClick={() => {
                     setSelectedSweetness(option);
-                    customize("sweetness", option , details, setDetails);
+                    customize("sweetness", option , details, setDetails, currentEditIdx);
                 }}
                 className={selectedSweetness === option ? "selected" : ""}
                 >
@@ -282,20 +282,26 @@ export function SweetnessSelector({selectedSweetness, setSelectedSweetness, deta
 	);
 }
 
-export function customize(option, custom, details, setDetails) {
-	details[details.length - 1] = {
-		...details[details.length - 1],
+export function customize(option, custom, details, setDetails, currentEditIdx) {
+	const idx = currentEditIdx != null ? currentEditIdx : details.length - 1;
+    details[idx] = {
+		...details[idx],
 		[option]: custom,
 	};
 	setDetails(details);
 }
 
-export function deleteItem(index, orderdetails, setorderDetails) {
+export function deleteItem(index, orderdetails, setorderDetails, setScreen) {
     const updated = [...orderdetails];
     updated.splice(index, 1);
     setorderDetails(updated);
+
+    if (setScreen && index === orderdetails.length - 1) {
+        setScreen("cashier");
+    }
 }
 
-export function editItem(index, orderdetails, setorderDetails) {
-
+export function editItem(index, setCurrentEditIdx, setScreen) {
+    setCurrentEditIdx(index);
+    setScreen("cashier-customization");
 }
