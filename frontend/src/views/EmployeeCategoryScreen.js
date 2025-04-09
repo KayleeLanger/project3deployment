@@ -21,7 +21,8 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
 
     const subtotal = orderdetails.reduce((subtotal, order) => {
       const price = parseFloat(order.price);
-      return !isNaN(price) ? subtotal + price: subtotal;
+      const qty = parseInt(order.quantity);
+      return !isNaN(price) ? subtotal + price * qty: subtotal;
     }, 0);
   
     const tax = subtotal * 0.08;
@@ -65,7 +66,7 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
         </tr><tr><h1>   </h1>
 
 
-       
+      
         </tr><tr>
             {/* Clear order and start over */}
             <functions.Button text="Clear Order" onClick={() => {
@@ -95,9 +96,9 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
           {categories.map(category=> (
             <div class= "buttonBox">
             <functions.CategoryButton
-                 key={category.name}
-                 text={category.name}
-                 onClick={() =>  {
+                  key={category.name}
+                  text={category.name}
+                  onClick={() =>  {
                     setSelectedCategory(category.name); //update cat and switch page
                     if (category.name === "Toppings") {
                       setScreen("cashier-toppings");
@@ -109,22 +110,19 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
                           size: "n/a",
                           ice: "n/a",
                           sweetness: "n/a",
-                          toppings: "n/a"
+                          toppings: "n/a",
+                          quantity: "1"
                         }]);
                     } else {
                       setScreen("cashier-drinks");
                     }
                   }}
-                 
-                 ></functions.CategoryButton> </div>
+                
+                ></functions.CategoryButton> </div>
           ))}
-         
-
-
-        </div>
-       
       </div>
-      </div>
+    </div>
+    </div>
 
 
 
@@ -140,20 +138,75 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
         {/* check if items in order is greater than zero, if so then add items.  */}
         {orderdetails && orderdetails.length > 0 ? ( 
           <>
-            {orderdetails.map((orderdetails, index) => (
+            {orderdetails.map((order, index) => (
               <div className="order-item">
-                <div className="order-header">
-                    <h3>{orderdetails.name}</h3>
-                    <h3>${orderdetails.price}</h3>
+                <div className = "order-left">
+                  {/* Delete button */}
+                  <functions.Button text="X" 
+                    onClick={() => {
+                      // Example logic: move item up or edit
+                      functions.deleteItem(index, orderdetails, setorderDetails);
+                      console.log("Delete button clicked for", order.name);
+                    }} 
+                  />
+                  <div className = "quantity">
+                    <button
+                      onClick={() => {
+                        const updated = [...orderdetails];
+                        const currentQty = parseInt(order.quantity) || 1;
+                        updated[index].quantity = Math.max(1, currentQty - 1);
+                        setorderDetails(updated);
+                      }}
+                    >
+                      –
+                    </button>
+
+                    <input
+                      type="number"
+                      min="1"
+                      className="quantity-input"
+                      value={order.quantity}
+                      onChange={(e) => {
+                        const newQty = parseInt(e.target.value) || 1;
+                        const updated = [...order];
+                        updated[index].quantity = newQty;
+                        setorderDetails(updated);
+                      }}
+                    />
+
+                    <button
+                      onClick={() => {
+                        const updated = [...orderdetails];
+                        const currentQty = parseInt(order.quantity) || 1;
+                        updated[index].quantity = currentQty + 1;
+                        setorderDetails(updated);
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-                {orderdetails.ice !== "n/a" && (
-                  <p>
-                    <strong>Size:</strong> {orderdetails.size} <br />
-                    <strong>Ice:</strong> {orderdetails.ice} <br />
-                    <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
-                    <strong>Toppings:</strong> {orderdetails.toppings}
-                  </p>
-                )}
+                <div className = "order-content">
+                  <div className="order-header">
+                      <h3>{order.name}</h3>
+                      <h3>${order.price}</h3>
+                  </div>
+                  {order.ice !== "n/a" && (
+                    <p>
+                      <strong>Size:</strong> {order.size} <br />
+                      <strong>Ice:</strong> {order.ice} <br />
+                      <strong>Sweetness:</strong> {order.sweetness} <br />
+                      <strong>Toppings:</strong> {order.toppings}
+                    </p>
+                  )}
+                </div>
+                {/* Edit item button */}
+                <functions.Button text="Edit" 
+                  onClick={() => {
+                    functions.editItem(index, orderdetails, setorderDetails);
+                    console.log("Right button clicked for", order.name);
+                  }} 
+                />
               </div>
             ))}
             {/* display order totals */}

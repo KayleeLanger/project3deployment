@@ -116,7 +116,8 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
                           size: "",
                           ice: "",
                           sweetness: "",
-                          toppings: ""
+                          toppings: "",
+                          quantity: "1"
                       }]);
                       setScreen("cashier-customization");
                     }}

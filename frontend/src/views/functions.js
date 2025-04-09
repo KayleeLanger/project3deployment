@@ -282,10 +282,20 @@ export function SweetnessSelector({selectedSweetness, setSelectedSweetness, deta
 	);
 }
 
-export function customize(option, custom, details , setDetails) {
+export function customize(option, custom, details, setDetails) {
 	details[details.length - 1] = {
 		...details[details.length - 1],
 		[option]: custom,
 	};
 	setDetails(details);
+}
+
+export function deleteItem(index, orderdetails, setorderDetails) {
+    const updated = [...orderdetails];
+    updated.splice(index, 1);
+    setorderDetails(updated);
+}
+
+export function editItem(index, orderdetails, setorderDetails) {
+
 }
