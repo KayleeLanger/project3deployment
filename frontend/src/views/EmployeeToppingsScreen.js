@@ -59,13 +59,13 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
   }
 
   useEffect(() => {
+    const idx = currentEditIdx != null ? currentEditIdx : orderdetails.length - 1;
     if (
-      currentEditIdx != null &&
-      orderdetails[currentEditIdx] &&
-      orderdetails[currentEditIdx].toppings &&
-      orderdetails[currentEditIdx].toppings !== "none"
+      orderdetails[idx] &&
+      orderdetails[idx].toppings &&
+      orderdetails[idx].toppings !== "none"
     ) {
-      const toppingsList = orderdetails[currentEditIdx].toppings
+      const toppingsList = orderdetails[idx].toppings
         .split(", ")
         .map(t => t.split(" (+")[0]); // Strip out the " (+$...)" part
       setSelectedToppings(toppingsList);
@@ -77,7 +77,8 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
 
   const subtotal = orderdetails.reduce((subtotal, order) => {
     const price = parseFloat(order.price);
-    return !isNaN(price) ? subtotal + price: subtotal;
+    const qty = parseInt(order.quantity);
+    return !isNaN(price) ? subtotal + price * qty: subtotal;
   }, 0);
 
   const tax = subtotal * 0.08;
@@ -314,15 +315,15 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
           functions.defaultVal(orderdetails, setorderDetails);
           setCurrentEditIdx(null);
 				}} />
-			<functions.Button text="Checkout" 
-        onClick={() => {
-          functions.checkout(orderdetails.length , total.toFixed(2));
-          functions.defaultVal(orderdetails, setorderDetails);
-          setScreen("cashier"); 
-          alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
-          setorderDetails([]);
-          setCurrentEditIdx(null);
-        }} />
+        <functions.Button text="Checkout" 
+          onClick={() => {
+            const totalItems = orderdetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
+            functions.checkout(totalItems , total.toFixed(2));
+            functions.defaultVal(orderdetails, setorderDetails);
+            setScreen("cashier"); 
+            alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
+            setorderDetails([]);
+          }} />
       </div>
     </>
   );

@@ -34,7 +34,8 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
 
     const subtotal = orderdetails.reduce((subtotal, order) => {
       const price = parseFloat(order.price);
-      return !isNaN(price) ? subtotal + price: subtotal;
+      const qty = parseInt(order.quantity);
+      return !isNaN(price) ? subtotal + price * qty: subtotal;
     }, 0);
   
     const tax = subtotal * 0.08;
@@ -224,9 +225,10 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
 					setScreen("cashier"); 
           functions.defaultVal(orderdetails, setorderDetails);
 				}} />
-			<functions.Button text="Checkout" 
+      <functions.Button text="Checkout" 
         onClick={() => {
-          functions.checkout(orderdetails.length , total.toFixed(2));
+          const totalItems = orderdetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
+          functions.checkout(totalItems , total.toFixed(2));
           functions.defaultVal(orderdetails, setorderDetails);
           setScreen("cashier"); 
           alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
