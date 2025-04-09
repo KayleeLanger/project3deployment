@@ -1,0 +1,210 @@
+/* sidebar */
+.sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #ababab;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    
+}
+
+/* main (container holds everything else) */
+.container{
+    background-color:white;
+}
+
+.main {
+    margin-left: 250px; 
+    width: calc(65% - 250px); /* width */
+    padding:20px;
+    
+    min-height: 100vh;
+    display: flex;
+    flex-wrap:wrap;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items:center;
+    border-bottom: 20px solid black;
+}
+.main h1{
+    color:white;
+}
+
+.homeScreen {
+    margin-left: 250px; 
+    width: calc(100% - 250px); /* width */
+    padding:20px;
+    
+    min-height: 100vh;
+    display: flex;
+    flex-wrap:wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    border-bottom: 20px solid black;
+}
+.homeScreen h1{
+    color:rgb(0, 0, 0);
+    font-family: Georgia, serif;
+}
+.homeScreen h3{
+    color:rgb(0, 0, 0);
+    font-family: Verdana, Tahoma, sans-serif;
+}
+
+
+/* main table (where all catagories are) 3 columns*/
+.mainBody{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+
+
+/* order section*/
+.order {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 30%;
+    height: 100vh;
+    background-color: white;
+    padding: 20px;
+    border: 20px solid black;
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between; /* pushes button to  very bottom */
+    overflow-y: auto; /* makes it scrollable */
+}
+/* order button is on the bottom, but is still a little space below */
+.order button{
+    margin-bottom: 50px;
+}
+
+/* default button styling (sidebar) */
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+/* need to fix */
+.category-button{
+    background-color: "rgb(19, 90, 120)"; 
+	color: "white" ;
+	width: "150px";
+	height: "50px";
+}
+
+/* Customization screen's style -Long */
+.customization-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+  
+.option-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.option-label {
+    width: 150px;
+    font-weight: bold;
+    color: white;
+}
+
+.option-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+.option-buttons button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    white-space: nowrap;
+    background-color: #a3a3a3;
+    color: white;
+}
+
+.option-buttons button.selected {
+    background-color: #3b82f6;
+}
+
+.selected {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    border: 2px solid white;
+    box-shadow: 0 0 8px rgba(0, 0,0, 0.3);
+}
+
+/* For Employee Toppings Screen -Long*/
+.toppings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .topping-button {
+    background-color: #f4a261;
+    border: none;
+    border-radius: 15px;
+    padding: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    color: black;
+    transition: background-color 0.2s;
+  }
+  
+  .topping-button.selected {
+    background-color: #2a9d8f;
+    color: white;
+  }
+  
+
+/* Clock */
+.time-box {
+    background-color: #edde5d;
+    padding: 15px;
+    width: 200px;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+/* top time */
+.time-box h2 {
+    margin: 0;
+    font-size: 24px;
+}
+/* date */
+.time-box strong {
+    font-size: 16px;
+}
+
+
+/* Fun tings :) */
+/* Button colors */
+button:hover {
+    background-color: #0056b3;
+}
+.category-button:hover {
+    background-color: rgb(15, 75, 100); 
+}
