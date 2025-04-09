@@ -24,8 +24,9 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 	}
 
 	useEffect(() => {
-		if (currentEditIdx != null && orderdetails[currentEditIdx]) {
-			const item = orderdetails[currentEditIdx];
+		const idx = currentEditIdx != null ? currentEditIdx : orderdetails.length - 1;
+		if (orderdetails[idx]) {
+			const item = orderdetails[idx];
 			setSize(item.size || "");
 			setIce(item.ice || "");
 			setSweetness(item.sweetness || "");
@@ -37,7 +38,7 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 		const price = parseFloat(order.price);
 		const qty = parseInt(order.quantity);
 		return !isNaN(price) ? subtotal + price * qty: subtotal;
-	  }, 0);
+	}, 0);
 
 	const tax = subtotal * 0.08;
 	const total = subtotal + tax;
