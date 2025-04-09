@@ -1,5 +1,6 @@
 import { useState } from "react"; 
-import logo from "./logo.svg";
+import CustomerHome from "./views/CustomerHome.js";
+import CustomerDrinks from "./views/CustomerDrinks.js";
 import Inventory from "./views/Inventory";
 import EmployeeCategoryScreen from "./views/EmployeeCategoryScreen";
 import EmployeeToppingsScreen from "./views/EmployeeToppingsScreen.js";
@@ -10,6 +11,7 @@ import Employees from "./views/Employees"; // New import for Employee Management
 import HomeScreen from "./views/HomeScreen"; //homescreen
 import Prices from './views/Prices';
 import Menu from './views/Menu';
+import MenuBoard from "./views/MenuBoard";
 import Graph from './views/Graph';
 //import Categories from './views/Categories';
 import Button from './Button';
@@ -21,6 +23,7 @@ function App() { //main function, will be mostly imports eventually
 	const [screen, setScreen] = useState("home");
 	const [selectedCategory, setSelectedCategory] = useState(""); 
 	const [orderDetails, setOrderDetails] = useState([]); 
+	const [currentEditIdx, setCurrentEditIdx] = useState(null);
 	
 
 	return (
@@ -31,22 +34,28 @@ function App() { //main function, will be mostly imports eventually
 			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} />}
+										setorderDetails={setOrderDetails}
+										setCurrentEditIdx={setCurrentEditIdx} />}
 			{screen === "cashier-drinks" && <EmployeeDrinks setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} />}
+										setorderDetails={setOrderDetails}
+										setCurrentEditIdx={setCurrentEditIdx} />}
 			{screen === "cashier-customization" && <EmployeeCustomization setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} />}
+										setorderDetails={setOrderDetails}
+										currentEditIdx={currentEditIdx}
+										setCurrentEditIdx={setCurrentEditIdx} />}
 			{screen === "cashier-toppings" && <EmployeeToppingsScreen setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} />}
+										setorderDetails={setOrderDetails}
+										currentEditIdx={currentEditIdx}
+										setCurrentEditIdx={setCurrentEditIdx} />}
 
 
 			
@@ -62,7 +71,18 @@ function App() { //main function, will be mostly imports eventually
 			
 
 			{/* customer */}
-			{screen === "customer" && <CustomerHomeScreen setScreen={setScreen} />}
+			{screen === "customer" && <CustomerHome setScreen={setScreen}
+										setSelectedCategory={setSelectedCategory}
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails} />}
+			{screen === "customer-drinks" && <CustomerDrinks setScreen={setScreen}
+										setSelectedCategory={setSelectedCategory}
+										selectedCategory={selectedCategory} 
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails} />}
+
+			{/* menu board */}
+			{screen === "menu-board" && <MenuBoard setScreen={setScreen} />}
 		</header>
 		</div>
 	);
@@ -93,16 +113,16 @@ function App() { //main function, will be mostly imports eventually
 
 
 /////////////////////// Cashier Pages ///////////////////////
-function CashierCategoriesScreen({ setScreen }) {
-	return (
-		<>
-		<h1>Cashier Categories</h1>
+// function CashierCategoriesScreen({ setScreen }) {
+// 	return (
+// 		<>
+// 		<h1>Cashier Categories</h1>
 		
-		<Button text="Logout" onClick={() => setScreen("home")} />
-		<Button text="Go to Drinks" onClick={() => setScreen("cashier-drinks")} />
-		</>
-	);
-}
+// 		<Button text="Logout" onClick={() => setScreen("home")} />
+// 		<Button text="Go to Drinks" onClick={() => setScreen("cashier-drinks")} />
+// 		</>
+// 	);
+// }
 
 
 
@@ -130,11 +150,5 @@ function ManagerScreen({ setScreen }) {
 }
 ///////////////////////////////////////////////////////////////////////
 
-////////////////////////////////Customer Pages//////////////////////////
-function CustomerHomeScreen({ setScreen }) {
-	return (
-		<Button text="Home" onClick={() => setScreen("home")} />
-	);
-}
-///////////////////////////////////////////////////////////////////////
+
 export default App;

@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
 import "./Employee.css";
+import * as functions from "./functions.js";
 
 
-function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, setorderDetails }) {
+function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, setorderDetails, setCurrentEditIdx}) {
     const [currentTime, setCurrentTime] = useState(new Date());
-    // const [currentOrder, setState]=useState()
 
 
     /// category list: hardcoded since categories won't change, only drinks
-    const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "Miscellaneous"}];
+    const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "Toppings"}, {name: "Miscellaneous"}];
 
 
     // TODO: Update order details
-    //const orderdetails= [{name: "Item1", price: "4.00", ice: "25%", sweetness:"100%", toppings:"boba"}, {name: "Item2", price: "2.00", ice: "50%", sweetness:"109%", toppings:"creama"}];
     let orderdetails = [];
     if (OrderDetails.length > 0) {
       orderdetails = OrderDetails;
@@ -20,7 +19,8 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
 
     const subtotal = orderdetails.reduce((subtotal, order) => {
       const price = parseFloat(order.price);
-      return !isNaN(price) ? subtotal + price: subtotal;
+      const qty = parseInt(order.quantity);
+      return !isNaN(price) ? subtotal + price * qty: subtotal;
     }, 0);
   
     const tax = subtotal * 0.08;
@@ -64,15 +64,15 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
         </tr><tr><h1>   </h1>
 
 
-       
+      
         </tr><tr>
             {/* Clear order and start over */}
-            <Button text="Clear Order" onClick={() => {
+            <functions.Button text="Clear Order" onClick={() => {
               setScreen("cashier");
               setorderDetails([]);
             }} />
         </tr><tr>
-          <Button text="Logout" onClick={() => setScreen("home")} />
+          <functions.Button text="Logout" onClick={() => setScreen("home")} />
         </tr></table>
       </div>
 
@@ -93,23 +93,34 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
           {/* loop through Categories */}
           {categories.map(category=> (
             <div class= "buttonBox">
-            <CategoryButton
-                 key={category.name}
-                 text={category.name}
-                 onClick={() =>  {
+            <functions.CategoryButton
+                  key={category.name}
+                  text={category.name}
+                  onClick={() =>  {
                     setSelectedCategory(category.name); //update cat and switch page
-                    setScreen("cashier-drinks");
+                    if (category.name === "Toppings") {
+                      setScreen("cashier-toppings");
+                      setorderDetails(prevDetails => [ // add in place holder for topping only
+                        ...prevDetails,
+                        {
+                          name: "Topping Only", 
+                          price: "", 
+                          size: "n/a",
+                          ice: "n/a",
+                          sweetness: "n/a",
+                          toppings: "n/a",
+                          quantity: "1"
+                        }]);
+                    } else {
+                      setScreen("cashier-drinks");
+                    }
                   }}
-                 
-                 ></CategoryButton> </div>
+                
+                ></functions.CategoryButton> </div>
           ))}
-         
-
-
-        </div>
-       
       </div>
-      </div>
+    </div>
+    </div>
 
 
 
@@ -125,22 +136,78 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
         {/* check if items in order is greater than zero, if so then add items.  */}
         {orderdetails && orderdetails.length > 0 ? ( 
           <>
-            {orderdetails.map((orderdetails, index) => (
+            {orderdetails.map((order, index) => (
               <div className="order-item">
-                <div className="order-header">
-                    <h3>{orderdetails.name}</h3>
-                    <h3>${orderdetails.price}</h3>
+                <div className = "order-left">
+                  {/* Delete button */}
+                  <functions.Button text="X" 
+                    onClick={() => {
+                      functions.deleteItem(index, orderdetails, setorderDetails);
+                      console.log("Delete button clicked for", order.name);
+                    }} 
+                  />
+                  <div className = "quantity">
+                    <button
+                      onClick={() => {
+                        const updated = [...orderdetails];
+                        const currentQty = parseInt(order.quantity) || 1;
+                        updated[index].quantity = Math.max(1, currentQty - 1);
+                        setorderDetails(updated);
+                      }}
+                    >
+                      –
+                    </button>
+
+                    <input
+                      type="number"
+                      min="1"
+                      className="quantity-input"
+                      value={order.quantity}
+                      onChange={(e) => {
+                        const newQty = parseInt(e.target.value) || 1;
+                        const updated = [...orderdetails];
+                        updated[index].quantity = newQty;
+                        setorderDetails(updated);
+                      }}
+                    />
+
+                    <button
+                      onClick={() => {
+                        const updated = [...orderdetails];
+                        const currentQty = parseInt(order.quantity) || 1;
+                        updated[index].quantity = currentQty + 1;
+                        setorderDetails(updated);
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-                <p>
-                    <strong>Size:</strong> {orderdetails.size} <br />
-                    <strong>Ice:</strong> {orderdetails.ice} <br />
-                    <strong>Sweetness:</strong> {orderdetails.sweetness} <br />
-                    <strong>Toppings:</strong> {orderdetails.toppings}
-                </p>
+                <div className = "order-content">
+                  <div className="order-header">
+                      <h3>{order.name}</h3>
+                      <h3>${order.price}</h3>
+                  </div>
+                  {order.ice !== "n/a" && (
+                    <p>
+                      <strong>Size:</strong> {order.size} <br />
+                      <strong>Ice:</strong> {order.ice} <br />
+                      <strong>Sweetness:</strong> {order.sweetness} <br />
+                      <strong>Toppings:</strong> {order.toppings}
+                    </p>
+                  )}
+                </div>
+                {/* Edit item button */}
+                <functions.Button text="Edit" 
+                  onClick={() => {
+                    functions.editItem(index, setCurrentEditIdx, setScreen);
+                    console.log("Edit button clicked for", order.name);
+                  }} 
+                />
               </div>
             ))}
             {/* display order totals */}
-            <div className = "order-total">
+            <div className = "order-total" style={{ textAlign: "right" }}>
               <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
               <h3>Tax: ${tax.toFixed(2)} </h3>
               <h2>Total: ${total.toFixed(2)}</h2>
@@ -151,13 +218,16 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
         )}
   
 
-        <Button text="Add More" 
+        <functions.Button text="Add More" 
           onClick={() => {
             setScreen("cashier"); 
+            functions.defaultVal(orderdetails, setorderDetails);
           }} />
-        <Button text="Checkout" 
+        <functions.Button text="Checkout" 
           onClick={() => {
-            checkout(orderdetails.length , total.toFixed(2));
+            const totalItems = orderdetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
+            functions.checkout(totalItems , total.toFixed(2));
+            functions.defaultVal(orderdetails, setorderDetails);
             setScreen("cashier"); 
             alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
             setorderDetails([]);
@@ -167,66 +237,4 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
   );
 }
 
-
-function Button({ text, onClick }) {
-  return <button onClick={onClick}>{text}</button>;
-}
-
-function CategoryButton({ text, onClick }) {
-    return <button
-    style={{
-        backgroundColor: "rgb(19, 90, 120)",
-        color: "white" ,
-        width: "200px",
-        height: "200px",
-        margin: "20px",
-        padding: "20px"
-        }}
-        onClick={onClick}>{text}</button>;
-}
-
-function checkout (numItems, orderTotal) {
-  const executeCheckout = async () => {
-    try {
-      const orderDate = getCurrentDateTime();
-      console.log(orderDate);
-      const employeeId = '123460';                // NEED TO FILL WITH PROPER ID
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          numItems,
-          orderTotal,
-          orderDate,
-          employeeId,
-        }),
-      });
-      if (!response.ok) throw new Error ("Failed to place order");
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  executeCheckout();
-}
-
-function getCurrentDateTime() {
-  const currentDate = new Date();
-
-  const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  const day = String(currentDate.getDate()).padStart(2, '0');
-
-  const hours = String(currentDate.getHours()).padStart(2, '0');
-  const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-  const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
-
 export default EmployeeCategoryScreen;
-
-
