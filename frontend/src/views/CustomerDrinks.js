@@ -105,7 +105,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                     {/* loop through Categories */}
                     {drinks.length > 0 ? (
                       drinks.map(drink => (
-                        <div className ="buttonBox" key={drink.name}>
+                        <div className ="buttonBox" key={drink.drinkname}>
                           <functions.CustomerDrinkButton
                             text = {drink.drinkname}
                             image={logo} // TODO: LONG UPDATE IMAGES!!

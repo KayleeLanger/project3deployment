@@ -15,6 +15,8 @@ import MenuBoard from "./views/MenuBoard";
 import Graph from './views/Graph';
 //import Categories from './views/Categories';
 import Button from './Button';
+import ItemConfirm from './views/ItemConfirm.js'; //New import for Item Confirm
+import CustomerCustomization from "./views/CustomerCustomization.js";
 
 
 
@@ -73,6 +75,7 @@ function App() { //main function, will be mostly imports eventually
 			{/* customer */}
 			{screen === "customer" && <CustomerHome setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
+										//selectedCategory={selectedCategory}
 										OrderDetails={orderDetails}
 										setorderDetails={setOrderDetails} />}
 			{screen === "customer-drinks" && <CustomerDrinks setScreen={setScreen}
@@ -80,6 +83,16 @@ function App() { //main function, will be mostly imports eventually
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
 										setorderDetails={setOrderDetails} />}
+			{screen === "confirm" && <ItemConfirm setScreen={setScreen}
+											setSelectedCategory={setSelectedCategory}
+											selectedCategory={selectedCategory}
+											OrderDetails={orderDetails}
+											setorderDetails={setOrderDetails}
+										/>}
+			{screen === "customer-customization" && <CustomerCustomization setScreen={setScreen}
+											OrderDetails={orderDetails}
+											setorderDetails={setOrderDetails}
+										/>}
 
 			{/* menu board */}
 			{screen === "menu-board" && <MenuBoard setScreen={setScreen} />}

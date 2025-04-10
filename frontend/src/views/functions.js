@@ -184,7 +184,7 @@ export function CustomerDrinkButton({ text, image, onClick }) {
             />
         )}
         <span style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}>
-            
+            {text}
         </span>
         </button>
     );
