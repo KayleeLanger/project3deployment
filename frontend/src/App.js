@@ -17,6 +17,7 @@ import Graph from './views/Graph';
 import Button from './Button';
 import ItemConfirm from './views/ItemConfirm.js'; //New import for Item Confirm
 import CustomerCustomization from "./views/CustomerCustomization.js";
+import CustomerToppingsScreen from "./views/CustomerToppingsScreen";
 
 
 
@@ -85,6 +86,11 @@ function App() { //main function, will be mostly imports eventually
 										OrderDetails={orderDetails}
 										setorderDetails={setOrderDetails} 
 									/>}
+			{screen === "customer-toppings" && <CustomerToppingsScreen setScreen={setScreen}
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails}
+									/>}
+			
 			{screen === "confirm" && <ItemConfirm setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory}

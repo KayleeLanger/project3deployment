@@ -382,6 +382,19 @@ app.post('/api/checkout', async (req, res) => {
     }
 });
 
+// get all toppings directly (used by CustomerToppingsScreen) -Long
+app.get('/api/toppings', async (req, res) => {
+    try {
+        const query = "SELECT otherName, otherPrice, otherType FROM toppings_other WHERE otherType = 'topping';";
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Toppings fetch error:', err);
+        res.status(500).json({ error: 'Failed to load toppings: ' + err.message });
+    }
+});
+
+
 //start server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
