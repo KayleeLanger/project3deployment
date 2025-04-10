@@ -5,45 +5,38 @@ import * as functions from "./functions.js";
 function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, setorderDetails, currentEditIdx, setCurrentEditIdx }) {
   const [selectedToppings, setSelectedToppings] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [toppings, setToppings] = useState([]);
     
-    //clock setup
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setCurrentTime(new Date());
-      }, 1000);
-      return () => clearInterval(interval);
-    }, []);
+  //clock setup
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-  // Hardcoded toppings for now, backend will replace this later
-  const toppings = [
-    { name: "Pearl", price: 0.50 },
-    { name: "Mini Pearl", price: 0.50 },
-    { name: "Ice Cream", price: 0.75 },
-    { name: "Pudding", price: 0.50 },
-    { name: "Aloe Vera", price: 0.60 },
-    { name: "Red Bean", price: 0.55 },
-    { name: "Herb Jelly", price: 0.50 },
-    { name: "Alyu Jelly", price: 0.50 },
-    { name: "Lychee Jelly", price: 0.50 },
-    { name: "Creama", price: 0.60 }
-  ];
+  // get drinks for category
+  useEffect(() => {
+    getToppings("Toppings");
+  }, []);
 
-  // const getToppings = async () => {
-  //   try {
-  //     const response = await fetch(`${process.env.REACT_APP_API_URL}/api/toppings/`);
-  //     if (!response.ok) throw new Error ("Failed to fetch toppings");
-  //     const data = await response.json();
-  //     const formattedToppings = data.map(topping => ({
-  //       name: topping.otherName,
-  //       price: parseFloat(topping.otherPrice),
-  //     }));
-  //     console.log("Toppings data: ", formattedToppings);
-  //     setToppings(formattedToppings); // set toppings state with data
-  //   } catch (error) {
-  //     console.error(error);
-  //     setToppings([]);  // reset toppings if error
-  //   }
-  // };
+  const getToppings = async (category ) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/drinks/category/${category}`);
+      if (!response.ok) throw new Error ("Failed to fetch drinks");
+      const data = await response.json();
+      console.log("data: ", data);
+
+      const formatted = data.map(item => ({
+        name: item.drinkname || item.othername,
+        price: parseFloat(item.drinkprice || item.otherprice)
+      }))
+      setToppings(formatted); // set toppings state with data
+    } catch (error) {
+      console.error(error);
+      setToppings([]);  // reset toppings if error
+    }
+  };
 
   const toggleTopping = (name) => {
     setSelectedToppings(prev =>

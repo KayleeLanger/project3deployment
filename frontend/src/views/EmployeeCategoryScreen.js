@@ -92,7 +92,7 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
         <div className = "mainBody">
           {/* loop through Categories */}
           {categories.map(category=> (
-            <div class= "buttonBox">
+            <div className= "buttonBox">
             <functions.CategoryButton
                   key={category.name}
                   text={category.name}
