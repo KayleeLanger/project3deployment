@@ -188,7 +188,8 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
                       <h3>{order.name}</h3>
                       <h3>${order.price}</h3>
                   </div>
-                  {order.ice !== "n/a" && (
+                  { /* don't add options and edit if topping or misc */}
+                  {order.ice !== "n/a" && order.ice !== "-" && (
                     <p>
                       <strong>Size:</strong> {order.size} <br />
                       <strong>Ice:</strong> {order.ice} <br />
@@ -198,12 +199,14 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
                   )}
                 </div>
                 {/* Edit item button */}
-                <functions.Button text="Edit" 
-                  onClick={() => {
-                    functions.editItem(index, setCurrentEditIdx, setScreen);
-                    console.log("Edit button clicked for", order.name);
-                  }} 
-                />
+                {order.ice !== "n/a" && order.ice !== "-" && (
+                  <functions.Button text="Edit" 
+                    onClick={() => {
+                      functions.editItem(index, setCurrentEditIdx, setScreen);
+                      console.log("Edit button clicked for", order.name);
+                    }} 
+                  />
+                )}
               </div>
             ))}
             {/* display order totals */}

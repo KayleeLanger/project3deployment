@@ -104,20 +104,31 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
               drinks.map(drink => (
                 <div className ="buttonBox" key={drink.name}>
                   <functions.DrinkButton
-                    text = {drink.drinkname}
+                    text = {drink.drinkname || drink.othername} 
                     onClick={() => {
-                      setorderDetails(prevDetails => [
-                        ...prevDetails,
-                        {
-                          name: drink.drinkname, 
-                          price: drink.drinkprice.toFixed(2), 
-                          size: "",
-                          ice: "",
-                          sweetness: "",
-                          toppings: "",
-                          quantity: "1"
-                      }]);
-                      setScreen("cashier-customization");
+                      const isMisc = !!drink.othername;
+                      const item = isMisc
+                        ? {
+                            name: drink.othername,
+                            price: drink.otherprice.toFixed(2),
+                            size: "-",
+                            ice: "-",
+                            sweetness: "-",
+                            toppings: "-",
+                            quantity: "1"
+                          }
+                        : {
+                            name: drink.drinkname,
+                            price: drink.drinkprice.toFixed(2),
+                            size: "",
+                            ice: "",
+                            sweetness: "",
+                            toppings: "",
+                            quantity: "1"
+                          };
+                  
+                      setorderDetails(prevDetails => [...prevDetails, item]);
+                      setScreen(isMisc ? "cashier" : "cashier-customization");
                     }}
                   ></functions.DrinkButton> 
                 </div>
@@ -191,7 +202,8 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
                       <h3>{order.name}</h3>
                       <h3>${order.price}</h3>
                   </div>
-                  {order.ice !== "n/a" && (
+                  { /* don't add options and edit if topping or misc */}
+                  {order.ice !== "n/a" && order.ice !== "-" && (
                     <p>
                       <strong>Size:</strong> {order.size} <br />
                       <strong>Ice:</strong> {order.ice} <br />
@@ -201,12 +213,14 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
                   )}
                 </div>
                 {/* Edit item button */}
-                <functions.Button text="Edit" 
-                  onClick={() => {
-                    functions.editItem(index, setCurrentEditIdx, setScreen);
-                    console.log("Edit button clicked for", order.name);
-                  }} 
-                />
+                {order.ice !== "n/a" && order.ice !== "-" && (
+                  <functions.Button text="Edit" 
+                    onClick={() => {
+                      functions.editItem(index, setCurrentEditIdx, setScreen);
+                      console.log("Edit button clicked for", order.name);
+                    }} 
+                  />
+                )}
               </div>
             ))}
             {/* display order totals */}

@@ -190,26 +190,29 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 							</div>
 							</div>
 							<div className = "order-content">
-							<div className="order-header">
-								<h3>{order.name}</h3>
-								<h3>${order.price}</h3>
-							</div>
-							{order.ice !== "n/a" && (
-								<p>
-								<strong>Size:</strong> {order.size} <br />
-								<strong>Ice:</strong> {order.ice} <br />
-								<strong>Sweetness:</strong> {order.sweetness} <br />
-								<strong>Toppings:</strong> {order.toppings}
-								</p>
-							)}
+								<div className="order-header">
+									<h3>{order.name}</h3>
+									<h3>${order.price}</h3>
+								</div>
+								{ /* don't add options and edit if topping or misc */}
+								{order.ice !== "n/a" && order.ice !== "-" && (
+									<p>
+										<strong>Size:</strong> {order.size} <br />
+										<strong>Ice:</strong> {order.ice} <br />
+										<strong>Sweetness:</strong> {order.sweetness} <br />
+										<strong>Toppings:</strong> {order.toppings}
+									</p>
+								)}
 							</div>
 							{/* Edit item button */}
-							<functions.Button text="Edit" 
-							onClick={() => {
-								functions.editItem(index, setCurrentEditIdx, setScreen);
-								console.log("Edit button clicked for", order.name);
-							}} 
-							/>
+							{order.ice !== "n/a" && order.ice !== "-" && (
+								<functions.Button text="Edit" 
+									onClick={() => {
+										functions.editItem(index, setCurrentEditIdx, setScreen);
+										console.log("Edit button clicked for", order.name);
+									}} 
+								/>
+							)}
 						</div>
 					</>
 					))

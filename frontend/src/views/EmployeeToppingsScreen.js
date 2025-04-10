@@ -150,19 +150,22 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                       if (prevDetails.length > 0 && prevDetails[prevDetails.length - 1].name === "Topping Only") {
                         // if last item is "Topping Only", overwrite it
                         return prevDetails.map((order, index) => {
-                          return {
-                            ...order,
-                            name: name, 
-                            price: price.toFixed(2), 
-                            size: "n/a",
-                            ice: "n/a",
-                            sweetness: "n/a",
-                            toppings: "n/a",
-                            quantity: "1"
-                          };
+                          if (index === prevDetails.length - 1) {
+                            return {
+                              ...order,
+                              name: name, 
+                              price: price.toFixed(2), 
+                              size: "n/a",
+                              ice: "n/a",
+                              sweetness: "n/a",
+                              toppings: "n/a",
+                              quantity: "1"
+                            };
+                          }
+                          return order;
                         });
                       } else {
-                        // if not, add new item
+                        // if not, add new item (already in topping only)
                         return [
                           ...prevDetails,
                           {
@@ -280,7 +283,8 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                       <h3>{order.name}</h3>
                       <h3>${order.price}</h3>
                   </div>
-                  {order.ice !== "n/a" && (
+                  { /* don't add options and edit if topping or misc */}
+                  {order.ice !== "n/a" && order.ice !== "-" && (
                     <p>
                       <strong>Size:</strong> {order.size} <br />
                       <strong>Ice:</strong> {order.ice} <br />
@@ -290,12 +294,14 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                   )}
                 </div>
                 {/* Edit item button */}
-                <functions.Button text="Edit" 
-                  onClick={() => {
-                    functions.editItem(index, setCurrentEditIdx, setScreen);
-                    console.log("Edit button clicked for", order.name);
-                  }} 
-                />
+                {order.ice !== "n/a" && order.ice !== "-" && (
+                  <functions.Button text="Edit" 
+                    onClick={() => {
+                      functions.editItem(index, setCurrentEditIdx, setScreen);
+                      console.log("Edit button clicked for", order.name);
+                    }} 
+                  />
+                )}
               </div>
             ))}
             {/* display order totals */}
