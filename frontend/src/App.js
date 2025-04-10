@@ -90,8 +90,12 @@ function App() { //main function, will be mostly imports eventually
 											setorderDetails={setOrderDetails}
 										/>}
 			{screen === "customer-customization" && <CustomerCustomization setScreen={setScreen}
+											setSelectedCategory={setSelectedCategory}
+											selectedCategory={selectedCategory} 
 											OrderDetails={orderDetails}
 											setorderDetails={setOrderDetails}
+											currentEditIdx={currentEditIdx}
+											setCurrentEditIdx={setCurrentEditIdx} 
 										/>}
 
 			{/* menu board */}

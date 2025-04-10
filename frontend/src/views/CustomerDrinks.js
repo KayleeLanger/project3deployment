@@ -82,7 +82,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
             {/* ONLY TOPPINGS BUTTON (goes to a different screen ) */}
             <functions.SideButton
                 text="Individual Toppings"
-                 onClick={() => setScreen("customer-toppings")}
+                onClick={() => setScreen("customer-toppings")}
             />
 
             {/* BLANK BUTTON THAT TAKES YOU BACK HOME */}
@@ -118,7 +118,8 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                                   size: "",
                                   ice: "",
                                   sweetness: "",
-                                  toppings: ""
+                                  toppings: "",
+                                  quantity: "1"
                               }]);
                               setScreen("customer-customization");
                             }}
@@ -131,7 +132,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                   </div>
                 {/* </div> */}
               {/* </div> */}
-       
+      
       </div>
       
     </>

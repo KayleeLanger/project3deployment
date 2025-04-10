@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import "./Customer.css";
+import * as functions from "./functions.js";
 
-function CustomerCustomization({ setScreen }) {
+function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, setorderDetails, currentEditIdx, setCurrentEditIdx }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
+
+	const [size, setSize] = useState("");
+	const [ice, setIce] = useState("");
+	const [sweetness, setSweetness] = useState("");
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -10,6 +15,17 @@ function CustomerCustomization({ setScreen }) {
 		}, 1000);
 		return () => clearInterval(interval);
 	}, []);
+
+	// to make sure that correct item is edited (whether or not edit is clicked)
+	useEffect(() => {
+		const idx = currentEditIdx != null ? currentEditIdx : OrderDetails.length - 1;
+		if (OrderDetails[idx]) {
+			const item = OrderDetails[idx];
+			setSize(item.size || "");
+			setIce(item.ice || "");
+			setSweetness(item.sweetness || "");
+		}
+	}, [currentEditIdx, OrderDetails]);
 
 	return (
 		<div style={{ display: "flex", height: "100vh" }}>
@@ -41,6 +57,40 @@ function CustomerCustomization({ setScreen }) {
 				>
 					Go to Confirmation
 				</button>
+				<h1>Customization<br></br></h1>
+				<div className = "customization-options">
+					<functions.SizeSelector selectedSize={size} setSelectedSize={setSize} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx}/>
+					<functions.IceSelector selectedIce={ice} setSelectedIce={setIce} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx}/>
+					<functions.SweetnessSelector selectedSweetness={sweetness} setSelectedSweetness={setSweetness} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx}/>
+				
+					<button onClick={() => {
+						const updated = [...OrderDetails];
+						const idx = currentEditIdx != null ? currentEditIdx : OrderDetails.length - 1;
+						updated[idx] = {
+							...updated[idx],
+							size,
+							ice,
+							sweetness
+						};
+						setorderDetails(updated);
+						functions.defaultVal(updated, setorderDetails);
+						setScreen("cashier-toppings");
+						}}
+						style={{
+							padding: "10px 20px",
+							borderRadius: "15px",
+							backgroundColor: "#38bdf8",
+							color: "white",
+							border: "none",
+							fontWeight: "bold",
+							cursor: "pointer",
+							width: "fit-content",
+							marginTop: "10px"
+						}}
+					>
+						Select Toppings
+					</button>
+				</div>
 			</div>
 		</div>
 	);

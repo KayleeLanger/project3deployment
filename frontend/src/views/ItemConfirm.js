@@ -33,7 +33,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails }) {
             toppings: toppings.join(", ")
         };
         setorderDetails(updated);
-        setScreen("customer-drinks");
+        setScreen("customer-drinks"); // SET TO CHECKOUT SCREEN (IF ITEM HAS BEEN ADDED TO ORDER)
     };
 
     return (

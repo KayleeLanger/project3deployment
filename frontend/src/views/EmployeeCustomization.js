@@ -23,6 +23,7 @@ function EmployeeCustomization({ setScreen, selectedCategory, OrderDetails, seto
 		orderdetails = OrderDetails;
 	}
 
+	// to make sure that correct item is edited (whether or not edit is clicked)
 	useEffect(() => {
 		const idx = currentEditIdx != null ? currentEditIdx : orderdetails.length - 1;
 		if (orderdetails[idx]) {
