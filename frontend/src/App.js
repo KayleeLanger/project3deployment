@@ -77,26 +77,29 @@ function App() { //main function, will be mostly imports eventually
 										setSelectedCategory={setSelectedCategory}
 										//selectedCategory={selectedCategory}
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} />}
+										setorderDetails={setOrderDetails} 
+									/>}
 			{screen === "customer-drinks" && <CustomerDrinks setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} />}
+										setorderDetails={setOrderDetails} 
+									/>}
 			{screen === "confirm" && <ItemConfirm setScreen={setScreen}
-											setSelectedCategory={setSelectedCategory}
-											selectedCategory={selectedCategory}
-											OrderDetails={orderDetails}
-											setorderDetails={setOrderDetails}
-										/>}
+										setSelectedCategory={setSelectedCategory}
+										selectedCategory={selectedCategory}
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails}
+										setCurrentEditIdx={setCurrentEditIdx} 
+									/>}
 			{screen === "customer-customization" && <CustomerCustomization setScreen={setScreen}
-											setSelectedCategory={setSelectedCategory}
-											selectedCategory={selectedCategory} 
-											OrderDetails={orderDetails}
-											setorderDetails={setOrderDetails}
-											currentEditIdx={currentEditIdx}
-											setCurrentEditIdx={setCurrentEditIdx} 
-										/>}
+										setSelectedCategory={setSelectedCategory}
+										selectedCategory={selectedCategory} 
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails}
+										currentEditIdx={currentEditIdx}
+										setCurrentEditIdx={setCurrentEditIdx} 
+									/>}
 
 			{/* menu board */}
 			{screen === "menu-board" && <MenuBoard setScreen={setScreen} />}

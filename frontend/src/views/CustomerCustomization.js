@@ -40,28 +40,14 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 
 			{/* Main content */}
 			<div className="main" style={{ flex: 1, textAlign: "center" }}>
-				<h1>Customization Coming Soon</h1>
-				<p>This screen will let customers pick size, ice, and sweetness.</p>
+				<h1 style={{color:"black"}}>Customize Your Drink!</h1>
+				<p>Pick size, ice, sweetness, and toppings.</p>
 
-				<button
-					onClick={() => setScreen("confirm")}
-					style={{
-						marginTop: "40px",
-						backgroundColor: "#4CAF50",
-						color: "white",
-						padding: "12px 24px",
-						borderRadius: "8px",
-						fontSize: "18px",
-						cursor: "pointer",
-					}}
-				>
-					Go to Confirmation
-				</button>
 				<h1>Customization<br></br></h1>
 				<div className = "customization-options">
-					<functions.SizeSelector selectedSize={size} setSelectedSize={setSize} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx}/>
-					<functions.IceSelector selectedIce={ice} setSelectedIce={setIce} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx}/>
-					<functions.SweetnessSelector selectedSweetness={sweetness} setSelectedSweetness={setSweetness} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx}/>
+					<functions.SizeSelector selectedSize={size} setSelectedSize={setSize} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx} page="customer"/>
+					<functions.IceSelector selectedIce={ice} setSelectedIce={setIce} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx} page="customer"/>
+					<functions.SweetnessSelector selectedSweetness={sweetness} setSelectedSweetness={setSweetness} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx} page="customer"/>
 				
 					<button onClick={() => {
 						const updated = [...OrderDetails];
@@ -74,7 +60,7 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 						};
 						setorderDetails(updated);
 						functions.defaultVal(updated, setorderDetails);
-						setScreen("cashier-toppings");
+						setScreen("confirm"); // set to customer toppings page
 						}}
 						style={{
 							padding: "10px 20px",
@@ -90,6 +76,24 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 					>
 						Select Toppings
 					</button>
+
+					<button
+					onClick={() => {
+						setScreen("confirm");
+						functions.defaultVal(OrderDetails, setorderDetails);
+					}}
+					style={{
+						marginTop: "40px",
+						backgroundColor: "#4CAF50",
+						color: "white",
+						padding: "12px 24px",
+						borderRadius: "8px",
+						fontSize: "18px",
+						cursor: "pointer",
+					}}
+				>
+					Done
+				</button>
 				</div>
 			</div>
 		</div>

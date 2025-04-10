@@ -192,38 +192,38 @@ export function CustomerDrinkButton({ text, image, onClick }) {
 
 
 
-export function SizeSelector({ selectedSize, setSelectedSize , details , setDetails, currentEditIdx }) {
+export function SizeSelector({ selectedSize, setSelectedSize , details , setDetails, currentEditIdx, page }) {
 	return (
 	    <div className="option-row">
-            <div className="option-label">Size</div>
+            <div className={page === "customer" ? "option-label-customer" : "option-label"}>Size</div>
             <div className="option-buttons">
-            <button
-                className={selectedSize === "regular" ? "selected" : ""}
-                onClick={() => {
-                    setSelectedSize("regular");
-                    customize("size", "regular", details, setDetails, currentEditIdx);
-                }}
-            >
-                Regular
-            </button>
-            <button
-                className={selectedSize === "large" ? "selected" : ""}
-                onClick={() => {
-                    setSelectedSize("large");
-                    customize("size", "large", details, setDetails, currentEditIdx);
-                }}
-            >
-                Large
-            </button>
+                <button
+                    className={selectedSize === "regular" ? "selected" : ""}
+                    onClick={() => {
+                        setSelectedSize("regular");
+                        customize("size", "regular", details, setDetails, currentEditIdx);
+                    }}
+                >
+                    Regular
+                </button>
+                <button
+                    className={selectedSize === "large" ? "selected" : ""}
+                    onClick={() => {
+                        setSelectedSize("large");
+                        customize("size", "large", details, setDetails, currentEditIdx);
+                    }}
+                >
+                    Large
+                </button>
             </div>
         </div>
     );
 }
 
-export function IceSelector({ selectedIce, setSelectedIce , details , setDetails, currentEditIdx }) {
+export function IceSelector({ selectedIce, setSelectedIce , details , setDetails, currentEditIdx , page }) {
 	return (
 	    <div className="option-row">
-            <div className="option-label">Ice</div>
+            <div className={page === "customer" ? "option-label-customer" : "option-label"}>Ice</div>
             <div className="option-buttons">
             <button
                 className={selectedIce === "no" ? "selected" : ""}
@@ -257,13 +257,12 @@ export function IceSelector({ selectedIce, setSelectedIce , details , setDetails
 	);
 }
 
-export function SweetnessSelector({selectedSweetness, setSelectedSweetness, details , setDetails, currentEditIdx}) {  
+export function SweetnessSelector({selectedSweetness, setSelectedSweetness, details , setDetails, currentEditIdx, page}) {  
 	const sweetnessOptions = ["0%", "25%", "50%", "75%", "100%"];
 
 	return (
         <div className="option-row">
-            <div className="option-label">Sweetness</div>
-
+            <div className={page === "customer" ? "option-label-customer" : "option-label"}>Sweetness</div>
             <div className="option-buttons">
             {sweetnessOptions.map(option => (
                 <button
@@ -301,7 +300,12 @@ export function deleteItem(index, orderdetails, setorderDetails, setScreen) {
     }
 }
 
-export function editItem(index, setCurrentEditIdx, setScreen) {
+export function editItem(index, setCurrentEditIdx, setScreen, page) {
     setCurrentEditIdx(index);
-    setScreen("cashier-customization");
+    if (page === "customer") {
+        setScreen("customer-drinks");
+    }
+    else {
+        setScreen("cashier-customization");
+    }
 }
