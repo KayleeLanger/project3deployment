@@ -60,7 +60,7 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 						};
 						setorderDetails(updated);
 						functions.defaultVal(updated, setorderDetails);
-						setScreen("confirm"); // set to customer toppings page
+						setScreen("confirm"); // NEEDS TO GO TO CUSTOMER TOPPINGS PAGE
 						}}
 						style={{
 							padding: "10px 20px",

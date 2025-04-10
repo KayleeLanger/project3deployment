@@ -90,114 +90,103 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
             </div>
 
             {/* Order summary panel */}
-            {/* <div className="order">
-                <h2>Order Details</h2>
-                {OrderDetails.length === 0 ? (
-                    <p>No items added</p>
-                ) : (
-                    OrderDetails.map((item, index) => (
-                        <div key={index} style={{ marginBottom: "10px" }}>
-                            <strong>{item.name}</strong><br />
-                            {item.sweetness}, {item.ice}, {item.toppings}
-                        </div>
-                    ))
-                )}
-                <button>Checkout</button>
-            </div> */}
-
-        <div className="order">
-            <h1>Order Details</h1>
-                {/* loop through order items and display */}
-                {OrderDetails && OrderDetails.length > 0 ? (
-                    OrderDetails.map((order, index) => ( <>
-                        <div className="order-item">
-                            <div className = "order-left">
-                                {/* Delete button */}
-                                <functions.Button text="X" 
-                                    onClick={() => {
-                                    functions.deleteItem(index, OrderDetails, setorderDetails, setScreen);
-                                    console.log("Delete button clicked for", order.name);
-                                    }} 
-                                />
-                                <div className = "quantity">
-                                    <button
+            <div className="order">
+                <h1>Order Details</h1>
+                    {/* loop through order items and display */}
+                    {OrderDetails && OrderDetails.length > 0 ? (
+                        OrderDetails.map((order, index) => ( <>
+                            <div className="order-item">
+                                <div className = "order-left">
+                                    {/* Delete button */}
+                                    <functions.Button text="X" 
                                         onClick={() => {
-                                            const updated = [...OrderDetails];
-                                            const currentQty = parseInt(order.quantity) || 1;
-                                            updated[index].quantity = Math.max(1, currentQty - 1);
-                                            setorderDetails(updated);
-                                        }}
-                                    >
-                                        –
-                                    </button>
-        
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        className="quantity-input"
-                                        value={order.quantity}
-                                        onChange={(e) => {
-                                            const newQty = parseInt(e.target.value) || 1;
-                                            const updated = [...OrderDetails];
-                                            updated[index].quantity = newQty;
-                                            setorderDetails(updated);
-                                        }}
-                                        />
-        
+                                        functions.deleteItem(index, OrderDetails, setorderDetails, setScreen);
+                                        console.log("Delete button clicked for", order.name);
+                                        }} 
+                                    />
+                                    <div className = "quantity">
                                         <button
-                                        onClick={() => {
-                                            const updated = [...OrderDetails];
-                                            const currentQty = parseInt(order.quantity) || 1;
-                                            updated[index].quantity = currentQty + 1;
-                                            setorderDetails(updated);
-                                        }}
+                                            onClick={() => {
+                                                const updated = [...OrderDetails];
+                                                const currentQty = parseInt(order.quantity) || 1;
+                                                updated[index].quantity = Math.max(1, currentQty - 1);
+                                                setorderDetails(updated);
+                                            }}
                                         >
-                                        +
+                                            –
                                         </button>
+            
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            className="quantity-input"
+                                            value={order.quantity}
+                                            onChange={(e) => {
+                                                const newQty = parseInt(e.target.value) || 1;
+                                                const updated = [...OrderDetails];
+                                                updated[index].quantity = newQty;
+                                                setorderDetails(updated);
+                                            }}
+                                            />
+            
+                                            <button
+                                            onClick={() => {
+                                                const updated = [...OrderDetails];
+                                                const currentQty = parseInt(order.quantity) || 1;
+                                                updated[index].quantity = currentQty + 1;
+                                                setorderDetails(updated);
+                                            }}
+                                            >
+                                            +
+                                            </button>
                                     </div>
-                                    </div>
-                                    <div className = "order-content">
+                                </div>
+                                
+                                <div className = "order-content">
                                     <div className="order-header">
                                         <h3>{order.name}</h3>
                                         <h3>${order.price}</h3>
                                     </div>
                                     {order.ice !== "n/a" && (
                                         <p>
-                                        <strong>Size:</strong> {order.size} <br />
-                                        <strong>Ice:</strong> {order.ice} <br />
-                                        <strong>Sweetness:</strong> {order.sweetness} <br />
-                                        <strong>Toppings:</strong> {order.toppings}
+                                            <strong>Size:</strong> {order.size} <br />
+                                            <strong>Ice:</strong> {order.ice} <br />
+                                            <strong>Sweetness:</strong> {order.sweetness} <br />
+                                            <strong>Toppings:</strong> {order.toppings}
                                         </p>
                                     )}
-                                    </div>
-                                    {/* Edit item button */}
-                                    <functions.Button text="Edit" 
+                                </div>
+                                
+                                {/* Edit item button */}
+                                <functions.Button text="Edit" 
                                     onClick={() => {
                                         functions.editItem(index, setCurrentEditIdx, setScreen, "customer");
                                         console.log("Edit button clicked for", order.name);
                                     }} 
-                                    />
-                                </div>
-                            </>
-                            ))
-                        ) : (
-                    <p>No items</p>
+                                />
+                            </div>
+                        </>
+                        ))
+                    ) : (
+                        <p>No items</p>
                     )}
+
                     {/* display order totals */}
                     <div className = "order-total" style={{ textAlign: "right" }}>
                         <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
                         <h3>Tax: ${tax.toFixed(2)} </h3>
                         <h2>Total: ${total.toFixed(2)}</h2>
                     </div>
-            
+                
                     <functions.Button text="Add More" 
                         onClick={() => {
                             setScreen("customer-drinks");
                             functions.defaultVal(OrderDetails, setorderDetails);
                             setCurrentEditIdx(null);
-                        }} />
-        
-                    <functions.Button text="Checkout" 
+                        }} 
+                    />
+            
+                    <functions.Button text="Checkout" // NEEDS TO GO TO CHECKOUT SCREEN, NOT THE ACTUAL CHECKOUT FUNCTIONALITY
                         onClick={() => {
                             const totalItems = OrderDetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
                             functions.checkout(totalItems , total.toFixed(2));
@@ -205,9 +194,9 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                             setScreen("customer"); 
                             alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
                             setorderDetails([]);
-                        }} />
-            
-                    </div>
+                        }}
+                    />
+            </div>
         </div>
     );
 }
