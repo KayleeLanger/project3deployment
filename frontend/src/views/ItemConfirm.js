@@ -21,7 +21,13 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
         if (lastItem) {
             setSweetness(lastItem.sweetness || "");
             setIce(lastItem.ice || "");
-            setToppings(lastItem.toppings ? lastItem.toppings.split(", ") : []);
+
+            // to prevent error when doing individual toppings
+            if (typeof lastItem.toppings === "string") {
+                setToppings(lastItem.toppings.split(", "));
+            } else {
+                setToppings([]);
+            }
         }
     }, [lastItem]);
 
@@ -38,13 +44,13 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
     };
 
     const subtotal = OrderDetails.reduce((subtotal, order) => {
-		const price = parseFloat(order.price);
-		const qty = parseInt(order.quantity);
-		return !isNaN(price) ? subtotal + price * qty: subtotal;
-	}, 0);
+        const price = parseFloat(order.price);
+        const qty = parseInt(order.quantity);
+        return !isNaN(price) ? subtotal + price * qty : subtotal;
+    }, 0);
 
-	const tax = subtotal * 0.08;
-	const total = subtotal + tax;
+    const tax = subtotal * 0.08;
+    const total = subtotal + tax;
 
     return (
         <div style={{ display: "flex", height: "100vh" }}>
@@ -67,9 +73,16 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                         style={{ width: "150px", height: "150px", objectFit: "contain" }}
                     />
                     <div style={{ textAlign: "left", fontSize: "18px" }}>
-                        <p><strong>Sweetness:</strong> {sweetness}</p>
-                        <p><strong>Ice:</strong> {ice}</p>
-                        <p><strong>Toppings:</strong> {toppings.join(", ") || "None"}</p>
+                        {/* Check if topping is standalone */}
+                        {ice === "n/a" && sweetness === "n/a" ? (
+                            <p><strong>Type:</strong> Standalone Topping</p>
+                        ) : (
+                            <>
+                                <p><strong>Sweetness:</strong> {sweetness}</p>
+                                <p><strong>Ice:</strong> {ice}</p>
+                                <p><strong>Toppings:</strong> {toppings.join(", ") || "None"}</p>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -92,19 +105,21 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
             {/* Order summary panel */}
             <div className="order">
                 <h1>Order Details</h1>
-                    {/* loop through order items and display */}
-                    {OrderDetails && OrderDetails.length > 0 ? (
-                        OrderDetails.map((order, index) => ( <>
+                {/* loop through order items and display */}
+                {OrderDetails && OrderDetails.length > 0 ? (
+                    OrderDetails.map((order, index) => (
+                        <>
                             <div className="order-item">
-                                <div className = "order-left">
+                                <div className="order-left">
                                     {/* Delete button */}
-                                    <functions.Button text="X" 
+                                    <functions.Button
+                                        text="X"
                                         onClick={() => {
-                                        functions.deleteItem(index, OrderDetails, setorderDetails, setScreen);
-                                        console.log("Delete button clicked for", order.name);
-                                        }} 
+                                            functions.deleteItem(index, OrderDetails, setorderDetails, setScreen);
+                                            console.log("Delete button clicked for", order.name);
+                                        }}
                                     />
-                                    <div className = "quantity">
+                                    <div className="quantity">
                                         <button
                                             onClick={() => {
                                                 const updated = [...OrderDetails];
@@ -115,7 +130,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                         >
                                             –
                                         </button>
-            
+
                                         <input
                                             type="number"
                                             min="1"
@@ -127,22 +142,22 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                                 updated[index].quantity = newQty;
                                                 setorderDetails(updated);
                                             }}
-                                            />
-            
-                                            <button
+                                        />
+
+                                        <button
                                             onClick={() => {
                                                 const updated = [...OrderDetails];
                                                 const currentQty = parseInt(order.quantity) || 1;
                                                 updated[index].quantity = currentQty + 1;
                                                 setorderDetails(updated);
                                             }}
-                                            >
+                                        >
                                             +
-                                            </button>
+                                        </button>
                                     </div>
                                 </div>
-                                
-                                <div className = "order-content">
+
+                                <div className="order-content">
                                     <div className="order-header">
                                         <h3>{order.name}</h3>
                                         <h3>${order.price}</h3>
@@ -156,46 +171,44 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                         </p>
                                     )}
                                 </div>
-                                
+
                                 {/* Edit item button */}
-                                <functions.Button text="Edit" 
+                                <functions.Button
+                                    text="Edit"
                                     onClick={() => {
                                         functions.editItem(index, setCurrentEditIdx, setScreen, "customer");
                                         console.log("Edit button clicked for", order.name);
-                                    }} 
+                                    }}
                                 />
                             </div>
                         </>
-                        ))
-                    ) : (
-                        <p>No items</p>
-                    )}
+                    ))
+                ) : (
+                    <p>No items</p>
+                )}
 
-                    {/* display order totals */}
-                    <div className = "order-total" style={{ textAlign: "right" }}>
-                        <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
-                        <h3>Tax: ${tax.toFixed(2)} </h3>
-                        <h2>Total: ${total.toFixed(2)}</h2>
-                    </div>
-                
-                    <functions.Button text="Add More" 
-                        onClick={() => {
-                            setScreen("customer-drinks");
-                            functions.defaultVal(OrderDetails, setorderDetails);
-                            setCurrentEditIdx(null);
-                        }} 
-                    />
-            
-                    <functions.Button text="Checkout" // NEEDS TO GO TO CHECKOUT SCREEN, NOT THE ACTUAL CHECKOUT FUNCTIONALITY
-                        onClick={() => {
-                            const totalItems = OrderDetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
-                            functions.checkout(totalItems , total.toFixed(2));
-                            functions.defaultVal(OrderDetails, setorderDetails);
-                            setScreen("customer"); 
-                            alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
-                            setorderDetails([]);
-                        }}
-                    />
+                {/* display order totals */}
+                <div className="order-total" style={{ textAlign: "right" }}>
+                    <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
+                    <h3>Tax: ${tax.toFixed(2)} </h3>
+                    <h2>Total: ${total.toFixed(2)}</h2>
+                </div>
+
+                <functions.Button
+                    text="Add More"
+                    onClick={() => {
+                        setScreen("customer-drinks");
+                        functions.defaultVal(OrderDetails, setorderDetails);
+                        setCurrentEditIdx(null);
+                    }}
+                />
+
+                <functions.Button
+                    text="Checkout"
+                    onClick={() => {
+                        setScreen("customer-checkout");
+                    }}
+                />
             </div>
         </div>
     );

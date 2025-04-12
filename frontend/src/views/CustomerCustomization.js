@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./Customer.css";
 import * as functions from "./functions.js";
 
-function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, setorderDetails, currentEditIdx, setCurrentEditIdx }) {
+function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, setorderDetails, currentEditIdx, setCurrentEditIdx, setToppingMode }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
 
 	const [size, setSize] = useState("");
@@ -60,7 +60,8 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 						};
 						setorderDetails(updated);
 						functions.defaultVal(updated, setorderDetails);
-						setScreen("confirm"); // NEEDS TO GO TO CUSTOMER TOPPINGS PAGE
+						setToppingMode("linked");
+						setScreen("customer-toppings"); // NEEDS TO GO TO CUSTOMER TOPPINGS PAGE
 						}}
 						style={{
 							padding: "10px 20px",
