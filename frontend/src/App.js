@@ -17,6 +17,9 @@ import Graph from './views/Graph';
 import Button from './Button';
 import ItemConfirm from './views/ItemConfirm.js'; //New import for Item Confirm
 import CustomerCustomization from "./views/CustomerCustomization.js";
+import CustomerToppingsScreen from "./views/CustomerToppingsScreen";
+import CustomerCheckoutScreen from "./views/CustomerCheckoutScreen";
+
 
 
 
@@ -26,7 +29,8 @@ function App() { //main function, will be mostly imports eventually
 	const [selectedCategory, setSelectedCategory] = useState(""); 
 	const [orderDetails, setOrderDetails] = useState([]); 
 	const [currentEditIdx, setCurrentEditIdx] = useState(null);
-	
+	const [toppingMode, setToppingMode] = useState("standalone"); // standalone means toppings by itself, linked will be toppings linked to a drink
+
 
 	return (
 		<div className="App">
@@ -51,8 +55,10 @@ function App() { //main function, will be mostly imports eventually
 										setorderDetails={setOrderDetails}
 										currentEditIdx={currentEditIdx}
 										setCurrentEditIdx={setCurrentEditIdx} />}
+
+										
 			{screen === "cashier-toppings" && <EmployeeToppingsScreen setScreen={setScreen}
-										setSelectedCategory={setSelectedCategory}
+										setSelectedCategory={setSelectedCategory}	
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
 										setorderDetails={setOrderDetails}
@@ -83,8 +89,15 @@ function App() { //main function, will be mostly imports eventually
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
 										OrderDetails={orderDetails}
-										setorderDetails={setOrderDetails} 
+										setorderDetails={setOrderDetails}
+										setToppingMode={setToppingMode}
 									/>}
+			{screen === "customer-toppings" && <CustomerToppingsScreen setScreen={setScreen}
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails}
+										cameFromCustomization={toppingMode === "linked"}
+									/>}
+			
 			{screen === "confirm" && <ItemConfirm setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory}
@@ -99,7 +112,11 @@ function App() { //main function, will be mostly imports eventually
 										setorderDetails={setOrderDetails}
 										currentEditIdx={currentEditIdx}
 										setCurrentEditIdx={setCurrentEditIdx} 
+										setToppingMode={setToppingMode}
 									/>}
+			{screen === "customer-checkout" && <CustomerCheckoutScreen setScreen={setScreen}
+										OrderDetails={orderDetails}
+										setorderDetails={setOrderDetails} />}
 
 			{/* menu board */}
 			{screen === "menu-board" && <MenuBoard setScreen={setScreen} />}

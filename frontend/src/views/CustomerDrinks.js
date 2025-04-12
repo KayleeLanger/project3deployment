@@ -4,7 +4,7 @@ import logo from "./Images/team_00_logo.png";
 import * as functions from "./functions.js";
 
 
-function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, OrderDetails, setorderDetails }) {
+function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, OrderDetails, setorderDetails, setToppingMode }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     // const [currentOrder, setState]=useState()
     const [drinks, setDrinks] = useState([]);
@@ -82,7 +82,10 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
             {/* ONLY TOPPINGS BUTTON (goes to a different screen ) */}
             <functions.SideButton
                 text="Individual Toppings"
-                onClick={() => setScreen("customer-toppings")}
+                onClick={() => {
+                  setToppingMode("standalone");
+                  setScreen("customer-toppings");
+                }}
             />
 
             {/* BLANK BUTTON THAT TAKES YOU BACK HOME */}
