@@ -22,7 +22,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
             setSweetness(lastItem.sweetness || "");
             setIce(lastItem.ice || "");
 
-            // to prevent error when doing individual toppings
+            //to prevent error when doing individual toppings
             if (typeof lastItem.toppings === "string") {
                 setToppings(lastItem.toppings.split(", "));
             } else {
@@ -40,7 +40,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
             toppings: toppings.join(", ")
         };
         setorderDetails(updated);
-        setScreen("customer-drinks"); // SET TO CHECKOUT SCREEN (IF ITEM HAS BEEN ADDED TO ORDER)
+        setScreen("customer-drinks"); //SET TO CHECKOUT SCREEN (IF ITEM HAS BEEN ADDED TO ORDER)
     };
 
     const subtotal = OrderDetails.reduce((subtotal, order) => {
@@ -93,12 +93,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     >
                         Edit Customizations
                     </button>
-                    <button
-                        onClick={handleAddToOrder}
-                        style={{ backgroundColor: "#38bdf8", padding: "15px", fontSize: "18px", borderRadius: "15px", color: "white" }}
-                    >
-                        Add To Order
-                    </button>
+                    
                 </div>
             </div>
 
@@ -115,7 +110,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                     <functions.Button
                                         text="X"
                                         onClick={() => {
-                                            functions.deleteItem(index, OrderDetails, setorderDetails, setScreen);
+                                            functions.deleteItem(index, OrderDetails, setorderDetails, setScreen, "customer");
                                             console.log("Delete button clicked for", order.name);
                                         }}
                                     />
@@ -197,7 +192,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                 <functions.Button
                     text="Add More"
                     onClick={() => {
-                        setScreen("customer-drinks");
+                        setScreen("customer");
                         functions.defaultVal(OrderDetails, setorderDetails);
                         setCurrentEditIdx(null);
                     }}

@@ -290,13 +290,17 @@ export function customize(option, custom, details, setDetails, currentEditIdx) {
 	setDetails(details);
 }
 
-export function deleteItem(index, orderdetails, setorderDetails, setScreen) {
+export function deleteItem(index, orderdetails, setorderDetails, setScreen, page) {
     const updated = [...orderdetails];
     updated.splice(index, 1);
     setorderDetails(updated);
 
-    if (setScreen && index === orderdetails.length - 1) {
-        setScreen("cashier");
+    if (setScreen && index === orderdetails.length - 1 && updated.length === 0) {
+        if (page === "customer") {
+            setScreen("customer");
+        } else {
+            setScreen("cashier");
+        }
     }
 }
 

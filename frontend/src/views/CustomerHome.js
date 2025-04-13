@@ -53,6 +53,18 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
                  onClick={() => setScreen("customer-toppings")}
             />
 
+            {/*Checkout*/}
+            <functions.SideButton
+                text="Checkout"
+                onClick={() => {
+                    if (OrderDetails.length > 0) {
+                        setScreen("confirm");
+                    } else {
+                        alert("No items in the order!");
+                    }
+                }}
+/>
+
             {/* BLANK BUTTON THAT TAKES YOU BACK HOME */}
             <functions.SideButton
                 onClick={() => setScreen("home")}
