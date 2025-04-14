@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./Customer.css";
 import * as functions from "./functions.js";
 import logo from "./Images/team_00_logo.png";
-import { getDrinkImage } from "./functions.js";
+import { getDrinkImage, getToppingImage } from "./functions.js";
 
 function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
@@ -77,29 +77,43 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 
 			{/* Main Content */}
 			<div className="homeScreen">
-			<functions.XButton
-				text="X"
-				onClick={() => {
-					const confirmClear = window.confirm("Are you sure you want to cancel your order and return to the home screen?");
-					if (confirmClear) {
-						setorderDetails([]);
-						setScreen("customer");
-					}
-				}}
-			/>
+				<functions.XButton
+					text="X"
+					onClick={() => {
+						const confirmClear = window.confirm("Are you sure you want to cancel your order and return to the home screen?");
+						if (confirmClear) {
+							setorderDetails([]);
+							setScreen("customer");
+						}
+					}}
+				/>
 				<h1>Review Your Order</h1>
 
 				<div className="mainBody" style={{ width: "100%" }}>
 					{OrderDetails.length > 0 ? (
 						OrderDetails.map((item, index) => (
 							<div key={index} className="order-item" style={{ display: "flex", marginBottom: "20px", alignItems: "center" }}>
-								<img src={getDrinkImage(item.name) || logo} alt="drink" style={{ width: "100px", height: "100px", marginRight: "20px" }} />
+								<img src={
+									item.image ||
+									(item.ice === "n/a"
+										? getToppingImage(item.name)
+										: getDrinkImage(item.name)) || logo
+								}
+									alt={item.name}
+									style={{ width: "100px", height: "100px", marginRight: "20px" }}
+								/>
 								<div className="order-item-info" style={{ textAlign: "left" }}>
 									<strong>{item.name}</strong>
-									<p>Size: {item.size}</p>
-									<p>Sweetness: {item.sweetness}</p>
-									<p>Ice: {item.ice}</p>
-									<p>Toppings: {item.toppings}</p>
+									{item.ice !== "n/a" ? (
+										<>
+											<p>Size: {item.size}</p>
+											<p>Sweetness: {item.sweetness}</p>
+											<p>Ice: {item.ice}</p>
+											<p>Toppings: {item.toppings}</p>
+										</>
+									) : (
+										<p>Standalone Topping</p>
+									)}
 									<p>Quantity: {item.quantity || 1}</p>
 									<p>Price: ${item.price}</p>
 								</div>
@@ -117,7 +131,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 						<h2><strong>Total:</strong> ${total.toFixed(2)}</h2>
 					</div>
 
-					{/*Seasonal drink upsell offer */}
+					{/* Seasonal drink upsell offer */}
 					{seasonalDrink && !seasonalInOrder && !offerUsed && (
 						<div style={{ marginTop: "30px", textAlign: "center" }}>
 							<p style={{ fontSize: "18px", fontWeight: "bold", color: "#b91c1c" }}>
