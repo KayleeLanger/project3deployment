@@ -9,12 +9,12 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
 
     /// category list: hardcoded since categories won't change, only drinks
     const categories = [
-        { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
-        { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
-        { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
+        {name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"},
+        {name: "Fresh Milk"}, {name: "Fruit Tea"}, {name: "Tea Mojito"},
+        {name: "Crema"}, {name: "Seasonal"}, {name: "Miscellaneous"}
     ];
 
-    // need a useEffect here to fetch toppings when component mounts
+    // fetch toppings from API when screen loads
     useEffect(() => {
         const getToppings = async () => {
             try {
@@ -23,7 +23,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                 const data = await response.json();
                 console.log("Raw data from /api/toppings:", data);
 
-                // Filter out for just toppings, since our database is toppings_other with some misc items
+                // Filter for toppings only (vs misc)
                 const filteredToppings = data.filter(item => item.othertype === "topping");
                 console.log("Filtered toppings:", filteredToppings);
                 setToppings(filteredToppings);
@@ -43,17 +43,24 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
         return () => clearInterval(interval);
     }, []);
 
+    // function to load topping image by name
+    const importImage = (name) => {
+        try {
+            return require(`./Images/toppings/${name.toLowerCase().replace(/ /g, "_")}.png`);
+        } catch (err) {
+            return logo; // fallback image
+        }
+    };
+
     return (
         <>
-            {/* Sidebar (logout, time, cancel order) */}
+            {/* Sidebar (logout, time, cancel order)*/}
             <div className="sidebar">
-                {/* TIME BOX TODO: ADD WEATHER Sprint 3 */}
                 <div className="time-box">
                     <h2>{currentTime.toLocaleTimeString()}</h2>
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
 
-                {/* DRINK CATEGORIES if selected darker (SideButton vs SpecialSideButton) */}
                 {categories.map((category) =>
                     <functions.SideButton
                         key={category.name}
@@ -71,7 +78,9 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                 />
 
                 {/* BLANK BUTTON THAT TAKES YOU BACK HOME */}
-                <functions.SideButton onClick={() => setScreen("home")} />
+                <functions.SideButton
+                    onClick={() => setScreen("home")}
+                />
             </div>
 
             {/* Main content */}
@@ -81,47 +90,55 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                 <div className="mainBody">
                     {/* loop through toppings */}
                     {toppings.length > 0 ? (
-                        toppings.map((topping) => (
-                            <div className="buttonBox" key={topping.othername}>
-                                <functions.CustomerDrinkButton
-                                    text={topping.othername}
-                                    image={logo} // TODO: LONG UPDATE IMAGES!!
-                                    onClick={() => {
-                                        // add topping to drink if in linked mode
-                                        if (cameFromCustomization) {
-                                            const updated = [...OrderDetails];
-                                            const lastIdx = updated.length - 1;
+                        toppings.map((topping) => {
+                            const toppingLabel = `${topping.othername} (+$${parseFloat(topping.otherprice).toFixed(2)})`;
+                            return (
+                                <div className="buttonBox" key={topping.othername}>
+                                    <functions.CustomerDrinkButton
+                                        text={toppingLabel}
+                                        image={importImage(topping.othername)}
+                                        onClick={() => {
+                                            if (cameFromCustomization) {
+                                                // ADD TO EXISTING DRINK
+                                                setorderDetails(prevDetails => {
+                                                    const idx = prevDetails.length - 1;
+                                                    const updated = [...prevDetails];
 
-                                            const currentToppings = updated[lastIdx].toppings || "";
-                                            const newToppings = currentToppings
-                                                ? `${currentToppings}, ${topping.othername}`
-                                                : topping.othername;
+                                                    const existingToppings = updated[idx].toppings && updated[idx].toppings !== "none"
+                                                        ? updated[idx].toppings + `, ${toppingLabel}`
+                                                        : toppingLabel;
 
-                                            updated[lastIdx] = {
-                                                ...updated[lastIdx],
-                                                toppings: newToppings
-                                            };
+                                                    const newPrice = parseFloat(updated[idx].price) + parseFloat(topping.otherprice);
 
-                                            setorderDetails(updated);
-                                            setScreen("confirm");
-                                        } else {
-                                            // otherwise it's an individual topping order
-                                            const toppingObject = {
-                                                name: topping.othername,
-                                                price: topping.otherprice?.toFixed(2) || "0.00",
-                                                quantity: "1",
-                                                size: "n/a",
-                                                ice: "n/a",
-                                                sweetness: "n/a",
-                                                toppings: ""
-                                            };
-                                            setorderDetails(prev => [...prev, toppingObject]);
-                                            setScreen("confirm");
-                                        }
-                                    }}
-                                />
-                            </div>
-                        ))
+                                                    updated[idx] = {
+                                                        ...updated[idx],
+                                                        toppings: existingToppings,
+                                                        price: newPrice.toFixed(2)
+                                                    };
+                                                    return updated;
+                                                });
+                                                setScreen("confirm");
+                                            } else {
+                                                // TOPPING ONLY MODE
+                                                setorderDetails(prevDetails => [
+                                                    ...prevDetails,
+                                                    {
+                                                        name: topping.othername,
+                                                        price: topping.otherprice?.toFixed(2) || "0.00",
+                                                        size: "n/a",
+                                                        ice: "n/a",
+                                                        sweetness: "n/a",
+                                                        toppings: "n/a",
+                                                        quantity: "1"
+                                                    },
+                                                ]);
+                                                setScreen("confirm");
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            );
+                        })
                     ) : (
                         <p>No toppings available. Please check back later!</p>
                     )}

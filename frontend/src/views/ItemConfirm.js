@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import "./Customer.css";
 import logo from "./Images/team_00_logo.png";
 import * as functions from "./functions.js";
+import { getDrinkImage } from "./functions.js";
+
 
 function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditIdx }) {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -68,7 +70,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                 <h1 style={{ fontSize: "40px", marginBottom: "10px" }}>{lastItem.name}</h1>
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
                     <img
-                        src={logo}
+                        src={getDrinkImage(lastItem.name)}
                         alt={lastItem.name}
                         style={{ width: "150px", height: "150px", objectFit: "contain" }}
                     />

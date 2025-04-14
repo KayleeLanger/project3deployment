@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "./Customer.css";
 import * as functions from "./functions.js";
-import logo from "./Images/team_00_logo.png"; // placeholder
+import logo from "./Images/team_00_logo.png";
+import { getDrinkImage } from "./functions.js";
 
 function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
@@ -92,7 +93,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 					{OrderDetails.length > 0 ? (
 						OrderDetails.map((item, index) => (
 							<div key={index} className="order-item" style={{ display: "flex", marginBottom: "20px", alignItems: "center" }}>
-								<img src={logo} alt="drink" style={{ width: "100px", height: "100px", marginRight: "20px" }} />
+								<img src={getDrinkImage(item.name) || logo} alt="drink" style={{ width: "100px", height: "100px", marginRight: "20px" }} />
 								<div className="order-item-info" style={{ textAlign: "left" }}>
 									<strong>{item.name}</strong>
 									<p>Size: {item.size}</p>
