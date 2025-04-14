@@ -103,7 +103,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                 <h1 style={{ fontSize: "40px", marginBottom: "10px" }}>{lastItem.name}</h1>
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
                     <img
-                        src={getDrinkImage(lastItem.name)}
+                        src={lastItem.image || getDrinkImage(lastItem.name) || logo}
                         alt={lastItem.name}
                         style={{ width: "150px", height: "150px", objectFit: "contain" }}
                     />

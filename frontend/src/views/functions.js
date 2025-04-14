@@ -322,3 +322,13 @@ export function getDrinkImage(drinkName) {
         return require("./Images/team_00_logo.png"); // fallback image if image not found
     }
 }
+
+export function getToppingImage(toppingName) {
+    try {
+        const formatted = toppingName.toLowerCase().replace(/\s+/g, "_");
+        return require(`./Images/toppings/${formatted}.png`);
+    } catch {
+        return require("./Images/team_00_logo.png");
+    }
+}
+

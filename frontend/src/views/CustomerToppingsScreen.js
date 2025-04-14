@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./Customer.css";
 import logo from "./Images/team_00_logo.png"; 
 import * as functions from "./functions.js";
+import { getToppingImage } from "./functions";
 
 function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCategory, OrderDetails, setorderDetails, cameFromCustomization }) {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -129,7 +130,8 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                                                         ice: "n/a",
                                                         sweetness: "n/a",
                                                         toppings: "n/a",
-                                                        quantity: "1"
+                                                        quantity: "1",
+                                                        image: getToppingImage(topping.othername)
                                                     },
                                                 ]);
                                                 setScreen("confirm");
