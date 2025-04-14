@@ -4,8 +4,7 @@ import logo from "./Images/team_00_logo.png";
 import * as functions from "./functions.js";
 import { getDrinkImage } from "./functions.js";
 
-
-function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditIdx }) {
+function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditIdx, selectedCategory, setSelectedCategory, setToppingMode }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     const lastIdx = OrderDetails.length - 1;
     const lastItem = OrderDetails[lastIdx];
@@ -24,7 +23,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
             setSweetness(lastItem.sweetness || "");
             setIce(lastItem.ice || "");
 
-            //to prevent error when doing individual toppings
             if (typeof lastItem.toppings === "string") {
                 setToppings(lastItem.toppings.split(", "));
             } else {
@@ -42,7 +40,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
             toppings: toppings.join(", ")
         };
         setorderDetails(updated);
-        setScreen("customer-drinks"); //SET TO CHECKOUT SCREEN (IF ITEM HAS BEEN ADDED TO ORDER)
+        setScreen("customer-drinks");
     };
 
     const subtotal = OrderDetails.reduce((subtotal, order) => {
@@ -54,18 +52,53 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
     const tax = subtotal * 0.08;
     const total = subtotal + tax;
 
+    const categories = [
+        { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
+        { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
+        { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
+    ];
+
     return (
         <div style={{ display: "flex", height: "100vh" }}>
-            {/* Sidebar */}
             <div className="sidebar">
                 <div className="time-box">
                     <h2>{currentTime.toLocaleTimeString()}</h2>
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
-                <button onClick={() => setScreen("customer-customization")}>Back</button>
+
+                {categories.map((category) =>
+                    category.name === selectedCategory ? (
+                        <functions.SpecialSideButton
+                            key={category.name}
+                            text={category.name}
+                            onClick={() => {
+                                setSelectedCategory(category.name);
+                                setScreen("customer-drinks");
+                            }}
+                        />
+                    ) : (
+                        <functions.SideButton
+                            key={category.name}
+                            text={category.name}
+                            onClick={() => {
+                                setSelectedCategory(category.name);
+                                setScreen("customer-drinks");
+                            }}
+                        />
+                    )
+                )}
+
+                <functions.SideButton
+                    text="Individual Toppings"
+                    onClick={() => {
+                        setToppingMode("standalone");
+                        setScreen("customer-toppings");
+                    }}
+                />
+
+                <functions.SideButton onClick={() => setScreen("home")} />
             </div>
 
-            {/* Main confirmation content */}
             <div className="main" style={{ marginLeft: "250px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
                 <h1 style={{ fontSize: "40px", marginBottom: "10px" }}>{lastItem.name}</h1>
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
@@ -75,7 +108,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                         style={{ width: "150px", height: "150px", objectFit: "contain" }}
                     />
                     <div style={{ textAlign: "left", fontSize: "18px" }}>
-                        {/* Check if topping is standalone */}
                         {ice === "n/a" && sweetness === "n/a" ? (
                             <p><strong>Type:</strong> Standalone Topping</p>
                         ) : (
@@ -84,7 +116,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                 <p><strong>Sweetness:</strong> {sweetness}</p>
                                 <p><strong>Ice:</strong> {ice}</p>
                                 <p><strong>Toppings:</strong> {toppings.join(", ") || "None"}</p>
-
                             </>
                         )}
                     </div>
@@ -97,20 +128,16 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     >
                         Edit Customizations
                     </button>
-                    
                 </div>
             </div>
 
-            {/* Order summary panel */}
             <div className="order">
                 <h1>Order Details</h1>
-                {/* loop through order items and display */}
                 {OrderDetails && OrderDetails.length > 0 ? (
                     OrderDetails.map((order, index) => (
                         <>
                             <div className="order-item">
                                 <div className="order-left">
-                                    {/* Delete button */}
                                     <functions.Button
                                         text="X"
                                         onClick={() => {
@@ -126,9 +153,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                                 updated[index].quantity = Math.max(1, currentQty - 1);
                                                 setorderDetails(updated);
                                             }}
-                                        >
-                                            –
-                                        </button>
+                                        >–</button>
 
                                         <input
                                             type="number"
@@ -150,9 +175,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                                 updated[index].quantity = currentQty + 1;
                                                 setorderDetails(updated);
                                             }}
-                                        >
-                                            +
-                                        </button>
+                                        >+</button>
                                     </div>
                                 </div>
 
@@ -171,7 +194,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                     )}
                                 </div>
 
-                                {/* Edit item button */}
                                 <functions.Button
                                     text="Edit"
                                     onClick={() => {
@@ -186,7 +208,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     <p>No items</p>
                 )}
 
-                {/* display order totals */}
                 <div className="order-total" style={{ textAlign: "right" }}>
                     <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
                     <h3>Tax: ${tax.toFixed(2)} </h3>
