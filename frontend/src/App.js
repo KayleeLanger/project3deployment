@@ -103,7 +103,8 @@ function App() { //main function, will be mostly imports eventually
 										selectedCategory={selectedCategory}
 										OrderDetails={orderDetails}
 										setorderDetails={setOrderDetails}
-										setCurrentEditIdx={setCurrentEditIdx} 
+										setCurrentEditIdx={setCurrentEditIdx}
+										setToppingMode={setToppingMode}
 									/>}
 			{screen === "customer-customization" && <CustomerCustomization setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
