@@ -313,3 +313,12 @@ export function editItem(index, setCurrentEditIdx, setScreen, page) {
         setScreen("cashier-customization");
     }
 }
+
+export function getDrinkImage(drinkName) {
+    try {
+        const formatted = drinkName.toLowerCase().replace(/\s+/g, "_");
+        return require(`./Images/drinks/${formatted}.png`);
+    } catch {
+        return require("./Images/team_00_logo.png"); // fallback image if image not found
+    }
+}
