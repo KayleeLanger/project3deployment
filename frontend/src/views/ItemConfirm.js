@@ -80,9 +80,11 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                             <p><strong>Type:</strong> Standalone Topping</p>
                         ) : (
                             <>
+                                <p><strong>Size:</strong> {lastItem.size}</p>
                                 <p><strong>Sweetness:</strong> {sweetness}</p>
                                 <p><strong>Ice:</strong> {ice}</p>
                                 <p><strong>Toppings:</strong> {toppings.join(", ") || "None"}</p>
+
                             </>
                         )}
                     </div>
