@@ -154,6 +154,7 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
                         updated[index].quantity = Math.max(1, currentQty - 1);
                         setorderDetails(updated);
                       }}
+                      style={{ backgroundColor: "#38bdf8"}}
                     >
                       –
                     </button>
@@ -178,6 +179,7 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
                         updated[index].quantity = currentQty + 1;
                         setorderDetails(updated);
                       }}
+                      style={{ backgroundColor: "#38bdf8"}}
                     >
                       +
                     </button>

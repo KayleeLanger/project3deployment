@@ -242,6 +242,7 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                         updated[index].quantity = Math.max(1, currentQty - 1);
                         setorderDetails(updated);
                       }}
+                      style={{ backgroundColor: "#38bdf8"}}
                     >
                       –
                     </button>
@@ -266,6 +267,7 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                         updated[index].quantity = currentQty + 1;
                         setorderDetails(updated);
                       }}
+                      style={{ backgroundColor: "#38bdf8"}}
                     >
                       +
                     </button>

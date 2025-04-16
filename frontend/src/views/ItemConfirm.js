@@ -153,6 +153,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                                 updated[index].quantity = Math.max(1, currentQty - 1);
                                                 setorderDetails(updated);
                                             }}
+                                            style={{ backgroundColor: "#38bdf8"}}
                                         >–</button>
 
                                         <input
@@ -175,6 +176,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                                 updated[index].quantity = currentQty + 1;
                                                 setorderDetails(updated);
                                             }}
+                                            style={{ backgroundColor: "#38bdf8"}}
                                         >+</button>
                                     </div>
                                 </div>

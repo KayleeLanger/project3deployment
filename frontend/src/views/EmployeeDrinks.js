@@ -168,6 +168,7 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
                         updated[index].quantity = Math.max(1, currentQty - 1);
                         setorderDetails(updated);
                       }}
+                      style={{ backgroundColor: "#38bdf8"}}
                     >
                       –
                     </button>
@@ -192,6 +193,7 @@ function EmployeeDrinks({ setScreen, selectedCategory, OrderDetails, setorderDet
                         updated[index].quantity = currentQty + 1;
                         setorderDetails(updated);
                       }}
+                      style={{ backgroundColor: "#38bdf8"}}
                     >
                       +
                     </button>

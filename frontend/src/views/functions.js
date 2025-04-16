@@ -1,5 +1,20 @@
 export function Button({ text, onClick }) {
-    return <button onClick={onClick}>{text}</button>;
+    return (
+        <button
+            style={{
+                backgroundColor: "#38bdf8 ",
+                color: "white",
+                padding: "10px 20px",
+                border: "none",
+                borderRadius: "5px",
+                fontSize: "16px",
+                cursor: "pointer"
+            }}
+            onClick={onClick}
+        >
+            {text}
+        </button>
+    );
 }
 
 export function CategoryButton({ text, onClick }) {
