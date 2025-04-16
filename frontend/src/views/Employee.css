@@ -162,6 +162,11 @@ button {
 .option-buttons button.selected {
     background-color: #3b82f6;
 }
+body.high-contrast .option-buttons button.selected {
+    background-color: white !important;
+    color: black !important;
+    border: 3px solid yellow !important;
+}
 
 .selected {
     background-color: #4CAF50;
@@ -193,6 +198,11 @@ button {
 .topping-button.selected {
     background-color: #2a9d8f;
     color: white;
+}
+body.high-contrast .topping-button.selected {
+    background-color: white !important;
+    color: black !important;
+    border: 3px solid yellow !important;
 }
 
 
