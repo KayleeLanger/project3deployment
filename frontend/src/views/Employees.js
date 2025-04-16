@@ -120,7 +120,8 @@ function Employees({ setScreen }) { //employees
         <div style={{ 
             display: 'flex', 
             minHeight: '100vh',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
+            color: 'black'
         }}>
             {/*Sidebar*/}
             <div style={{
@@ -295,13 +296,15 @@ function Employees({ setScreen }) { //employees
 const tableHeaderStyle = {
     padding: '12px',
     textAlign: 'left',
-    borderBottom: '1px solid'
+    borderBottom: '1px solid',
+    color: 'black'
 };
 
 const tableCellStyle = {
     padding: '12px',
     textAlign: 'left',
-    borderBottom: '1px solid'
+    borderBottom: '1px solid',
+    color: 'black'
 };
 
 export default Employees;

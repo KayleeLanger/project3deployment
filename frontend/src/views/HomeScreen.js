@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import logo from '../logo.svg';
 import './HomeScreen.css';
 import Button from '../Button';
+import HighContrastToggle from './HighContrastToggle';
+import './HighContrast.css';
 
 function HomeScreen({ setScreen }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
@@ -15,6 +17,8 @@ function HomeScreen({ setScreen }) {
 
 	return (
 		<div className="home-container">
+			<HighContrastToggle /> {/* <-- just drop this in every page */}
+
 			<div className="top-bar">
 				<span className="date-time">
 					{currentTime.toLocaleDateString()} {currentTime.toLocaleTimeString()}

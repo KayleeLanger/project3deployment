@@ -208,8 +208,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     <p>No items</p>
                 )}
 
-                <div className="order-total" style={{ textAlign: "right" }}>
-                    <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
+                <div className="order-total" style={{ textAlign: "right", color: "black" }}>                    <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
                     <h3>Tax: ${tax.toFixed(2)} </h3>
                     <h2>Total: ${total.toFixed(2)}</h2>
                 </div>

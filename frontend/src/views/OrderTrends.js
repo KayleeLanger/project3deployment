@@ -139,7 +139,7 @@ function OrderTrends({ setScreen }) { //order trends
     };
 
     return (
-        <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'white' }}>
+        <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'white', color: 'black' }}>
             <div style={{ width: '150px', backgroundColor: '#D3D3D3', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div style={{ textAlign: 'center', marginBottom: '20px' }}>
                     <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{formatTime(currentTime)}</div>
@@ -202,7 +202,7 @@ function OrderTrends({ setScreen }) { //order trends
                 )}
                 {activeReport === 'z' && zReport && (
                     <div style={{ flex: 1, backgroundColor: 'white', borderRadius: '4px', overflow: 'hidden' }}>
-                        <h2 style={{ padding: '15px', backgroundColor: 'grey', color: 'white', margin: 0 }}>Z-Report (Updated: {formatTime(currentTime)})</h2>
+                        <h2 style={{ padding: '15px', backgroundColor: '#333333', color: 'white', margin: 0 }}>Z-Report (Updated: {formatTime(currentTime)})</h2>
                         <div style={{ padding: '20px', backgroundColor: '#D3D3D3' }}>
                             <div style={zReportItemStyle}><span style={zReportLabelStyle}>Total Sales:</span><span style={zReportValueStyle}>${zReport.total_sales.toFixed(2)}</span></div>
                             <div style={zReportItemStyle}><span style={zReportLabelStyle}>Total Orders:</span><span style={zReportValueStyle}>{zReport.total_orders}</span></div>
