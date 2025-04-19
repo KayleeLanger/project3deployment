@@ -13,7 +13,6 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
     const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "Miscellaneous"}];
 
 
-
     //clock setup
     useEffect(() => {
         const interval = setInterval(() => {
@@ -21,14 +20,61 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
         }, 1000);
         return () => clearInterval(interval);
     }, []);
-  return (
-    <>
+
+    const [translateKey] = useState(() => Date.now());
+
+    // machine translation API
+    useEffect(() => {
+
+        // translate div style
+        const newDiv = document.createElement("div");
+        newDiv.id = "google_translate_element";
+        newDiv.style.position = "absolute";
+        newDiv.style.top = "25px";
+        newDiv.style.right = "25px";
+        newDiv.style.zIndex = "1000";
+        document.body.appendChild(newDiv);
     
+        // initialize translate widget
+        const initTranslateWidget = () => {
+            const checkExist = setInterval(() => {
+                if (
+                    window.google &&
+                    window.google.translate &&
+                    typeof window.google.translate.TranslateElement === "function"
+                ) {
+                    clearInterval(checkExist);
+                    new window.google.translate.TranslateElement(
+                        { pageLanguage: "en" },
+                        "google_translate_element"
+                    );
+                }
+            }, 100);
+        };
+    
+        // load script only once
+        if (!document.getElementById("google-translate-script")) {
+            const script = document.createElement("script");
+            script.id = "google-translate-script";
+            script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            script.async = true;
+            document.body.appendChild(script);
+    
+            // google calls this global when script loads
+            window.googleTranslateElementInit = initTranslateWidget;
+        } else {
+            // if script already loaded, call init directly
+            initTranslateWidget();
+        }
+    }, []);
 
 
-      {/* Sidebar (logout, time, cancel order)*/}
-      
-      <div className="sidebar">
+    return (
+    <>
+
+        {/* Sidebar (logout, time, cancel order)*/}
+        <div className="sidebar">
+
             {/* TIME BOX TODO: ADD WEATHER Sprint 3 */}
             <div className="time-box">
                 <h2>{currentTime.toLocaleTimeString()}</h2>
@@ -50,7 +96,7 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
             {/* ONLY TOPPINGS BUTTON (goes to a different screen ) */}
             <functions.SideButton
                 text="Individual Toppings"
-                 onClick={() => setScreen("customer-toppings")}
+                onClick={() => setScreen("customer-toppings")}
             />
 
             {/*Checkout*/}
@@ -63,39 +109,27 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
                         alert("No items in the order!");
                     }
                 }}
-/>
+            />
 
             {/* BLANK BUTTON THAT TAKES YOU BACK HOME */}
             <functions.SideButton
                 onClick={() => setScreen("home")}
             />
         </div>
-      
+    
 
 
 
-      {/* Main content */}
-      
-      <div className="homeScreen">
-        <img src={logo} alt="Logo" style={{ width: "200px", marginBottom: "20px" }} />
-        <h1>Welcome!<br></br></h1>
-        <h3>Please click on the category on the left to get started with your order!</h3>
-        
-       
-      </div>
-      
+        {/* Main content */}
+                
+        <div className="homeScreen">
+            <img src={logo} alt="Logo" style={{ width: "200px", marginBottom: "20px" }} />
+            <h1>Welcome!<br></br></h1>
+            <h3>Please click on the category on the left to get started with your order!</h3>
+        </div>
+    
     </>
-  );
+    );
 }
 
-
-// function Button({ text, onClick }) {
-//   return <button onClick={onClick}>{text}</button>;
-// }
-
-
-
-
 export default CustomerHome;
-
-
