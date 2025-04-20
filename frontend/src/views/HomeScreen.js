@@ -45,13 +45,7 @@ function HomeScreen({ setScreen }) {
 				/>
 			)}
 
-			{/* <div className="button-section">
-				<Button text="Go to Cashier" onClick={() => setScreen("cashier")} />
-				<Button text="Go to Manager" onClick={() => setScreen("manager")} />
-				<Button text="Go to Customer" onClick={() => setScreen("customer")} />
-				<Button text="Go to Menu Board" onClick={() => setScreen("menu-board")} />
-			</div> */}
-
+			{/* only show option buttons after user authentication */}
 			{user && (
 				<>
 				<p>Hello, {user.name}!</p>
