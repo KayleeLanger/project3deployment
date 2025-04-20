@@ -30,7 +30,7 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
         const newDiv = document.createElement("div");
         newDiv.id = "google_translate_element";
         newDiv.style.position = "absolute";
-        newDiv.style.top = "25px";
+        newDiv.style.top = "50px";
         newDiv.style.right = "25px";
         newDiv.style.zIndex = "1000";
         document.body.appendChild(newDiv);

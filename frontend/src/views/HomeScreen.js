@@ -4,9 +4,12 @@ import './HomeScreen.css';
 import Button from '../Button';
 import HighContrastToggle from './HighContrastToggle';
 import './HighContrast.css';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
 
 function HomeScreen({ setScreen }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
+	const [user, setUser] = useState(null); // Stores logged-in user info
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -29,12 +32,38 @@ function HomeScreen({ setScreen }) {
 				<img src={logo} className="App-logo" alt="logo" />
 			</div>
 
-			<div className="button-section">
+			{!user && (
+				<GoogleLogin
+					onSuccess={(credentialResponse) => {
+						const decoded = jwtDecode(credentialResponse.credential);
+						console.log("Logged in user:", decoded);
+						setUser(decoded); // Store user info to unlock the page
+					}}
+					onError={() => {
+						console.log("Login Failed");
+					}}
+				/>
+			)}
+
+			{/* <div className="button-section">
 				<Button text="Go to Cashier" onClick={() => setScreen("cashier")} />
 				<Button text="Go to Manager" onClick={() => setScreen("manager")} />
 				<Button text="Go to Customer" onClick={() => setScreen("customer")} />
 				<Button text="Go to Menu Board" onClick={() => setScreen("menu-board")} />
-			</div>
+			</div> */}
+
+			{user && (
+				<>
+				<p>Hello, {user.name}!</p>
+
+				<div className="button-section">
+					<Button text="Go to Cashier" onClick={() => setScreen("cashier")} />
+					<Button text="Go to Manager" onClick={() => setScreen("manager")} />
+					<Button text="Go to Customer" onClick={() => setScreen("customer")} />
+					<Button text="Go to Menu Board" onClick={() => setScreen("menu-board")} />
+				</div>
+				</>
+			)}
 		</div>
 	);
 }

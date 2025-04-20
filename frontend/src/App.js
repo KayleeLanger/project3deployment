@@ -19,6 +19,7 @@ import ItemConfirm from './views/ItemConfirm.js'; //New import for Item Confirm
 import CustomerCustomization from "./views/CustomerCustomization.js";
 import CustomerToppingsScreen from "./views/CustomerToppingsScreen";
 import CustomerCheckoutScreen from "./views/CustomerCheckoutScreen";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 
@@ -30,12 +31,18 @@ function App() { //main function, will be mostly imports eventually
 	const [orderDetails, setOrderDetails] = useState([]); 
 	const [currentEditIdx, setCurrentEditIdx] = useState(null);
 	const [toppingMode, setToppingMode] = useState("standalone"); // standalone means toppings by itself, linked will be toppings linked to a drink
+	const clientId = "460671222657-14blmgvc58epn677ovrfvlc68i3c7ddt.apps.googleusercontent.com";
 
 
 	return (
 		<div className="App">
 		<header className="App-header">
-			{screen === "home" && <HomeScreen setScreen={setScreen} />}
+			{/* home screen with user authentication */}
+			{screen === "home" && (
+				<GoogleOAuthProvider clientId={clientId}>
+				<HomeScreen setScreen={setScreen} />
+				</GoogleOAuthProvider>
+			)}
 			{/* cashier */}
 			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
