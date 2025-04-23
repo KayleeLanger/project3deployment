@@ -66,11 +66,11 @@
 
 .order-item {
     display: flex;
-    flex-wrap: wrap;
     align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 8px; /* change gap btwn order */
+    margin-bottom: 12px;
     width: 100%;
+    position: relative;
 }
 
 .order h1, .order p {
