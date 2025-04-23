@@ -255,3 +255,8 @@ button:hover {
 .category-button:hover {
     background-color: rgb(15, 75, 100); 
 }
+
+.customer-drink-button.selected {
+    background-color: #ffe680; /* highlight color */
+    border: 2px solid #ffbb00;
+}

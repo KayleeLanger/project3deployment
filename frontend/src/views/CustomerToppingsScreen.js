@@ -7,6 +7,8 @@ import { getToppingImage } from "./functions";
 function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCategory, OrderDetails, setorderDetails, cameFromCustomization }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [toppings, setToppings] = useState([]);
+    const [selectedToppings, setSelectedToppings] = useState([]);
+
 
     /// category list: hardcoded since categories won't change, only drinks
     const categories = [
@@ -53,6 +55,32 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
         }
     };
 
+    // highlight all selected toppings
+    useEffect(() => {
+        if (!cameFromCustomization) return;
+    
+        const lastOrder = OrderDetails[OrderDetails.length - 1];
+    
+        if (lastOrder && lastOrder.toppings && lastOrder.toppings !== "none") {
+            const toppingsList = lastOrder.toppings
+                .split(", ")
+                .map(t => t.split(" (+")[0]); // Remove price text
+            setSelectedToppings(toppingsList);
+        } else {
+            setSelectedToppings([]);
+        }
+    }, [cameFromCustomization, OrderDetails]);
+    
+
+    // selects multiple toppings
+    const toggleTopping = (name) => {
+        setSelectedToppings(prev =>
+        prev.includes(name)
+            ? prev.filter(t => t !== name)
+            : [...prev, name]
+        );
+    };
+
     return (
         <>
             {/* Sidebar (logout, time, cancel order)*/}
@@ -93,12 +121,16 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     {toppings.length > 0 ? (
                         toppings.map((topping) => {
                             const toppingLabel = `${topping.othername} (+$${parseFloat(topping.otherprice).toFixed(2)})`;
+
                             return (
                                 <div className="buttonBox" key={topping.othername}>
                                     <functions.CustomerDrinkButton
                                         text={toppingLabel}
                                         image={importImage(topping.othername)}
+                                        selected={selectedToppings.includes(topping.othername)}
                                         onClick={() => {
+                                            toggleTopping(topping.othername);
+
                                             if (cameFromCustomization) {
                                                 // ADD TO EXISTING DRINK
                                                 setorderDetails(prevDetails => {
@@ -118,24 +150,39 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                                                     };
                                                     return updated;
                                                 });
-                                                setScreen("confirm");
+                                                // setScreen("confirm");
                                             } else {
-                                                // TOPPING ONLY MODE
-                                                setorderDetails(prevDetails => [
-                                                    ...prevDetails,
-                                                    {
-                                                        name: topping.othername,
-                                                        price: topping.otherprice?.toFixed(2) || "0.00",
-                                                        size: "n/a",
-                                                        ice: "n/a",
-                                                        sweetness: "n/a",
-                                                        toppings: "n/a",
-                                                        quantity: "1",
-                                                        image: getToppingImage(topping.othername)
-                                                    },
-                                                ]);
-                                                setScreen("confirm");
+                                                // TOPPING ONLY MODE: toggle add/remove
+                                                setorderDetails(prevDetails => {
+                                                    const last = prevDetails[prevDetails.length - 1];
+                                            
+                                                    const isSameTopping =
+                                                        last?.name === topping.othername &&
+                                                        last.size === "n/a" &&
+                                                        last.ice === "n/a";
+                                            
+                                                    if (isSameTopping) {
+                                                        // Deselect: remove the topping-only item
+                                                        return prevDetails.slice(0, -1);
+                                                    }
+                                            
+                                                    // Add new topping-only item
+                                                    return [
+                                                        ...prevDetails,
+                                                        {
+                                                            name: topping.othername,
+                                                            price: topping.otherprice?.toFixed(2) || "0.00",
+                                                            size: "n/a",
+                                                            ice: "n/a",
+                                                            sweetness: "n/a",
+                                                            toppings: "n/a",
+                                                            quantity: "1",
+                                                            image: getToppingImage(topping.othername)
+                                                        },
+                                                    ];
+                                                });
                                             }
+                                            
                                         }}
                                     />
                                 </div>

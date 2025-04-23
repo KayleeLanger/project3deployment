@@ -161,12 +161,12 @@ export function DrinkButton({ text, onClick }) {
     onClick={onClick}>{text}</button>;
 }
 
-export function CustomerDrinkButton({ text, image, onClick }) {
+export function CustomerDrinkButton({ text, image, onClick , selected}) {
     return (
         <button
             style={{
             // Colors
-            backgroundColor: "#39D6DE",
+            backgroundColor: selected ? "#ffe680" : "#39D6DE",
             color: "black",
             // Button Spacing
             width: "300px",
