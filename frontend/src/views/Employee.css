@@ -66,9 +66,11 @@
 
 .order-item {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    align-items: flex-start;
     gap: 10px;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 .order h1, .order p {
@@ -93,13 +95,36 @@
 }
 
 .quantity {
+    display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 40px;
+}
+
+.quantity button {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #38bdf8;
 }
 
 .quantity-input {
     width: 50px;
+    height: 34px;
     text-align: center;
-    padding: 4px;
+    padding: 0 5px;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
 
