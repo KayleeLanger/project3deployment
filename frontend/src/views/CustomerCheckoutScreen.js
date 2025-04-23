@@ -104,15 +104,19 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 								/>
 								<div className="order-item-info" style={{ textAlign: "left" }}>
 									<strong>{item.name}</strong>
-									{item.ice !== "n/a" ? (
+									{item.ice !== "n/a" && item.ice !== "-" && (
 										<>
 											<p>Size: {item.size}</p>
 											<p>Sweetness: {item.sweetness}</p>
 											<p>Ice: {item.ice}</p>
 											<p>Toppings: {item.toppings}</p>
 										</>
-									) : (
+									)}
+									{item.ice === "n/a" && (
 										<p>Standalone Topping</p>
+									)}
+									{item.ice === "-" && (
+										<p>Miscellaneous Item</p>
 									)}
 									<p>Quantity: {item.quantity || 1}</p>
 									<p>Price: ${item.price}</p>

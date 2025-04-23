@@ -104,12 +104,21 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                         drinks.map(drink => (
                             <div className="buttonBox" key={drink.drinkname}>
                                 <functions.CustomerDrinkButton
-                                    text={drink.drinkname}
+                                    text = {drink.drinkname || drink.othername} 
                                     image={functions.getDrinkImage(drink.drinkname)}
                                     onClick={() => {
-                                        setorderDetails(prevDetails => [
-                                            ...prevDetails,
-                                            {
+                                        const isMisc = !!drink.othername;
+                                        const item = isMisc
+                                            ? {
+                                                name: drink.othername,
+                                                price: drink.otherprice.toFixed(2),
+                                                size: "-",
+                                                ice: "-",
+                                                sweetness: "-",
+                                                toppings: "-",
+                                                quantity: "1"
+                                            }
+                                            : {
                                                 name: drink.drinkname,
                                                 price: drink.drinkprice.toFixed(2),
                                                 size: "",
@@ -117,9 +126,10 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                                                 sweetness: "",
                                                 toppings: "",
                                                 quantity: "1"
-                                            }
-                                        ]);
-                                        setScreen("customer-customization");
+                                            };
+                                    
+                                        setorderDetails(prevDetails => [...prevDetails, item]);
+                                        setScreen(isMisc ? "customer" : "customer-customization");
                                     }}
                                 />
                             </div>

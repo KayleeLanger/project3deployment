@@ -121,13 +121,19 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
 
 
         {/* Main content */}
-                
-        <div className="homeScreen">
-            <img src={logo} alt="Logo" style={{ width: "200px", marginBottom: "20px" }} />
-            <h1>Welcome!<br></br></h1>
-            <h3>Please click on the category on the left to get started with your order!</h3>
-        </div>
-    
+        {/* Welcome if no items in order, else encouragement to add more */}
+        {(OrderDetails.length === 0 ? (
+            <div className="homeScreen">
+                <img src={logo} alt="Logo" style={{ width: "200px", marginBottom: "20px" }} />
+                <h1>Welcome!<br></br></h1>
+                <h3>Please click on the category on the left to get started with your order!</h3>
+            </div>
+        ) : (
+            <div className="homeScreen">
+                <img src={logo} alt="Logo" style={{ width: "200px", marginBottom: "20px" }} />
+                <h1>Click on a category to add more!<br></br></h1>
+            </div>
+        ))}
     </>
     );
 }

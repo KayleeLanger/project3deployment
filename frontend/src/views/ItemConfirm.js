@@ -100,7 +100,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
             </div>
 
             <div className="main" style={{ marginLeft: "250px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                <h1 style={{ fontSize: "40px", marginBottom: "10px" }}>{lastItem.name}</h1>
+                <h1 style={{ color: "black", fontSize: "40px", marginBottom: "100px" }}>{lastItem.name}</h1>
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
                     <img
                         src={lastItem.image || getDrinkImage(lastItem.name) || logo}
@@ -108,9 +108,13 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                         style={{ width: "150px", height: "150px", objectFit: "contain" }}
                     />
                     <div style={{ textAlign: "left", fontSize: "18px" }}>
-                        {ice === "n/a" && sweetness === "n/a" ? (
-                            <p><strong>Type:</strong> Standalone Topping</p>
-                        ) : (
+                        {ice === "n/a" && sweetness === "n/a" && (
+                            <p><strong>Type:</strong> Individual Topping</p>
+                        )}
+                        {ice === "-" && (
+                            <p><strong>Type:</strong> Miscellaneous Item</p>
+                        )}
+                        {ice !== "n/a" && ice !== "-" && (
                             <>
                                 <p><strong>Size:</strong> {lastItem.size}</p>
                                 <p><strong>Sweetness:</strong> {sweetness}</p>
@@ -186,7 +190,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                         <h3>{order.name}</h3>
                                         <h3>${order.price}</h3>
                                     </div>
-                                    {order.ice !== "n/a" && (
+                                    {order.ice !== "n/a" && order.ice !== "-" && (
                                         <p>
                                             <strong>Size:</strong> {order.size} <br />
                                             <strong>Ice:</strong> {order.ice} <br />
