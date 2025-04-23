@@ -35,7 +35,12 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 					<h2>{currentTime.toLocaleTimeString()}</h2>
 					<strong>{currentTime.toLocaleDateString()}</strong>
 				</div>
-				<button onClick={() => setScreen("customer-drinks")}>Back</button>
+				<button onClick={() => {
+									setScreen("customer-drinks");
+									functions.deleteItem(OrderDetails.length-1, OrderDetails, setorderDetails, setScreen, "customer");
+								}}>
+								Back
+				</button>
 			</div>
 
 			{/* Main content */}

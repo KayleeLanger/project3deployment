@@ -322,7 +322,7 @@ export function deleteItem(index, orderdetails, setorderDetails, setScreen, page
 export function editItem(index, setCurrentEditIdx, setScreen, page) {
     setCurrentEditIdx(index);
     if (page === "customer") {
-        setScreen("customer-drinks");
+        setScreen("customer-customization");
     }
     else {
         setScreen("cashier-customization");

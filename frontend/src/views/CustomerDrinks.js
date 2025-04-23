@@ -80,6 +80,18 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                     }}
                 />
 
+                {/*Checkout*/}
+                <functions.SideButton
+                    text="Checkout"
+                    onClick={() => {
+                        if (OrderDetails.length > 0) {
+                            setScreen("confirm");
+                        } else {
+                            alert("No items in the order!");
+                        }
+                    }}
+                />
+
                 <functions.SideButton onClick={() => setScreen("home")} />
             </div>
 
