@@ -80,6 +80,7 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
                 <h2>{currentTime.toLocaleTimeString()}</h2>
                 <strong>{currentTime.toLocaleDateString()}</strong>
             </div>
+            {/* <functions.WeatherEntry/> */}
 
             {/* DRINK CATEGORIES */}
             {categories.map(category => (
@@ -110,6 +111,7 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
                     }
                 }}
             />
+            
 
             {/* BLANK BUTTON THAT TAKES YOU BACK HOME */}
             <functions.SideButton
@@ -127,6 +129,11 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
                 <img src={logo} alt="Logo" style={{ width: "200px", marginBottom: "20px" }} />
                 <h1>Welcome!<br></br></h1>
                 <h3>Please click on the category on the left to get started with your order!</h3>
+
+                {/* ACCESSIBILITY BUTTON(LARGE TEXT) */}
+                <functions.AccessButton
+                
+            />
             </div>
         ) : (
             <div className="homeScreen">
