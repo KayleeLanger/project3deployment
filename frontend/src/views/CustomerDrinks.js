@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Customer.css";
 import * as functions from "./functions.js";
+import LargeTextButtons from "./LargeTextButton.js";
+
 
 function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, OrderDetails, setorderDetails, setToppingMode }) {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -100,6 +102,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                 <functions.XButton text="X" onClick={() => setScreen("customer")} />
                 <h1>{selectedCategory}</h1>
                 <div className="mainBody">
+                <LargeTextButtons/>
                     {drinks.length > 0 ? (
                         drinks.map(drink => (
                             <div className="buttonBox" key={drink.drinkname}>

@@ -57,6 +57,14 @@
 // }
 
 
+<AccessButton
+    onClick={() => {
+        document.body.classList.toggle("large-text");
+    }}
+/>
+
+
+
 
 
 
@@ -89,8 +97,8 @@ export function AccessButton({ text = "Aa", onClick }) {
         <button
             style={{
                 position: "absolute",
-                bottom: "100px",
-                left: "270px",
+                top: "50px",
+                left: "370px",
                 backgroundColor: "rgb(19, 90, 120)",
                 color: "black",
                 border: "10px",
@@ -98,7 +106,8 @@ export function AccessButton({ text = "Aa", onClick }) {
                 borderRadius: "50px",
                 fontSize: "40px",
                 cursor: "pointer",
-                padding: "10px 20px",
+                // padding: "10px 20px",
+                textAlign: "center"
             }}
             onClick={onClick}
         >
@@ -123,46 +132,71 @@ export function CategoryButton({ text, onClick }) {
 }
 
 
-export function SideButton({ text, onClick }) {
-    return <button
-        style={{
-            backgroundColor: "rgb(99, 99, 99)",
-            color: "white" ,
-            fontFamily: "Verdana, Tahoma, sans-serif",
-            width: "250px",
-            height: "45px",
-            padding: "20px", 
-            margin: "5px",
-            border: "3px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            }}
-            onClick={onClick}>{text}
-    </button>;
-}
+// export function SideButton({ text, onClick }) {
+//     return <button
+//         style={{
+//             backgroundColor: "rgb(99, 99, 99)",
+//             color: "white" ,
+//             fontFamily: "Verdana, Tahoma, sans-serif",
+//             width: "250px",
+//             height: "45px",
+//             padding: "20px", 
+//             margin: "5px",
+//             border: "3px",
+//             display: "flex",
+//             justifyContent: "center",
+//             alignItems: "center",
+//             textAlign: "center",
+//             }}
+//             onClick={onClick}>{text}
+//     </button>;
+// }
 
+
+// export function SpecialSideButton({ text, onClick }) {
+//     return <button
+//         style={{
+//             backgroundColor: "rgb(50, 50, 50)",
+//             color: "white" ,
+//             fontFamily: "Verdana, Tahoma, sans-serif",
+//             width: "250px",
+//             height: "45px",
+//             padding: "20px", 
+//             margin: "5px",
+//             border: "3px",
+//             display: "flex",
+//             justifyContent: "center",
+//             alignItems: "center",
+//             textAlign: "center",
+//             }}
+//             onClick={onClick}>{text}
+//     </button>;
+// }
+
+export function SideButton({ text, onClick }) {
+    return (
+        <button
+            className="side-button"
+            onClick={onClick}
+        >
+            {text}
+            {/* REMOVED INLINE CSS */}
+        </button>
+    );
+}
 
 export function SpecialSideButton({ text, onClick }) {
-    return <button
-        style={{
-            backgroundColor: "rgb(50, 50, 50)",
-            color: "white" ,
-            fontFamily: "Verdana, Tahoma, sans-serif",
-            width: "250px",
-            height: "45px",
-            padding: "20px", 
-            margin: "5px",
-            border: "3px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            }}
-            onClick={onClick}>{text}
-    </button>;
+    return (
+        <button
+            className="special-side-button"
+            onClick={onClick}
+        >
+            {text}
+            {/* REMOVED INLINE CSS */}
+        </button>
+    );
 }
+
 
 export function defaultVal (orders, setOrders) {
     // copy of orderdetails

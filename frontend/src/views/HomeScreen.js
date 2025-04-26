@@ -21,7 +21,7 @@ function HomeScreen({ setScreen }) {
 	return (
 		<div className="home-container">
 			<HighContrastToggle /> {/* <-- just drop this in every page */}
-
+			
 			<div className="top-bar">
 				<span className="date-time">
 					{currentTime.toLocaleDateString()} {currentTime.toLocaleTimeString()}

@@ -3,6 +3,7 @@ import "./Customer.css";
 import * as functions from "./functions.js";
 import logo from "./Images/team_00_logo.png";
 import { getDrinkImage, getToppingImage } from "./functions.js";
+import LargeTextButtons from "./LargeTextButton.js";
 
 function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
@@ -64,6 +65,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 	const seasonalInOrder = OrderDetails.some(item => item.name === seasonalDrink?.drinkname);
 
 	return (
+		
 		<div style={{ display: "flex", height: "100vh" }}>
 			{/* Sidebar */}
 			<div className="sidebar">
@@ -77,6 +79,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 
 			{/* Main Content */}
 			<div className="homeScreen">
+				<LargeTextButtons/>
 				<functions.XButton
 					text="X"
 					onClick={() => {
@@ -154,7 +157,9 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 							>
 								Add Seasonal Drink
 							</button>
+							
 						</div>
+						
 					)}
 
 					<div className="checkout-button-container" style={{ marginTop: "40px", textAlign: "center" }}>

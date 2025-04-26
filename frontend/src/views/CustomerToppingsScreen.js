@@ -3,6 +3,8 @@ import "./Customer.css";
 import logo from "./Images/team_00_logo.png"; 
 import * as functions from "./functions.js";
 import { getToppingImage } from "./functions";
+import LargeTextButtons from "./LargeTextButton.js";
+
 
 function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCategory, OrderDetails, setorderDetails, cameFromCustomization }) {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -82,6 +84,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
     };
 
     return (
+        
         <>
             {/* Sidebar (logout, time, cancel order)*/}
             <div className="sidebar">
@@ -110,6 +113,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                 <functions.SideButton
                     onClick={() => setScreen("home")}
                 />
+                
             </div>
 
             {/* Main content */}
@@ -193,6 +197,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     )}
                 </div>
             </div>
+            <LargeTextButtons/>
         </>
     );
 }
