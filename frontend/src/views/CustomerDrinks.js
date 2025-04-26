@@ -26,11 +26,18 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
         }
     };
 
+    // //category list
+    // const categories = [
+    //     { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
+    //     { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
+    //     { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
+    // ];
+
     //category list
     const categories = [
         { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
         { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
-        { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
+        { name: "Seasonal" }, { name: "Miscellaneous" }
     ];
 
     //clock setup

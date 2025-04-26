@@ -37,13 +37,13 @@ function App() { //main function, will be mostly imports eventually
 	return (
 		<div className="App">
 		<header className="App-header">
-			{/* home screen with user authentication */}
+			{/*home screen with user authentication*/}
 			{screen === "home" && (
 				<GoogleOAuthProvider clientId={clientId}>
 				<HomeScreen setScreen={setScreen} />
 				</GoogleOAuthProvider>
 			)}
-			{/* cashier */}
+			{/*cashier*/}
 			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										OrderDetails={orderDetails}
@@ -74,18 +74,17 @@ function App() { //main function, will be mostly imports eventually
 
 
 			
-			{/* manager */}
+			{/*manager*/}
 			{screen === "manager" && <ManagerScreen setScreen={setScreen} />}
 			{screen === "inventory" && <Inventory setScreen={setScreen} />}
 			{screen === "order-trends" && <OrderTrends setScreen={setScreen} />}
-
 			{screen === "employees" && <Employees setScreen={setScreen} />}
 			{screen === "prices" && <Prices setScreen={setScreen} />}
 			{screen === "menu" && <Menu setScreen={setScreen} />}
 			{screen === "graph" && <Graph setScreen={setScreen} />}
 			
 
-			{/* customer */}
+			{/*customer*/}
 			{screen === "customer" && <CustomerHome setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										//selectedCategory={selectedCategory}
@@ -126,7 +125,7 @@ function App() { //main function, will be mostly imports eventually
 										OrderDetails={orderDetails}
 										setorderDetails={setOrderDetails} />}
 
-			{/* menu board */}
+			{/*menu board*/}
 			{screen === "menu-board" && <MenuBoard setScreen={setScreen} />}
 		</header>
 		</div>

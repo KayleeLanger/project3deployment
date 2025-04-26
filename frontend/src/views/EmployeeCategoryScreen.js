@@ -7,8 +7,10 @@ function EmployeeCategoryScreen({ setScreen, setSelectedCategory, OrderDetails, 
     const [currentTime, setCurrentTime] = useState(new Date());
 
 
+    // /// category list: hardcoded since categories won't change, only drinks
+    // const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "Toppings"}, {name: "Miscellaneous"}];
     /// category list: hardcoded since categories won't change, only drinks
-    const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "Toppings"}, {name: "Miscellaneous"}];
+    const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Seasonal"}, {name: "Toppings"}, {name: "Miscellaneous"}];
 
 
     // TODO: Update order details

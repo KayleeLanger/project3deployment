@@ -9,8 +9,10 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
     // const [currentOrder, setState]=useState()
 
 
+    // /// category list: hardcoded since categories won't change, only drinks
+    // const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "Miscellaneous"}];
     /// category list: hardcoded since categories won't change, only drinks
-    const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "Miscellaneous"}];
+    const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Seasonal"}, {name: "Miscellaneous"}];
 
 
     //clock setup

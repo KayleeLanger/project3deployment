@@ -9,11 +9,17 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
     const [toppings, setToppings] = useState([]);
     const [selectedToppings, setSelectedToppings] = useState([]);
 
+    // const categories = [
+    //     { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
+    //     { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
+    //     { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
+    // ];
+
     const categories = [
-        { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
-        { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
-        { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
-    ];
+            { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
+            { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
+            { name: "Seasonal" }, { name: "Miscellaneous" }
+        ];
 
     useEffect(() => {
         const getToppings = async () => {

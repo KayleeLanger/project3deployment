@@ -52,10 +52,16 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
     const tax = subtotal * 0.08;
     const total = subtotal + tax;
 
+    // const categories = [
+    //     { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
+    //     { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
+    //     { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
+    // ];
+
     const categories = [
         { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
         { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
-        { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
+        { name: "Seasonal" }, { name: "Miscellaneous" }
     ];
 
     return (
