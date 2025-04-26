@@ -129,6 +129,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     <h2>{currentTime.toLocaleTimeString()}</h2>
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
+
                 {categories.map(category => (
                     <functions.SideButton
                         key={category.name}
@@ -136,9 +137,23 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                         onClick={() => setScreen("customer-drinks")}
                     />
                 ))}
-                <functions.SpecialSideButton text="Individual Toppings" onClick={() => setScreen("customer-toppings")} />
+
+                <functions.SpecialSideButton
+                    text="Individual Toppings"
+                    onClick={() => setScreen("customer-toppings")}
+                />
+
+                {/*Add checkout button if there are order details*/}
+                {OrderDetails.length > 0 && (
+                    <functions.SideButton
+                        text="Checkout"
+                        onClick={() => setScreen("confirm")}
+                    />
+                )}
+
                 <functions.SideButton onClick={() => setScreen("home")} />
             </div>
+
 
             <div className="homeScreen">
                 <functions.XButton text="X" onClick={() => setScreen("customer")} />
