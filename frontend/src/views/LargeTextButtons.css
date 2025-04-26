@@ -1,0 +1,10 @@
+body.large-text button {
+    font-size: 40px !important;
+    padding: 40px !important;
+    width: 250px !important;
+    height: 80px !important;
+}
+
+body.large-text {
+    font-size: 40px !important;
+}
