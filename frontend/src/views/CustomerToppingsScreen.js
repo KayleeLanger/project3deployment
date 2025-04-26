@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Customer.css";
-import logo from "./Images/team_00_logo.png"; 
+import logo from "./Images/team_00_logo.png";
 import * as functions from "./functions.js";
 import { getToppingImage } from "./functions";
 
@@ -9,26 +9,19 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
     const [toppings, setToppings] = useState([]);
     const [selectedToppings, setSelectedToppings] = useState([]);
 
-
-    /// category list: hardcoded since categories won't change, only drinks
     const categories = [
-        {name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"},
-        {name: "Fresh Milk"}, {name: "Fruit Tea"}, {name: "Tea Mojito"},
-        {name: "Crema"}, {name: "Seasonal"}, {name: "Miscellaneous"}
+        { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
+        { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
+        { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
     ];
 
-    // fetch toppings from API when screen loads
     useEffect(() => {
         const getToppings = async () => {
             try {
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/api/toppings`);
                 if (!response.ok) throw new Error("Failed to fetch toppings");
                 const data = await response.json();
-                console.log("Raw data from /api/toppings:", data);
-
-                // Filter for toppings only (vs misc)
                 const filteredToppings = data.filter(item => item.othertype === "topping");
-                console.log("Filtered toppings:", filteredToppings);
                 setToppings(filteredToppings);
             } catch (error) {
                 console.error(error);
@@ -38,7 +31,6 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
         getToppings();
     }, []);
 
-    //clock setup
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentTime(new Date());
@@ -46,152 +38,130 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
         return () => clearInterval(interval);
     }, []);
 
-    // function to load topping image by name
-    const importImage = (name) => {
-        try {
-            return require(`./Images/toppings/${name.toLowerCase().replace(/ /g, "_")}.png`);
-        } catch (err) {
-            return logo; // fallback image
-        }
-    };
-
-    // highlight all selected toppings
     useEffect(() => {
         if (!cameFromCustomization) return;
-    
         const lastOrder = OrderDetails[OrderDetails.length - 1];
-    
         if (lastOrder && lastOrder.toppings && lastOrder.toppings !== "none") {
-            const toppingsList = lastOrder.toppings
-                .split(", ")
-                .map(t => t.split(" (+")[0]); // Remove price text
+            const toppingsList = lastOrder.toppings.split(", ").map(t => t.split(" (+")[0]);
             setSelectedToppings(toppingsList);
         } else {
             setSelectedToppings([]);
         }
     }, [cameFromCustomization, OrderDetails]);
-    
 
-    // selects multiple toppings
-    const toggleTopping = (name) => {
-        setSelectedToppings(prev =>
-        prev.includes(name)
-            ? prev.filter(t => t !== name)
-            : [...prev, name]
-        );
+    const toggleTopping = (name, price) => {
+        if (cameFromCustomization) {
+            setorderDetails(prevDetails => {
+                const updated = [...prevDetails];
+                const idx = updated.length - 1;
+    
+                let toppingsList = updated[idx].toppings && updated[idx].toppings !== "none"
+                    ? updated[idx].toppings.split(", ")
+                    : [];
+                let itemPrice = parseFloat(updated[idx].price);
+    
+                //Check if this topping already exists
+                const toppingEntry = `${name} (+$${parseFloat(price).toFixed(2)})`;
+                const toppingNamesOnly = toppingsList.map(t => t.split(" (+")[0]); //remove (+$) to compare by name
+    
+                if (toppingNamesOnly.includes(name)) {
+                    //Remove topping
+                    toppingsList = toppingsList.filter(t => !t.startsWith(name));
+                    itemPrice -= parseFloat(price);
+                } else {
+                    //Add topping
+                    toppingsList.push(toppingEntry);
+                    itemPrice += parseFloat(price);
+                }
+    
+                updated[idx] = {
+                    ...updated[idx],
+                    toppings: toppingsList.length > 0 ? toppingsList.join(", ") : "none",
+                    price: itemPrice.toFixed(2)
+                };
+                return updated;
+            });
+    
+            setSelectedToppings(prev =>
+                prev.includes(name)
+                    ? prev.filter(t => t !== name)
+                    : [...prev, name]
+            );
+        } else {
+            //standalone topping logic
+            setorderDetails(prevDetails => {
+                const last = prevDetails[prevDetails.length - 1];
+                const isSameTopping = last?.name === name && last.size === "n/a" && last.ice === "n/a";
+                if (isSameTopping) {
+                    return prevDetails.slice(0, -1);
+                }
+                return [...prevDetails, {
+                    name,
+                    price: price?.toFixed(2) || "0.00",
+                    size: "n/a",
+                    ice: "n/a",
+                    sweetness: "n/a",
+                    toppings: "n/a",
+                    quantity: "1",
+                    image: getToppingImage(name)
+                }];
+            });
+    
+            setSelectedToppings(prev =>
+                prev.includes(name)
+                    ? prev.filter(t => t !== name)
+                    : [...prev, name]
+            );
+        }
     };
+    
 
     return (
         <>
-            {/* Sidebar (logout, time, cancel order)*/}
             <div className="sidebar">
                 <div className="time-box">
                     <h2>{currentTime.toLocaleTimeString()}</h2>
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
-
-                {categories.map((category) =>
+                {categories.map(category => (
                     <functions.SideButton
                         key={category.name}
                         text={category.name}
-                        onClick={() => {
-                            setScreen("customer-drinks");
-                        }}
+                        onClick={() => setScreen("customer-drinks")}
                     />
-                )}
-
-                {/* ONLY TOPPINGS BUTTON (goes to a different screen ) */}
-                <functions.SpecialSideButton
-                    text="Individual Toppings"
-                    onClick={() => setScreen("customer-toppings")}
-                />
-
-                {/* BLANK BUTTON THAT TAKES YOU BACK HOME */}
-                <functions.SideButton
-                    onClick={() => setScreen("home")}
-                />
+                ))}
+                <functions.SpecialSideButton text="Individual Toppings" onClick={() => setScreen("customer-toppings")} />
+                <functions.SideButton onClick={() => setScreen("home")} />
             </div>
 
-            {/* Main content */}
             <div className="homeScreen">
                 <functions.XButton text="X" onClick={() => setScreen("customer")} />
                 <h1>Single Topping</h1>
                 <div className="mainBody">
-                    {/* loop through toppings */}
                     {toppings.length > 0 ? (
-                        toppings.map((topping) => {
-                            const toppingLabel = `${topping.othername} (+$${parseFloat(topping.otherprice).toFixed(2)})`;
-
-                            return (
-                                <div className="buttonBox" key={topping.othername}>
-                                    <functions.CustomerDrinkButton
-                                        text={toppingLabel}
-                                        image={importImage(topping.othername)}
-                                        selected={selectedToppings.includes(topping.othername)}
-                                        onClick={() => {
-                                            toggleTopping(topping.othername);
-
-                                            if (cameFromCustomization) {
-                                                // ADD TO EXISTING DRINK
-                                                setorderDetails(prevDetails => {
-                                                    const idx = prevDetails.length - 1;
-                                                    const updated = [...prevDetails];
-
-                                                    const existingToppings = updated[idx].toppings && updated[idx].toppings !== "none"
-                                                        ? updated[idx].toppings + `, ${toppingLabel}`
-                                                        : toppingLabel;
-
-                                                    const newPrice = parseFloat(updated[idx].price) + parseFloat(topping.otherprice);
-
-                                                    updated[idx] = {
-                                                        ...updated[idx],
-                                                        toppings: existingToppings,
-                                                        price: newPrice.toFixed(2)
-                                                    };
-                                                    return updated;
-                                                });
-                                                // setScreen("confirm");
-                                            } else {
-                                                // TOPPING ONLY MODE: toggle add/remove
-                                                setorderDetails(prevDetails => {
-                                                    const last = prevDetails[prevDetails.length - 1];
-                                            
-                                                    const isSameTopping =
-                                                        last?.name === topping.othername &&
-                                                        last.size === "n/a" &&
-                                                        last.ice === "n/a";
-                                            
-                                                    if (isSameTopping) {
-                                                        // Deselect: remove the topping-only item
-                                                        return prevDetails.slice(0, -1);
-                                                    }
-                                            
-                                                    // Add new topping-only item
-                                                    return [
-                                                        ...prevDetails,
-                                                        {
-                                                            name: topping.othername,
-                                                            price: topping.otherprice?.toFixed(2) || "0.00",
-                                                            size: "n/a",
-                                                            ice: "n/a",
-                                                            sweetness: "n/a",
-                                                            toppings: "n/a",
-                                                            quantity: "1",
-                                                            image: getToppingImage(topping.othername)
-                                                        },
-                                                    ];
-                                                });
-                                            }
-                                            
-                                        }}
-                                    />
-                                </div>
-                            );
-                        })
+                        toppings.map(topping => (
+                            <div className="buttonBox" key={topping.othername}>
+                                <functions.CustomerDrinkButton
+                                    text={`${topping.othername} (+$${parseFloat(topping.otherprice).toFixed(2)})`}
+                                    image={getToppingImage(topping.othername)}
+                                    selected={selectedToppings.includes(topping.othername)}
+                                    onClick={() => toggleTopping(topping.othername, topping.otherprice)}
+                                />
+                            </div>
+                        ))
                     ) : (
                         <p>No toppings available. Please check back later!</p>
                     )}
                 </div>
+
+                {cameFromCustomization && (
+                    <div style={{ marginTop: "20px", textAlign: "center" }}>
+                        <functions.Button
+                            text="Done"
+                            onClick={() => setScreen("confirm")}
+                        />
+                    </div>
+                )}
             </div>
         </>
     );

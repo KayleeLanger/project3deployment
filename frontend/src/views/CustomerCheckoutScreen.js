@@ -29,9 +29,14 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 		return !isNaN(price) ? subtotal + price * qty : subtotal;
 	}, 0);
 
-	const tax = subtotal * 0.08;
-	const total = subtotal + tax;
-	const discount = subtotal * 0.15;
+	const freeToppingsEarned = Math.floor(subtotal / 25); //1 free topping per $25
+	const nextThreshold = (freeToppingsEarned + 1) * 25; //next unlocking point
+	const amountToNextFreeTopping = nextThreshold - subtotal;
+	const freeToppingDiscount = freeToppingsEarned * 0.50; //$0.50 per topping discount
+	const tax = (subtotal - freeToppingDiscount) * 0.08;
+	const total = subtotal - freeToppingDiscount + tax;
+	const seasonalDiscountPercent = 0.10;
+	const seasonalDiscount = subtotal * seasonalDiscountPercent;
 
 	const handlePlaceOrder = () => {
 		const totalItems = OrderDetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
@@ -44,7 +49,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 	const handleAddSeasonalDrink = () => {
 		if (!seasonalDrink || offerUsed) return;
 
-		const discountedPrice = parseFloat(seasonalDrink.drinkprice) - discount;
+		const discountedPrice = parseFloat(seasonalDrink.drinkprice) - seasonalDiscount;
 		const rounded = Math.max(0, discountedPrice).toFixed(2);
 
 		const newItem = {
@@ -71,39 +76,63 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 					<h2>{currentTime.toLocaleTimeString()}</h2>
 					<strong>{currentTime.toLocaleDateString()}</strong>
 				</div>
+				<functions.SideButton text="Back to Item Confirmation" onClick={() => setScreen("confirm")} />
 				<functions.SideButton text="Back to Drinks" onClick={() => setScreen("customer-drinks")} />
 				<functions.SideButton text="Home" onClick={() => setScreen("customer")} />
 			</div>
 
 			{/* Main Content */}
-			<div className="homeScreen">
-				<functions.XButton
-					text="X"
-					onClick={() => {
-						const confirmClear = window.confirm("Are you sure you want to cancel your order and return to the home screen?");
-						if (confirmClear) {
-							setorderDetails([]);
-							setScreen("customer");
-						}
-					}}
-				/>
-				<h1>Review Your Order</h1>
+			<div className="homeScreen" style={{ flex: 1, display: "flex", flexDirection: "column", padding: "20px", overflow: "hidden" }}>
+				<div style={{ display: "flex", justifyContent: "flex-end" }}>
+					<functions.XButton
+						text="X"
+						onClick={() => {
+							const confirmClear = window.confirm("Are you sure you want to cancel your order and return to the home screen?");
+							if (confirmClear) {
+								setorderDetails([]);
+								setScreen("customer");
+							}
+						}}
+					/>
+				</div>
 
-				<div className="mainBody" style={{ width: "100%" }}>
+				<h1 style={{ textAlign: "center" }}>Review Your Order</h1>
+
+				{/*Scrollable order list*/}
+				<div style={{ flex: "1 1 auto", overflowY: "auto", padding: "10px 20px", marginBottom: "20px" }}>
 					{OrderDetails.length > 0 ? (
 						OrderDetails.map((item, index) => (
-							<div key={index} className="order-item" style={{ display: "flex", marginBottom: "20px", alignItems: "center" }}>
+							<div key={index} className="order-item" style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
 								<img src={
 									item.image ||
 									(item.ice === "n/a"
-										? getToppingImage(item.name)
-										: getDrinkImage(item.name)) || logo
+										? functions.getToppingImage(item.name)
+										: item.ice === "-"
+											? functions.getMiscImage(item.name)
+											: functions.getDrinkImage(item.name)
+									) || logo
 								}
-									alt={item.name}
-									style={{ width: "100px", height: "100px", marginRight: "20px" }}
+								alt={item.name}
+								style={{ width: "80px", height: "80px", marginRight: "20px", objectFit: "contain" }}
 								/>
-								<div className="order-item-info" style={{ textAlign: "left" }}>
+								<div style={{ textAlign: "left", flexGrow: 1 }}>
 									<strong>{item.name}</strong>
+
+									{/*Apply free topping badge only on first N items*/}
+									{index < freeToppingsEarned && (
+										<span style={{
+											display: "inline-block",
+											marginLeft: "8px",
+											backgroundColor: "#22c55e",
+											color: "white",
+											fontSize: "12px",
+											padding: "2px 6px",
+											borderRadius: "10px"
+										}}>
+											+ Free Topping
+										</span>
+									)}
+
 									{item.ice !== "n/a" && item.ice !== "-" && (
 										<>
 											<p>Size: {item.size}</p>
@@ -112,12 +141,8 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 											<p>Toppings: {item.toppings}</p>
 										</>
 									)}
-									{item.ice === "n/a" && (
-										<p>Standalone Topping</p>
-									)}
-									{item.ice === "-" && (
-										<p>Miscellaneous Item</p>
-									)}
+									{item.ice === "n/a" && <p>Standalone Topping</p>}
+									{item.ice === "-" && <p>Miscellaneous Item</p>}
 									<p>Quantity: {item.quantity || 1}</p>
 									<p>Price: ${item.price}</p>
 								</div>
@@ -126,40 +151,54 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 					) : (
 						<p>Your cart is empty.</p>
 					)}
+				</div>
 
+				{/*Totals and free topping info*/}
+				<div style={{ flexShrink: 0, padding: "10px 40px", textAlign: "right" }}>
 					<hr />
+					<p><strong>Subtotal:</strong> ${subtotal.toFixed(2)}</p>
 
-					<div className="order-total-summary" style={{ textAlign: "right", paddingRight: "40px" }}>
-						<p><strong>Subtotal:</strong> ${subtotal.toFixed(2)}</p>
-						<p><strong>Tax (8%):</strong> ${tax.toFixed(2)}</p>
-						<h2><strong>Total:</strong> ${total.toFixed(2)}</h2>
-					</div>
-
-					{/* Seasonal drink upsell offer */}
-					{seasonalDrink && !seasonalInOrder && !offerUsed && (
-						<div style={{ marginTop: "30px", textAlign: "center" }}>
-							<p style={{ fontSize: "18px", fontWeight: "bold", color: "#b91c1c" }}>
-								Add the seasonal drink <i>{seasonalDrink.drinkname}</i> for only <strong>${Math.max(0, (parseFloat(seasonalDrink.drinkprice) - discount)).toFixed(2)}</strong>?
-							</p>
-							<button
-								onClick={handleAddSeasonalDrink}
-								style={{
-									padding: "12px 24px",
-									backgroundColor: "#fbbf24",
-									color: "black",
-									fontWeight: "bold",
-									borderRadius: "10px",
-									fontSize: "16px"
-								}}
-							>
-								Add Seasonal Drink
-							</button>
-						</div>
+					{freeToppingsEarned > 0 && (
+						<p style={{ color: "#22c55e" }}>
+							<strong>Free Toppings:</strong> {freeToppingsEarned} (-${freeToppingDiscount.toFixed(2)})
+						</p>
+					)}
+					
+					{amountToNextFreeTopping > 0 && (
+						<p style={{ color: "#b91c1c" }}>
+							Spend ${amountToNextFreeTopping.toFixed(2)} more (pre-tax) to unlock another free topping!
+						</p>
 					)}
 
-					<div className="checkout-button-container" style={{ marginTop: "40px", textAlign: "center" }}>
-						<functions.Button text="Place Order" onClick={handlePlaceOrder} />
+					<p><strong>Tax (8%):</strong> ${tax.toFixed(2)}</p>
+					<h2><strong>Total:</strong> ${total.toFixed(2)}</h2>
+				</div>
+
+				{/*Seasonal drink upsell offer*/}
+				{seasonalDrink && !seasonalInOrder && !offerUsed && (
+					<div style={{ marginTop: "20px", textAlign: "center" }}>
+						<p style={{ fontSize: "18px", fontWeight: "bold", color: "#b91c1c" }}>
+							Add the seasonal drink <i>{seasonalDrink.drinkname}</i> for only <strong>${Math.max(0, (parseFloat(seasonalDrink.drinkprice) - seasonalDiscount)).toFixed(2)}</strong>?
+						</p>
+						<button
+							onClick={handleAddSeasonalDrink}
+							style={{
+								padding: "12px 24px",
+								backgroundColor: "#fbbf24",
+								color: "black",
+								fontWeight: "bold",
+								borderRadius: "10px",
+								fontSize: "16px",
+								marginTop: "10px"
+							}}
+						>
+							Add Seasonal Drink
+						</button>
 					</div>
+				)}
+
+				<div style={{ marginTop: "20px", textAlign: "center" }}>
+					<functions.Button text="Place Order" onClick={handlePlaceOrder} />
 				</div>
 			</div>
 		</div>

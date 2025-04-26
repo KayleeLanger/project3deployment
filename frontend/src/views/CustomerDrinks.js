@@ -6,7 +6,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
     const [currentTime, setCurrentTime] = useState(new Date());
     const [drinks, setDrinks] = useState([]);
 
-    // fetch drinks based on selected category
+    //fetch drinks based on selected category
     useEffect(() => {
         if (selectedCategory) {
             getDrinks(selectedCategory);
@@ -26,14 +26,14 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
         }
     };
 
-    // category list
+    //category list
     const categories = [
         { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
         { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
         { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
     ];
 
-    // clock setup
+    //clock setup
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentTime(new Date());
@@ -43,7 +43,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
 
     return (
         <>
-            {/* Sidebar */}
+            {/*Sidebar*/}
             <div className="sidebar">
                 <div className="time-box">
                     <h2>{currentTime.toLocaleTimeString()}</h2>
@@ -95,7 +95,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                 <functions.SideButton onClick={() => setScreen("home")} />
             </div>
 
-            {/* Main content */}
+            {/*Main content*/}
             <div className="homeScreen">
                 <functions.XButton text="X" onClick={() => setScreen("customer")} />
                 <h1>{selectedCategory}</h1>
@@ -105,7 +105,11 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                             <div className="buttonBox" key={drink.drinkname}>
                                 <functions.CustomerDrinkButton
                                     text = {drink.drinkname || drink.othername} 
-                                    image={functions.getDrinkImage(drink.drinkname)}
+                                    image={
+                                        drink.othername
+                                            ? functions.getMiscImage(drink.othername)  //if misc item
+                                            : functions.getDrinkImage(drink.drinkname)  //if normal drink
+                                    }
                                     onClick={() => {
                                         const isMisc = !!drink.othername;
                                         const item = isMisc
@@ -129,7 +133,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                                             };
                                     
                                         setorderDetails(prevDetails => [...prevDetails, item]);
-                                        setScreen(isMisc ? "customer" : "customer-customization");
+                                        setScreen(isMisc ? "confirm" : "customer-customization");
                                     }}
                                 />
                             </div>

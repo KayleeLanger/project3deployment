@@ -438,3 +438,11 @@ export function getToppingImage(toppingName) {
     }
 }
 
+export function getMiscImage(miscName) {
+    try {
+        const formatted = miscName.toLowerCase().replace(/\s+/g, "_");
+        return require(`./Images/misc/${formatted}.png`);
+    } catch {
+        return require("./Images/team_00_logo.png"); //fallback if not found
+    }
+}
