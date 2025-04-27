@@ -95,7 +95,11 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                     }}
                 />
 
-                <functions.SideButton onClick={() => setScreen("home")} />
+                {/* BUTTON THAT TAKES YOU BACK HOME */}
+                <functions.SideButton
+                    text="Home"
+                    onClick={() => setScreen("home")}
+                />
             </div>
 
             {/*Main content*/}
