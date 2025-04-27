@@ -390,7 +390,9 @@ app.post('/api/checkout', async (req, res) => {
     const client = await pool.connect();
     try {
         const { orderDetails, orderTotal, orderDate, employeeId } = req.body;
-        // orderDetails: array of { drinkId, otherId, quantity }
+
+        // 🔵 DEBUG: Check incoming order details
+        console.log("Received checkout:", { orderDetails, orderTotal, orderDate, employeeId });
 
         // Get next orderId
         const idResult = await client.query('SELECT COALESCE(MAX(orderId), 0) + 1 AS next_order_id FROM orders');
@@ -409,6 +411,9 @@ app.post('/api/checkout', async (req, res) => {
         for (const item of orderDetails) {
             const { drinkId = 0, otherId = 0, quantity = 1 } = item;
 
+            // 🔵 DEBUG: Check each item
+            console.log("Processing item:", { drinkId, otherId, quantity });
+
             // Insert into order_items
             const orderItemIdResult = await client.query('SELECT COALESCE(MAX(order_item_id), 0) + 1 AS next_item_id FROM order_items');
             const nextOrderItemId = orderItemIdResult.rows[0].next_item_id;
@@ -420,14 +425,20 @@ app.post('/api/checkout', async (req, res) => {
             );
 
             if (drinkId !== 0) {
-                // If it's a drink, find its ingredients from drink_to_inventory
+                // 🔵 DEBUG: Getting drink ingredients
                 const ingredientsResult = await client.query(
                     `SELECT inventoryId, quantityNeeded FROM drink_to_inventory WHERE drinkId = $1;`,
                     [drinkId]
                 );
+                console.log("Updating inventory for drink. Ingredients:", ingredientsResult.rows);
+
                 for (const ingredient of ingredientsResult.rows) {
                     const inventoryId = ingredient.inventoryid;
                     const quantityNeeded = ingredient.quantityneeded;
+                    
+                    // 🔵 DEBUG: Log each inventory deduction
+                    console.log(`Reducing inventoryId=${inventoryId} by amount=${quantity * quantityNeeded}`);
+
                     await client.query(
                         `UPDATE inventory SET remainingInStock = remainingInStock - $1 WHERE inventoryId = $2;`,
                         [quantity * quantityNeeded, inventoryId]
@@ -436,7 +447,7 @@ app.post('/api/checkout', async (req, res) => {
             }
 
             if (otherId !== 0) {
-                // If it's a topping/misc, directly decrement 1 unit
+                // 🔵 DEBUG: Handling toppings/misc
                 const toppingResult = await client.query(
                     `SELECT otherName FROM toppings_other WHERE otherId = $1;`,
                     [otherId]
@@ -445,7 +456,6 @@ app.post('/api/checkout', async (req, res) => {
                 const toppingName = toppingResult.rows[0]?.othername;
 
                 if (toppingName) {
-                    // Match topping name to inventory
                     const inventoryResult = await client.query(
                         `SELECT inventoryId FROM inventory WHERE itemName = $1;`,
                         [toppingName]
@@ -453,6 +463,10 @@ app.post('/api/checkout', async (req, res) => {
 
                     if (inventoryResult.rows.length > 0) {
                         const inventoryId = inventoryResult.rows[0].inventoryid;
+
+                        // 🔵 DEBUG: Log topping/misc reduction
+                        console.log(`Reducing topping/misc inventory for: ${toppingName} (inventoryId=${inventoryId}) by quantity=${quantity}`);
+
                         await client.query(
                             `UPDATE inventory SET remainingInStock = remainingInStock - $1 WHERE inventoryId = $2;`,
                             [quantity, inventoryId]
@@ -472,6 +486,7 @@ app.post('/api/checkout', async (req, res) => {
         client.release();
     }
 });
+
 
 
 
