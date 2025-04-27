@@ -385,36 +385,30 @@ app.get('/api/latest-orderid', async (req, res) => {
     }
 });
 
-// Push order to database and update inventory
+//Push order to database and update inventory
 app.post('/api/checkout', async (req, res) => {
     const client = await pool.connect();
     try {
         const { orderDetails, orderTotal, orderDate, employeeId } = req.body;
 
-        // 🔵 DEBUG: Check incoming order details
-        console.log("Received checkout:", { orderDetails, orderTotal, orderDate, employeeId });
-
-        // Get next orderId
+        //Get next orderId
         const idResult = await client.query('SELECT COALESCE(MAX(orderId), 0) + 1 AS next_order_id FROM orders');
         const nextOrderId = idResult.rows[0].next_order_id;
 
-        await client.query('BEGIN'); // Start transaction
+        await client.query('BEGIN'); //Start transaction
 
-        // Insert into orders table
+        //Insert into orders table
         await client.query(
             `INSERT INTO orders (orderId, numItems, orderPrice, orderDate, employeeId)
              VALUES ($1, $2, $3, $4, $5);`,
             [nextOrderId, orderDetails.length, parseFloat(orderTotal), orderDate, parseInt(employeeId)]
         );
 
-        // Insert into order_items and update inventory
+        //Insert into order_items and update inventory
         for (const item of orderDetails) {
             const { drinkId = 0, otherId = 0, quantity = 1 } = item;
 
-            // 🔵 DEBUG: Check each item
-            console.log("Processing item:", { drinkId, otherId, quantity });
-
-            // Insert into order_items
+            //Insert into order_items
             const orderItemIdResult = await client.query('SELECT COALESCE(MAX(order_item_id), 0) + 1 AS next_item_id FROM order_items');
             const nextOrderItemId = orderItemIdResult.rows[0].next_item_id;
 
@@ -440,7 +434,6 @@ app.post('/api/checkout', async (req, res) => {
             }              
 
             if (otherId !== 0) {
-                // 🔵 DEBUG: Handling toppings/misc
                 const toppingResult = await client.query(
                     `SELECT otherName FROM toppings_other WHERE otherId = $1;`,
                     [otherId]
@@ -456,9 +449,6 @@ app.post('/api/checkout', async (req, res) => {
 
                     if (inventoryResult.rows.length > 0) {
                         const inventoryId = inventoryResult.rows[0].inventoryid;
-
-                        // 🔵 DEBUG: Log topping/misc reduction
-                        console.log(`Reducing topping/misc inventory for: ${toppingName} (inventoryId=${inventoryId}) by quantity=${quantity}`);
 
                         await client.query(
                             `UPDATE inventory SET remainingInStock = remainingInStock - $1 WHERE inventoryId = $2;`,
@@ -480,7 +470,7 @@ app.post('/api/checkout', async (req, res) => {
     }
 });
 
-// get drinkId from drink name
+//get drinkId from drink name
 app.get('/api/drinks/id/:name', async (req, res) => {
     const { name } = req.params;
     try {
@@ -492,7 +482,7 @@ app.get('/api/drinks/id/:name', async (req, res) => {
     }
 });
 
-// get otherId from misc item name
+//get otherId from misc item name
 app.get('/api/misc/id/:name', async (req, res) => {
     const { name } = req.params;
     try {

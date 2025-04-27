@@ -9,7 +9,7 @@ function EmployeeCustomization({ setScreen, selectedCategory, orderDetails, seto
   const [ice, setIce] = useState("");
   const [sweetness, setSweetness] = useState("");
 
-  // Setup clock
+  //Setup clock
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -17,7 +17,7 @@ function EmployeeCustomization({ setScreen, selectedCategory, orderDetails, seto
     return () => clearInterval(interval);
   }, []);
 
-  // Initialize customization selections
+  //Initialize customization selections
   useEffect(() => {
 	if (orderDetails.length > 0) {
 	  const idx = currentEditIdx != null ? currentEditIdx : orderDetails.length - 1;
@@ -42,7 +42,7 @@ function EmployeeCustomization({ setScreen, selectedCategory, orderDetails, seto
 
   return (
     <>
-      {/* Sidebar */}
+      {/*Sidebar*/}
       <div className="sidebar">
         <table><tbody><tr>
           <div className="time-box">

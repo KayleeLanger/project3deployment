@@ -70,7 +70,7 @@ function EmployeeToppingsScreen({ setScreen, selectedCategory, orderDetails, set
 
   return (
     <>
-      {/* Sidebar */}
+      {/*Sidebar*/}
       <div className="sidebar">
         <table><tbody><tr>
           <div className="time-box">
@@ -78,7 +78,7 @@ function EmployeeToppingsScreen({ setScreen, selectedCategory, orderDetails, set
             <strong>{currentTime.toLocaleDateString()}</strong>
           </div>
         </tr><tr><h1> </h1></tr>
-        {/* spacer rows */}
+        {/*spacer rows*/}
         <tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr>
         <tr>
           {selectedCategory !== "Toppings" && (
@@ -100,7 +100,7 @@ function EmployeeToppingsScreen({ setScreen, selectedCategory, orderDetails, set
         </tr></tbody></table>
       </div>
 
-      {/* Main Content */}
+      {/*Main Content*/}
       <div className="container">
         <div className="main">
           <h1>Toppings</h1>
@@ -173,7 +173,7 @@ function EmployeeToppingsScreen({ setScreen, selectedCategory, orderDetails, set
         </div>
       </div>
 
-      {/* Order Summary */}
+      {/*Order Summary*/}
       <div className="order">
         <h1>Order Summary</h1>
         {orderDetails.length > 0 ? (

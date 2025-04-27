@@ -189,7 +189,7 @@ export async function checkout(numItems, orderTotal, orderDetails = []) {
 
         for (const item of orderDetails) {
             if (item.size === "-" && item.ice === "-") {
-                // Miscellaneous Item
+                //Miscellaneous Item
                 const res = await fetch(`${process.env.REACT_APP_API_URL}/api/misc/id/${encodeURIComponent(item.name)}`);
                 const data = await res.json();
                 mappedDetails.push({
@@ -198,7 +198,7 @@ export async function checkout(numItems, orderTotal, orderDetails = []) {
                     quantity: parseInt(item.quantity) || 1
                 });
             } else {
-                // Drink Item
+                //Drink Item
                 const res = await fetch(`${process.env.REACT_APP_API_URL}/api/drinks/id/${encodeURIComponent(item.name)}`);
                 const data = await res.json();
                 mappedDetails.push({

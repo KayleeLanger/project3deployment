@@ -43,7 +43,7 @@ function EmployeeDrinks({ setScreen, selectedCategory, orderDetails, setorderDet
 
   return (
     <>
-      {/* Sidebar */}
+      {/*Sidebar*/}
       <div className="sidebar">
         <table><tbody><tr>
           <div className="time-box">
@@ -51,7 +51,7 @@ function EmployeeDrinks({ setScreen, selectedCategory, orderDetails, setorderDet
             <strong>{currentTime.toLocaleDateString()}</strong>
           </div>
         </tr><tr><h1> </h1></tr>
-        {/* spacing rows */}
+        {/*spacing rows*/}
         <tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr>
         <tr>
           <functions.Button text="Remove Current Item" onClick={() => setScreen("cashier")} />
@@ -65,7 +65,7 @@ function EmployeeDrinks({ setScreen, selectedCategory, orderDetails, setorderDet
         </tr></tbody></table>
       </div>
 
-      {/* Main */}
+      {/*Main*/}
       <div className="container-drink">
         <div className="main">
           <functions.XButton text="X" onClick={() => setScreen("cashier")} />
@@ -110,7 +110,7 @@ function EmployeeDrinks({ setScreen, selectedCategory, orderDetails, setorderDet
         </div>
       </div>
 
-      {/* Order Summary */}
+      {/*Order Summary*/}
       <div className="order">
         <h1>Order Summary</h1>
         {orderDetails.length > 0 ? (

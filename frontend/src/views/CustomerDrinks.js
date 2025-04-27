@@ -28,13 +28,6 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
         }
     };
 
-    // //category list
-    // const categories = [
-    //     { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
-    //     { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
-    //     { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
-    // ];
-
     //category list
     const categories = [
         { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
@@ -132,7 +125,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                                                 sweetness: "-",
                                                 toppings: "-",
                                                 quantity: "1",
-                                                otherId: drink.otherid   // <-- ADDED THIS LINE
+                                                otherId: drink.otherid
                                             }
                                             : {
                                                 name: drink.drinkname,
@@ -142,7 +135,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                                                 sweetness: "",
                                                 toppings: "",
                                                 quantity: "1",
-                                                drinkId: drink.drinkid    // <-- ADDED THIS LINE
+                                                drinkId: drink.drinkid
                                             };
                                     
                                         setorderDetails(prevDetails => [...prevDetails, item]);
