@@ -51,6 +51,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                     <h2>{currentTime.toLocaleTimeString()}</h2>
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
+                <functions.WeatherEntry/>
 
                 {categories.map((category) =>
                     category.name === selectedCategory ? (

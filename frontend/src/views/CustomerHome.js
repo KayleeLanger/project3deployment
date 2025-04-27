@@ -76,12 +76,12 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
         {/* Sidebar (logout, time, cancel order)*/}
         <div className="sidebar">
 
-            {/* TIME BOX TODO: ADD WEATHER Sprint 3 */}
+            {/* TIME BOX */}
             <div className="time-box">
                 <h2>{currentTime.toLocaleTimeString()}</h2>
                 <strong>{currentTime.toLocaleDateString()}</strong>
             </div>
-            {/* <functions.WeatherEntry/> */}
+            <functions.WeatherEntry/>
 
             {/* DRINK CATEGORIES */}
             {categories.map(category => (

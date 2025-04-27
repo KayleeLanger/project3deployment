@@ -73,6 +73,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 					<h2>{currentTime.toLocaleTimeString()}</h2>
 					<strong>{currentTime.toLocaleDateString()}</strong>
 				</div>
+				<functions.WeatherEntry/>
 				<functions.SideButton text="Back to Drinks" onClick={() => setScreen("customer-drinks")} />
 				<functions.SideButton text="Home" onClick={() => setScreen("customer")} />
 			</div>

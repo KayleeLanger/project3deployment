@@ -68,7 +68,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     <h2>{currentTime.toLocaleTimeString()}</h2>
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
-
+                <functions.WeatherEntry/>
                 {categories.map((category) =>
                     category.name === selectedCategory ? (
                         <functions.SpecialSideButton

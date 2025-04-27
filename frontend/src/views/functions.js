@@ -1,60 +1,60 @@
-// import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-// export function WeatherEntry() {
-//   const [weather, setWeather] = useState(null);
-//   const [error, setError] = useState(null);
+export function WeatherEntry() {
+  const [weather, setWeather] = useState(null);
+  const [error, setError] = useState(null);
 
-//   // Fetch weather data
-//   const fetchWeather = async () => {
-//     try {
-//       const response = await fetch(
-//         "https://api.openweathermap.org/data/3.0/onecall?lat=30.6210&lon=-96.3255&appid=892b7cd320c8d96764bf6dada5417803&units=imperial"
-//       );
-//       if (!response.ok) throw new Error("Failed to get weather, try again later");
-//       const data = await response.json();
+ 
+  const fetchWeather = async () => {
+    try {
+      const response = await fetch(
+        "https://api.openweathermap.org/data/3.0/onecall?lat=30.6210&lon=-96.3255&appid=892b7cd320c8d96764bf6dada5417803&units=imperial"
+      );
+      if (!response.ok) throw new Error("Failed to get weather, try again later");
+      const data = await response.json();
 
-//       setWeather({
-//         temperature: data.current.temp,
-//         description: data.current.weather[0].description, //Word discription of image (Accesisble :) 
-//         icon: data.current.weather[0].icon, // e.g. "01d"
-//       });
-//     } catch (error) {
-//       setError(error.message);
-//     }
-//   };
+      setWeather({
+        temperature: data.current.temp,
+        description: data.current.weather[0].description, //Word discription of image (Accesisble :) 
+        icon: data.current.weather[0].icon, // e.g. "01d"
+      });
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
-//   useEffect(() => {
-//     // Fetch weather immediately on mount
-//     fetchWeather();
+  useEffect(() => {
+    // Fetch weather immediately on mount
+    fetchWeather();
 
-//     // Set up interval to fetch weather every 10 minutes (600000 ms)
-//     const intervalId = setInterval(fetchWeather, 600000);
+    // Set up interval to fetch weather every 10 minutes (600000 ms)
+    const intervalId = setInterval(fetchWeather, 60000000);
 
-//     // Clear interval on cleanup
-//     return () => clearInterval(intervalId);
-//   }, []);
+    // Clear interval on cleanup
+    return () => clearInterval(intervalId);
+  }, []);
 
-//   // Handling loading state
-//   if (!weather && !error) return <div className="weather">Loading weather...</div>;
+  // Handling loading state
+  if (!weather && !error) return <div className="weather">Loading weather...</div>;
 
-//   // Handling error state
-//   if (error) return <div className="weather text-red-500">Error: {error}</div>;
+  // Handling error state
+  if (error) return <div className="weather text-red-500">Error: {error}</div>;
 
-//   // Construct the icon URL
-//   const iconUrl = `https://openweathermap.org/img/wn/${weather.icon}.png`;
+  // Construct the icon URL
+  const iconUrl = `https://openweathermap.org/img/wn/${weather.icon}.png`;
 
-//   return (
-//     <div className="weatherBox">
-//       <table style="text-align: center">
-//         <tr>
-//             <td> <img src={iconUrl} alt={weather.description} style={"center"} />
-//               <p>{weather.description.charAt(0).toUpperCase() + weather.description.slice(1)}</p></td>
-//             <td><p>{weather.temperature.toFixed(1)}°F</p></td>
-//         </tr>
-//       </table>
-//     </div>
-//   );
-// }
+  return (
+    <div className="weatherBox">
+      <table>
+        <tr>
+            <td> <img src={iconUrl} alt={weather.description} style={{ display: 'block', margin: '10px' }} />
+              <p>{weather.description.charAt(0).toUpperCase() + weather.description.slice(1)}</p></td>
+            <td><h3 style={{ textAlign: 'center' }}>{weather.temperature.toFixed(1)}°F</h3></td>
+        </tr>
+      </table>
+    </div>
+  );
+}
 
 
 <AccessButton

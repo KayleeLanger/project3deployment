@@ -92,7 +92,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     <h2>{currentTime.toLocaleTimeString()}</h2>
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
-
+                <functions.WeatherEntry/>
                 {categories.map((category) =>
                     <functions.SideButton
                         key={category.name}
