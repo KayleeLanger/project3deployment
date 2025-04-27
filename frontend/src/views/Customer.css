@@ -504,7 +504,7 @@ body.high-contrast .customerDrinkButton.selected {
     top: 60px !important; /* to change higher/lower */
     right: 80px !important;
     z-index: 1000 !important;
-    transform: scale(1.7);
+    transform: scale(1.5);
 }
   
 body.large-text #google_translate_element {
