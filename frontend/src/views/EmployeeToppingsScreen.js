@@ -43,16 +43,21 @@ function EmployeeToppingsScreen({ setScreen, selectedCategory, orderDetails, set
   };
 
   useEffect(() => {
-    const idx = currentEditIdx != null ? currentEditIdx : orderDetails.length - 1;
-    if (orderDetails[idx] && orderDetails[idx].toppings && orderDetails[idx].toppings !== "none") {
-      const toppingsList = orderDetails[idx].toppings
-        .split(", ")
-        .map(t => t.split(" (+")[0]);
-      setSelectedToppings(toppingsList);
+    if (orderDetails.length > 0) {
+      const idx = currentEditIdx != null ? currentEditIdx : orderDetails.length - 1;
+      if (orderDetails[idx] && orderDetails[idx].toppings && orderDetails[idx].toppings !== "none") {
+        const toppingsList = orderDetails[idx].toppings
+          .split(", ")
+          .map(t => t.split(" (+")[0]);
+        setSelectedToppings(toppingsList);
+      } else {
+        setSelectedToppings([]);
+      }
     } else {
       setSelectedToppings([]);
     }
   }, [currentEditIdx, orderDetails]);
+  
 
   const subtotal = orderDetails.reduce((subtotal, order) => {
     const price = parseFloat(order.price);

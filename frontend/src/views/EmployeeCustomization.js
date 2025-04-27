@@ -19,14 +19,17 @@ function EmployeeCustomization({ setScreen, selectedCategory, orderDetails, seto
 
   // Initialize customization selections
   useEffect(() => {
-    const idx = currentEditIdx != null ? currentEditIdx : orderDetails.length - 1;
-    if (orderDetails[idx]) {
-      const item = orderDetails[idx];
-      setSize(item.size || "");
-      setIce(item.ice || "");
-      setSweetness(item.sweetness || "");
-    }
+	if (orderDetails.length > 0) {
+	  const idx = currentEditIdx != null ? currentEditIdx : orderDetails.length - 1;
+	  if (orderDetails[idx]) {
+		const item = orderDetails[idx];
+		setSize(item.size || "");
+		setIce(item.ice || "");
+		setSweetness(item.sweetness || "");
+	  }
+	}
   }, [currentEditIdx, orderDetails]);
+  
 
   const subtotal = orderDetails.reduce((subtotal, order) => {
     const price = parseFloat(order.price);
