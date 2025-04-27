@@ -319,7 +319,7 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
         <functions.Button text="Checkout" 
           onClick={() => {
             const totalItems = orderdetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
-            functions.checkout(totalItems , total.toFixed(2), OrderDetails);
+            functions.checkout(totalItems , total.toFixed(2), orderDetails);
             functions.defaultVal(orderdetails, setorderDetails);
             setScreen("cashier"); 
             alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
