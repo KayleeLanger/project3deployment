@@ -139,7 +139,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                         text={category.name}
                         onClick={() => setScreen("customer-drinks")}
                     />
-                ))}
+                )}
 
                 <functions.SpecialSideButton
                     text="Individual Toppings"
