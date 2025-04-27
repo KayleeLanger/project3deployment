@@ -79,7 +79,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 			</div>
 
 			{/* Main Content */}
-			<div className="homeScreen">
+			<div className="homeScreenCheckout">
 				<LargeTextButtons/>
 				<functions.XButton
 					text="X"
