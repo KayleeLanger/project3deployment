@@ -273,41 +273,18 @@ export function XButton({ text, onClick }) {
     onClick={onClick}>{text}</button>;
 }
 
-export function DrinkButton({ text, onClick }) {
-    return <button
-    style={{
-        backgroundColor: "rgb(120, 19, 78)",
-        color: "white" ,
-        width: "200px",
-        height: "200px",
-        margin: "20px",
-        padding: "20px"
-    }}
-    onClick={onClick}>{text}</button>;
-}
 
+export function DrinkButton({ text, onClick }) {
+    return (
+        <button classname="drinkButton" onClick={onClick}>
+            {text}
+        </button>
+    );
+}
 export function CustomerDrinkButton({ text, image, onClick , selected}) {
     return (
         <button
-            style={{
-            // Colors
-            backgroundColor: selected ? "#ffe680" : "#39D6DE",
-            color: "black",
-            // Button Spacing
-            width: "300px",
-            height: "300px",
-            margin: "20px",
-            padding: "10px",
-            // allowing for image
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            // rounded  edges/ border
-            border: "4px",
-            borderColor: "black",
-            borderRadius: "10px",
-            }}
+            className="customerDrinkButton"
             onClick={onClick}
         >
         {/* IMAGE: Long you may need to edit this to get dimensions right for photos */}
@@ -323,7 +300,7 @@ export function CustomerDrinkButton({ text, image, onClick , selected}) {
                 }}
             />
         )}
-        <span style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}>
+        <span style={{  fontWeight: "bold", textAlign: "center" }}>
             {text}
         </span>
         </button>
