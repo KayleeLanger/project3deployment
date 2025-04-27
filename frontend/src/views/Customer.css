@@ -479,3 +479,21 @@ body.high-contrast .customerDrinkButton.selected {
     font-weight: bold;
     text-align: center;
 }
+
+.accessibility-container {
+    position: absolute;
+    top: 30px; /* to change higher/lower */
+    left: 20px;
+    z-index: 1001; /* stay above other elements */
+}
+
+#google_translate_element {
+    position: absolute !important;
+    top: 60px !important; /* to change higher/lower */
+    right: 25px !important;
+    z-index: 1000 !important;
+}
+  
+body.large-text #google_translate_element {
+    top: 100px !important;
+}
