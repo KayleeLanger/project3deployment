@@ -185,49 +185,50 @@ export function checkout(numItems, orderTotal, orderDetails = []) {
         try {
             const orderDate = getCurrentDateTime();
             const employeeId = '123460';
+
+            // 🛠 MAP orderDetails into backend format
+            const mappedDetails = orderDetails.map(item => {
+                return {
+                    drinkId: item.drinkId || 0,
+                    otherId: item.otherId || 0,
+                    quantity: parseInt(item.quantity) || 1
+                };
+            });
+
+            console.log("✅ [DEBUG] Checkout Payload:");
+            console.log({
+                orderTotal,
+                orderDate,
+                employeeId,
+                orderDetails: mappedDetails
+            });
+
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/checkout`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    numItems,
                     orderTotal,
                     orderDate,
                     employeeId,
-                    orderDetails,
+                    orderDetails: mappedDetails,
                 }),
             });
+
             if (!response.ok) throw new Error("Failed to place order");
             const data = await response.json();
+            console.log("✅ [DEBUG] Server Response:");
             console.log(data);
 
-            const getOrderIdRes = await fetch(`${process.env.REACT_APP_API_URL}/api/latest-orderid`);
-            const { orderId } = await getOrderIdRes.json();
-
-            for (const item of orderDetails) {
-                const payload = {
-                    orderId: orderId,
-                    drinkName: item.drinkId ? item.name : null,
-                    otherName: item.otherId ? item.name : null,
-                    quantity: item.quantity || 1,
-                };
-
-                await fetch(`${process.env.REACT_APP_API_URL}/api/orderitem`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });
-            }
-
         } catch (error) {
-            console.error(error);
+            console.error("❌ [DEBUG] Checkout Error:", error);
         }
     };
     executeCheckout();
 }
+
+
+
+
 
 
 
