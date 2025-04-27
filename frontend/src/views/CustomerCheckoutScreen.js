@@ -41,6 +41,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 
 	const handlePlaceOrder = () => {
 		const totalItems = OrderDetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
+		console.log("Sending order details:", OrderDetails);
 		functions.checkout(totalItems, total.toFixed(2), OrderDetails);
 		alert(`Thanks for your order!\n\nTotal: $${total.toFixed(2)}`);
 		setorderDetails([]);

@@ -131,7 +131,9 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                                                 ice: "-",
                                                 sweetness: "-",
                                                 toppings: "-",
-                                                quantity: "1"
+                                                quantity: "1",
+                                                drinkId: 0,
+                                                otherId: drink.otherid // <-- ADD THIS
                                             }
                                             : {
                                                 name: drink.drinkname,
@@ -140,12 +142,14 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                                                 ice: "",
                                                 sweetness: "",
                                                 toppings: "",
-                                                quantity: "1"
+                                                quantity: "1",
+                                                drinkId: drink.drinkid, // <-- ADD THIS
+                                                otherId: 0
                                             };
                                     
                                         setorderDetails(prevDetails => [...prevDetails, item]);
                                         setScreen(isMisc ? "confirm" : "customer-customization");
-                                    }}
+                                    }}          
                                 />
                             </div>
                         ))

@@ -487,6 +487,29 @@ app.post('/api/checkout', async (req, res) => {
     }
 });
 
+// get drinkId from drink name
+app.get('/api/drinks/id/:name', async (req, res) => {
+    const { name } = req.params;
+    try {
+        const result = await pool.query('SELECT drinkId FROM drink WHERE drinkName = $1', [name]);
+        if (result.rows.length === 0) return res.status(404).json({ error: 'Drink not found' });
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// get otherId from misc item name
+app.get('/api/misc/id/:name', async (req, res) => {
+    const { name } = req.params;
+    try {
+        const result = await pool.query('SELECT otherId FROM toppings_other WHERE otherName = $1', [name]);
+        if (result.rows.length === 0) return res.status(404).json({ error: 'Misc item not found' });
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
 
 
 
