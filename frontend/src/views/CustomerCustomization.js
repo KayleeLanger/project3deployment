@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Customer.css";
 import * as functions from "./functions.js";
+import LargeTextButtons from "./LargeTextButton.js";
 
 function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, setorderDetails, currentEditIdx, setCurrentEditIdx, setToppingMode }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
@@ -35,6 +36,7 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 					<h2>{currentTime.toLocaleTimeString()}</h2>
 					<strong>{currentTime.toLocaleDateString()}</strong>
 				</div>
+				<functions.WeatherEntry/>
 				<button onClick={() => {
 									setScreen("customer-drinks");
 									functions.deleteItem(OrderDetails.length-1, OrderDetails, setorderDetails, setScreen, "customer");
@@ -44,11 +46,17 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 			</div>
 
 			{/* Main content */}
-			<div className="main" style={{ flex: 1, textAlign: "center" }}>
+			<div className="main" style={{ flex: 1, textAlign: "center", flexDirection:"column" }}>
+			
+				<table>
+					<tr><LargeTextButtons/></tr>
+					<tr>
 				<h1 style={{color:"black"}}>Customize Your Drink!</h1>
 				<p>Pick size, ice, sweetness, and toppings.</p>
-
+			
 				<h1>Customization<br></br></h1>
+				</tr>
+				<tr>
 				<div className = "customization-options">
 					<functions.SizeSelector selectedSize={size} setSelectedSize={setSize} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx} page="customer"/>
 					<functions.IceSelector selectedIce={ice} setSelectedIce={setIce} details={OrderDetails} setDetails={setorderDetails} currentEditIdx={currentEditIdx} page="customer"/>
@@ -100,7 +108,10 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 				>
 					Done
 				</button>
+				
 				</div>
+				</tr>
+				</table>
 			</div>
 		</div>
 	);

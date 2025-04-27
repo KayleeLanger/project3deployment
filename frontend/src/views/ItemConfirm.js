@@ -3,6 +3,7 @@ import "./Customer.css";
 import logo from "./Images/team_00_logo.png";
 import * as functions from "./functions.js";
 import { getDrinkImage } from "./functions.js";
+import LargeTextButtons from "./LargeTextButton.js";
 
 function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditIdx, selectedCategory, setSelectedCategory, setToppingMode }) {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -65,13 +66,15 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
     ];
 
     return (
+        
         <div style={{ display: "flex", height: "100vh" }}>
+            
             <div className="sidebar">
                 <div className="time-box">
                     <h2>{currentTime.toLocaleTimeString()}</h2>
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
-
+                <functions.WeatherEntry/>
                 {categories.map((category) =>
                     category.name === selectedCategory ? (
                         <functions.SpecialSideButton
@@ -105,7 +108,8 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                 <functions.SideButton onClick={() => setScreen("home")} />
             </div>
 
-            <div className="main" style={{ marginLeft: "250px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <div className="mainCustomization" >
+            <LargeTextButtons/>
                 <h1 style={{ color: "black", fontSize: "40px", marginBottom: "100px" }}>{lastItem.name}</h1>
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
                 <img
@@ -147,9 +151,11 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
 
             <div className="order">
                 <h1>Order Details</h1>
+         
                 {OrderDetails && OrderDetails.length > 0 ? (
                     OrderDetails.map((order, index) => (
                         <>
+                        
                             <div className="order-item">
                                 <div className="order-left">
                                     <functions.Button
@@ -218,6 +224,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                     }}
                                 />
                             </div>
+                            
                         </>
                     ))
                 ) : (

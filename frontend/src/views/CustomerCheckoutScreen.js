@@ -3,6 +3,7 @@ import "./Customer.css";
 import * as functions from "./functions.js";
 import logo from "./Images/team_00_logo.png";
 import { getDrinkImage, getToppingImage } from "./functions.js";
+import LargeTextButtons from "./LargeTextButton.js";
 
 function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
@@ -69,6 +70,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 	const seasonalInOrder = OrderDetails.some(item => item.name === seasonalDrink?.drinkname);
 
 	return (
+		
 		<div style={{ display: "flex", height: "100vh" }}>
 			{/* Sidebar */}
 			<div className="sidebar">
@@ -76,15 +78,17 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 					<h2>{currentTime.toLocaleTimeString()}</h2>
 					<strong>{currentTime.toLocaleDateString()}</strong>
 				</div>
+				<functions.WeatherEntry/>
 				<functions.SideButton text="Back to Item Confirmation" onClick={() => setScreen("confirm")} />
 				<functions.SideButton text="Back to Drinks" onClick={() => setScreen("customer-drinks")} />
 				<functions.SideButton text="Home" onClick={() => setScreen("customer")} />
 			</div>
 
 			{/* Main Content */}
-			<div className="homeScreen" style={{ flex: 1, display: "flex", flexDirection: "column", padding: "20px", overflow: "hidden" }}>
+			<div className="homeScreenCheckout" style={{ flex: 1, display: "flex", flexDirection: "column", padding: "20px", overflow: "hidden" }}>
 				<div style={{ display: "flex", justifyContent: "flex-end" }}>
-					<functions.XButton
+					<LargeTextButtons/>
+				<functions.XButton
 						text="X"
 						onClick={() => {
 							const confirmClear = window.confirm("Are you sure you want to cancel your order and return to the home screen?");
@@ -96,10 +100,14 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 					/>
 				</div>
 
+				
+				
 				<h1 style={{ textAlign: "center" }}>Review Your Order</h1>
-
+				
+				
 				{/*Scrollable order list*/}
 				<div style={{ flex: "1 1 auto", overflowY: "auto", padding: "10px 20px", marginBottom: "20px" }}>
+					
 					{OrderDetails.length > 0 ? (
 						OrderDetails.map((item, index) => (
 							<div key={index} className="order-item" style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
@@ -200,6 +208,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 				<div style={{ marginTop: "20px", textAlign: "center" }}>
 					<functions.Button text="Place Order" onClick={handlePlaceOrder} />
 				</div>
+				
 			</div>
 		</div>
 	);

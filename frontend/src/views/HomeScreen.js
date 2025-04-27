@@ -6,6 +6,7 @@ import HighContrastToggle from './HighContrastToggle';
 import './HighContrast.css';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import LargeTextButtons from "./LargeTextButton.js";
 
 function HomeScreen({ setScreen }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
@@ -21,7 +22,8 @@ function HomeScreen({ setScreen }) {
 	return (
 		<div className="home-container">
 			<HighContrastToggle /> {/* <-- just drop this in every page */}
-
+			<LargeTextButtons/>
+			
 			<div className="top-bar">
 				<span className="date-time">
 					{currentTime.toLocaleDateString()} {currentTime.toLocaleTimeString()}

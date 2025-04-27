@@ -1,60 +1,68 @@
-// import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-// export function WeatherEntry() {
-//   const [weather, setWeather] = useState(null);
-//   const [error, setError] = useState(null);
+export function WeatherEntry() {
+  const [weather, setWeather] = useState(null);
+  const [error, setError] = useState(null);
 
-//   // Fetch weather data
-//   const fetchWeather = async () => {
-//     try {
-//       const response = await fetch(
-//         "https://api.openweathermap.org/data/3.0/onecall?lat=30.6210&lon=-96.3255&appid=892b7cd320c8d96764bf6dada5417803&units=imperial"
-//       );
-//       if (!response.ok) throw new Error("Failed to get weather, try again later");
-//       const data = await response.json();
+ 
+  const fetchWeather = async () => {
+    try {
+      const response = await fetch(
+        "https://api.openweathermap.org/data/3.0/onecall?lat=30.6210&lon=-96.3255&appid=892b7cd320c8d96764bf6dada5417803&units=imperial"
+      );
+      if (!response.ok) throw new Error("Failed to get weather, try again later");
+      const data = await response.json();
 
-//       setWeather({
-//         temperature: data.current.temp,
-//         description: data.current.weather[0].description, //Word discription of image (Accesisble :) 
-//         icon: data.current.weather[0].icon, // e.g. "01d"
-//       });
-//     } catch (error) {
-//       setError(error.message);
-//     }
-//   };
+      setWeather({
+        temperature: data.current.temp,
+        description: data.current.weather[0].description, //Word discription of image (Accesisble :) 
+        icon: data.current.weather[0].icon, // e.g. "01d"
+      });
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
-//   useEffect(() => {
-//     // Fetch weather immediately on mount
-//     fetchWeather();
+  useEffect(() => {
+    // Fetch weather immediately on mount
+    fetchWeather();
 
-//     // Set up interval to fetch weather every 10 minutes (600000 ms)
-//     const intervalId = setInterval(fetchWeather, 600000);
+    // Set up interval to fetch weather every 10 minutes (600000 ms)
+    const intervalId = setInterval(fetchWeather, 60000000);
 
-//     // Clear interval on cleanup
-//     return () => clearInterval(intervalId);
-//   }, []);
+    // Clear interval on cleanup
+    return () => clearInterval(intervalId);
+  }, []);
 
-//   // Handling loading state
-//   if (!weather && !error) return <div className="weather">Loading weather...</div>;
+  // Handling loading state
+  if (!weather && !error) return <div className="weather">Loading weather...</div>;
 
-//   // Handling error state
-//   if (error) return <div className="weather text-red-500">Error: {error}</div>;
+  // Handling error state
+  if (error) return <div className="weather text-red-500">Error: {error}</div>;
 
-//   // Construct the icon URL
-//   const iconUrl = `https://openweathermap.org/img/wn/${weather.icon}.png`;
+  // Construct the icon URL
+  const iconUrl = `https://openweathermap.org/img/wn/${weather.icon}.png`;
 
-//   return (
-//     <div className="weatherBox">
-//       <table style="text-align: center">
-//         <tr>
-//             <td> <img src={iconUrl} alt={weather.description} style={"center"} />
-//               <p>{weather.description.charAt(0).toUpperCase() + weather.description.slice(1)}</p></td>
-//             <td><p>{weather.temperature.toFixed(1)}°F</p></td>
-//         </tr>
-//       </table>
-//     </div>
-//   );
-// }
+  return (
+    <div className="weatherBox">
+      <table>
+        <tr>
+            <td> <img src={iconUrl} alt={weather.description} style={{ display: 'block', margin: '10px' }} />
+              <p>{weather.description.charAt(0).toUpperCase() + weather.description.slice(1)}</p></td>
+            <td><h3 style={{ textAlign: 'center' }}>{weather.temperature.toFixed(1)}°F</h3></td>
+        </tr>
+      </table>
+    </div>
+  );
+}
+
+
+<AccessButton
+    onClick={() => {
+        document.body.classList.toggle("large-text");
+    }}
+/>
+
 
 
 
@@ -89,8 +97,8 @@ export function AccessButton({ text = "Aa", onClick }) {
         <button
             style={{
                 position: "absolute",
-                bottom: "100px",
-                left: "270px",
+                top: "50px",
+                left: "370px",
                 backgroundColor: "rgb(19, 90, 120)",
                 color: "black",
                 border: "10px",
@@ -98,7 +106,8 @@ export function AccessButton({ text = "Aa", onClick }) {
                 borderRadius: "50px",
                 fontSize: "40px",
                 cursor: "pointer",
-                padding: "10px 20px",
+                // padding: "10px 20px",
+                textAlign: "center"
             }}
             onClick={onClick}
         >
@@ -123,46 +132,31 @@ export function CategoryButton({ text, onClick }) {
 }
 
 
-export function SideButton({ text, onClick }) {
-    return <button
-        style={{
-            backgroundColor: "rgb(99, 99, 99)",
-            color: "white" ,
-            fontFamily: "Verdana, Tahoma, sans-serif",
-            width: "250px",
-            height: "45px",
-            padding: "20px", 
-            margin: "5px",
-            border: "3px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            }}
-            onClick={onClick}>{text}
-    </button>;
-}
 
+export function SideButton({ text, onClick }) {
+    return (
+        <button
+            className="side-button"
+            onClick={onClick}
+        >
+            {text}
+            {/* REMOVED INLINE CSS */}
+        </button>
+    );
+}
 
 export function SpecialSideButton({ text, onClick }) {
-    return <button
-        style={{
-            backgroundColor: "rgb(50, 50, 50)",
-            color: "white" ,
-            fontFamily: "Verdana, Tahoma, sans-serif",
-            width: "250px",
-            height: "45px",
-            padding: "20px", 
-            margin: "5px",
-            border: "3px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            }}
-            onClick={onClick}>{text}
-    </button>;
+    return (
+        <button
+            className="special-side-button"
+            onClick={onClick}
+        >
+            {text}
+            {/* REMOVED INLINE CSS */}
+        </button>
+    );
 }
+
 
 export function defaultVal (orders, setOrders) {
     // copy of orderdetails
@@ -239,6 +233,7 @@ export function XButton({ text, onClick }) {
     onClick={onClick}>{text}</button>;
 }
 
+
 export function DrinkButton({ text, onClick }) {
     return <button
     style={{
@@ -251,29 +246,10 @@ export function DrinkButton({ text, onClick }) {
     }}
     onClick={onClick}>{text}</button>;
 }
-
 export function CustomerDrinkButton({ text, image, onClick , selected}) {
     return (
         <button
-            style={{
-            // Colors
-            backgroundColor: selected ? "#ffe680" : "#39D6DE",
-            color: "black",
-            // Button Spacing
-            width: "300px",
-            height: "300px",
-            margin: "20px",
-            padding: "10px",
-            // allowing for image
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            // rounded  edges/ border
-            border: "4px",
-            borderColor: "black",
-            borderRadius: "10px",
-            }}
+            className="customerDrinkButton"
             onClick={onClick}
         >
         {/* IMAGE: Long you may need to edit this to get dimensions right for photos */}
@@ -289,7 +265,7 @@ export function CustomerDrinkButton({ text, image, onClick , selected}) {
                 }}
             />
         )}
-        <span style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}>
+        <span style={{  fontWeight: "bold", textAlign: "center" }}>
             {text}
         </span>
         </button>

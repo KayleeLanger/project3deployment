@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import "./Customer.css";
 import logo from "./Images/team_00_logo.png"; 
 import * as functions from "./functions.js";
+import LargeTextButtons from "./LargeTextButton.js";
 
 
 function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDetails }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     // const [currentOrder, setState]=useState()
-
+    <LargeTextButtons/>
 
     // /// category list: hardcoded since categories won't change, only drinks
     // const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "Miscellaneous"}];
@@ -73,16 +74,16 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
 
     return (
     <>
-
+       
         {/* Sidebar (logout, time, cancel order)*/}
         <div className="sidebar">
 
-            {/* TIME BOX TODO: ADD WEATHER Sprint 3 */}
+            {/* TIME BOX */}
             <div className="time-box">
                 <h2>{currentTime.toLocaleTimeString()}</h2>
                 <strong>{currentTime.toLocaleDateString()}</strong>
             </div>
-            {/* <functions.WeatherEntry/> */}
+            <functions.WeatherEntry/>
 
             {/* DRINK CATEGORIES */}
             {categories.map(category => (
@@ -133,9 +134,7 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
                 <h3>Please click on the category on the left to get started with your order!</h3>
 
                 {/* ACCESSIBILITY BUTTON(LARGE TEXT) */}
-                <functions.AccessButton
-                
-            />
+             <LargeTextButtons/>
             </div>
         ) : (
             <div className="homeScreen">

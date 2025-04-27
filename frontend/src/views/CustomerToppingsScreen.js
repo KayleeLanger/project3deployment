@@ -3,6 +3,8 @@ import "./Customer.css";
 import logo from "./Images/team_00_logo.png";
 import * as functions from "./functions.js";
 import { getToppingImage } from "./functions";
+import LargeTextButtons from "./LargeTextButton.js";
+
 
 function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCategory, OrderDetails, setorderDetails, cameFromCustomization }) {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -123,14 +125,15 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
     
 
     return (
+        
         <>
             <div className="sidebar">
                 <div className="time-box">
                     <h2>{currentTime.toLocaleTimeString()}</h2>
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
-
-                {categories.map(category => (
+                <functions.WeatherEntry/>
+                {categories.map((category) =>
                     <functions.SideButton
                         key={category.name}
                         text={category.name}
@@ -184,6 +187,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     </div>
                 )}
             </div>
+            <LargeTextButtons/>
         </>
     );
 }
