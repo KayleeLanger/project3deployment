@@ -424,27 +424,20 @@ app.post('/api/checkout', async (req, res) => {
                 [nextOrderItemId, nextOrderId, drinkId, otherId, quantity]
             );
 
-            if (drinkId !== 0) {
-                // 🔵 DEBUG: Getting drink ingredients
+            if (drinkId !== null) { 
                 const ingredientsResult = await client.query(
                     `SELECT inventoryId, quantityNeeded FROM drink_to_inventory WHERE drinkId = $1;`,
                     [drinkId]
                 );
-                console.log("Updating inventory for drink. Ingredients:", ingredientsResult.rows);
-
                 for (const ingredient of ingredientsResult.rows) {
                     const inventoryId = ingredient.inventoryid;
                     const quantityNeeded = ingredient.quantityneeded;
-                    
-                    // 🔵 DEBUG: Log each inventory deduction
-                    console.log(`Reducing inventoryId=${inventoryId} by amount=${quantity * quantityNeeded}`);
-
                     await client.query(
                         `UPDATE inventory SET remainingInStock = remainingInStock - $1 WHERE inventoryId = $2;`,
                         [quantity * quantityNeeded, inventoryId]
                     );
                 }
-            }
+            }              
 
             if (otherId !== 0) {
                 // 🔵 DEBUG: Handling toppings/misc
