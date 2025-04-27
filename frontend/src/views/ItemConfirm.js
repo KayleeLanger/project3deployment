@@ -102,7 +102,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                 <functions.SideButton onClick={() => setScreen("home")} />
             </div>
 
-            <div className="main" style={{ marginLeft: "250px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <div className="mainCustomization" >
             <LargeTextButtons/>
                 <h1 style={{ color: "black", fontSize: "40px", marginBottom: "100px" }}>{lastItem.name}</h1>
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
@@ -141,9 +141,11 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
 
             <div className="order">
                 <h1>Order Details</h1>
+         
                 {OrderDetails && OrderDetails.length > 0 ? (
                     OrderDetails.map((order, index) => (
                         <>
+                        
                             <div className="order-item">
                                 <div className="order-left">
                                     <functions.Button
@@ -212,12 +214,13 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                     }}
                                 />
                             </div>
+                            
                         </>
                     ))
                 ) : (
                     <p>No items</p>
                 )}
-
+               
                 <div className="order-total" style={{ textAlign: "right", color: "black" }}>                    <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
                     <h3>Tax: ${tax.toFixed(2)} </h3>
                     <h2>Total: ${total.toFixed(2)}</h2>

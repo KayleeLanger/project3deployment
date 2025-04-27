@@ -39,6 +39,15 @@ body.large-text .sidebar {
     align-items:center;
     
 }
+.mainCustomization {
+    margin-left: 250px;
+    width: calc(65% - 250px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 body.large-text .main {
     margin-left: 350px;
     width: calc(65% - 350px); /* width */
@@ -99,13 +108,50 @@ body.large-text .homeScreen {
     flex-direction: column;
     justify-content: space-between; /* pushes button to  very bottom */
     overflow-y: auto; /* makes it scrollable */
+    overflow-x: auto;
+}
+
+body.large-text .order{
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 40%;
+    height: 100vh;
+    background-color: white;
+    padding: 20px;
+    border: 20px solid black;
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between; /* pushes button to  very bottom */
+    overflow-y: auto; /* makes it scrollable */
+    overflow-x: auto;
+    
 }
 /* order button is on the bottom, but is still a little space below */
 .order button{
     margin-bottom: 50px;
 }
 
-/* default button styling (sidebar) */
+body.large-text .order button{
+    margin-bottom:100px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 button {
     padding: 10px 20px;
     margin: 5px;
