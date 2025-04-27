@@ -105,7 +105,11 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     }}
                 />
 
-                <functions.SideButton onClick={() => setScreen("home")} />
+                {/* BUTTON THAT TAKES YOU BACK HOME */}
+                <functions.SideButton
+                    text="Home"
+                    onClick={() => setScreen("home")}
+                />
             </div>
 
             <div className="mainCustomization" >
