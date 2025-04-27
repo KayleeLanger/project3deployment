@@ -53,12 +53,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
     const tax = subtotal * 0.08;
     const total = subtotal + tax;
 
-    // const categories = [
-    //     { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
-    //     { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
-    //     { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
-    // ];
-
     const categories = [
         { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
         { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
@@ -105,7 +99,11 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     }}
                 />
 
-                <functions.SideButton onClick={() => setScreen("home")} />
+                {/* BUTTON THAT TAKES YOU BACK HOME */}
+                <functions.SideButton
+                    text="Home"
+                    onClick={() => setScreen("home")}
+                />
             </div>
 
             <div className="mainCustomization" >

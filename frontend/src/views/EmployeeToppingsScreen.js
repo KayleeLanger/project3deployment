@@ -2,12 +2,11 @@ import { useState, useEffect } from "react";
 import "./Employee.css";
 import * as functions from "./functions.js";
 
-function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, setorderDetails, currentEditIdx, setCurrentEditIdx }) {
+function EmployeeToppingsScreen({ setScreen, selectedCategory, orderDetails, setorderDetails, currentEditIdx, setCurrentEditIdx }) {
   const [selectedToppings, setSelectedToppings] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [toppings, setToppings] = useState([]);
-    
-  //clock setup
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -15,26 +14,23 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
     return () => clearInterval(interval);
   }, []);
 
-  // get drinks for category
   useEffect(() => {
     getToppings("Toppings");
   }, []);
 
-  const getToppings = async (category ) => {
+  const getToppings = async (category) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/drinks/category/${category}`);
-      if (!response.ok) throw new Error ("Failed to fetch drinks");
+      if (!response.ok) throw new Error("Failed to fetch drinks");
       const data = await response.json();
-      console.log("data: ", data);
-
       const formatted = data.map(item => ({
         name: item.drinkname || item.othername,
         price: parseFloat(item.drinkprice || item.otherprice)
-      }))
-      setToppings(formatted); // set toppings state with data
+      }));
+      setToppings(formatted);
     } catch (error) {
       console.error(error);
-      setToppings([]);  // reset toppings if error
+      setToppings([]);
     }
   };
 
@@ -46,32 +42,27 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
     );
   };
 
-  let orderdetails = [];
-  if (OrderDetails.length > 0) {
-    orderdetails = OrderDetails;
-  }
-
   useEffect(() => {
-    const idx = currentEditIdx != null ? currentEditIdx : orderdetails.length - 1;
-    if (
-      orderdetails[idx] &&
-      orderdetails[idx].toppings &&
-      orderdetails[idx].toppings !== "none"
-    ) {
-      const toppingsList = orderdetails[idx].toppings
-        .split(", ")
-        .map(t => t.split(" (+")[0]); // Strip out the " (+$...)" part
-      setSelectedToppings(toppingsList);
+    if (orderDetails.length > 0) {
+      const idx = currentEditIdx != null ? currentEditIdx : orderDetails.length - 1;
+      if (orderDetails[idx] && orderDetails[idx].toppings && orderDetails[idx].toppings !== "none") {
+        const toppingsList = orderDetails[idx].toppings
+          .split(", ")
+          .map(t => t.split(" (+")[0]);
+        setSelectedToppings(toppingsList);
+      } else {
+        setSelectedToppings([]);
+      }
     } else {
       setSelectedToppings([]);
     }
-  }, [currentEditIdx, orderdetails]);
+  }, [currentEditIdx, orderDetails]);
   
 
-  const subtotal = orderdetails.reduce((subtotal, order) => {
+  const subtotal = orderDetails.reduce((subtotal, order) => {
     const price = parseFloat(order.price);
     const qty = parseInt(order.quantity);
-    return !isNaN(price) ? subtotal + price * qty: subtotal;
+    return !isNaN(price) ? subtotal + price * qty : subtotal;
   }, 0);
 
   const tax = subtotal * 0.08;
@@ -79,54 +70,37 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
 
   return (
     <>
-      {/* Sidebar (logout, time, cancel order)*/}
-		<div className="sidebar">
-			<table><tr>
-			<div className="time-box">
-				<h2>{currentTime.toLocaleTimeString()}</h2>
-				<strong>{currentTime.toLocaleDateString()}</strong>
-			</div>
-			{/* probably should come up with a better way to do this */}
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			</tr><tr><h1>   </h1>
-			
-			</tr><tr>
-        {selectedCategory !== "Toppings" && (
-          <functions.Button text="Back to Customization" onClick={() => setScreen("cashier-customization")} />
-        )}
+      {/*Sidebar*/}
+      <div className="sidebar">
+        <table><tbody><tr>
+          <div className="time-box">
+            <h2>{currentTime.toLocaleTimeString()}</h2>
+            <strong>{currentTime.toLocaleDateString()}</strong>
+          </div>
+        </tr><tr><h1> </h1></tr>
+        {/*spacer rows*/}
+        <tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr><tr><h1> </h1></tr>
+        <tr>
+          {selectedCategory !== "Toppings" && (
+            <functions.Button text="Back to Customization" onClick={() => setScreen("cashier-customization")} />
+          )}
+          <functions.Button text="Remove Current Item" onClick={() => {
+            setorderDetails(orderDetails.slice(0, orderDetails.length - 1));
+            setScreen("cashier");
+            setCurrentEditIdx(null);
+          }} />
+        </tr><tr>
+          <functions.Button text="Clear Order" onClick={() => {
+            setorderDetails([]);
+            setScreen("cashier");
+            setCurrentEditIdx(null);
+          }} />
+        </tr><tr>
+          <functions.Button text="Logout" onClick={() => setScreen("home")} />
+        </tr></tbody></table>
+      </div>
 
-				<functions.Button text="Remove Current Item" onClick={() => {
-					setorderDetails(orderdetails.slice(0, orderdetails.length-1));
-					setScreen("cashier");
-          setCurrentEditIdx(null);
-				}} />
-			</tr><tr>
-				{/* Clear order and start over */}
-				<functions.Button text="Clear Order" onClick={() => {
-					setScreen("cashier");
-					setorderDetails([]);
-          setCurrentEditIdx(null);
-				}} />
-			</tr><tr>
-				<functions.Button text="Logout" onClick={() => setScreen("home")} />
-			</tr></table>
-		</div>
-
-      {/* Main content */}
+      {/*Main Content*/}
       <div className="container">
         <div className="main">
           <h1>Toppings</h1>
@@ -139,15 +113,13 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                   toggleTopping(name);
                   if (selectedCategory === "Toppings") {
                     setorderDetails(prevDetails => {
-                      // check if last item is "Topping Only"
                       if (prevDetails.length > 0 && prevDetails[prevDetails.length - 1].name === "Topping Only") {
-                        // if last item is "Topping Only", overwrite it
                         return prevDetails.map((order, index) => {
                           if (index === prevDetails.length - 1) {
                             return {
                               ...order,
-                              name: name, 
-                              price: price.toFixed(2), 
+                              name: name,
+                              price: price.toFixed(2),
                               size: "n/a",
                               ice: "n/a",
                               sweetness: "n/a",
@@ -158,54 +130,37 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                           return order;
                         });
                       } else {
-                        // if not, add new item (already in topping only)
-                        return [
-                          ...prevDetails,
-                          {
-                            name: name,
-                            price: price.toFixed(2),
-                            size: "n/a",
-                            ice: "n/a",
-                            sweetness: "n/a",
-                            toppings: "n/a",
-                            quantity: "1"
-                          }
-                        ];
+                        return [...prevDetails, {
+                          name: name,
+                          price: price.toFixed(2),
+                          size: "n/a",
+                          ice: "n/a",
+                          sweetness: "n/a",
+                          toppings: "n/a",
+                          quantity: "1"
+                        }];
                       }
                     });
-                  } else { // add toppings to drink
+                  } else {
                     setorderDetails(prevDetails => {
                       const idx = currentEditIdx != null ? currentEditIdx : prevDetails.length - 1;
-                
                       return prevDetails.map((order, index) => {
                         if (index !== idx) return order;
-                
                         const toppingText = `${name} (+$${price.toFixed(2)})`;
                         const hasTopping = order.toppings?.includes(name);
-                
                         let newToppings = "";
                         let newPrice = parseFloat(order.price);
-                
                         if (hasTopping) {
-                          // remove topping
-                          const toppingsArray = order.toppings
-                            .split(", ")
-                            .filter(t => !t.includes(name));
+                          const toppingsArray = order.toppings.split(", ").filter(t => !t.includes(name));
                           newToppings = toppingsArray.length > 0 ? toppingsArray.join(", ") : "none";
                           newPrice -= price;
                         } else {
-                          // add topping
-                          newToppings =
-                            order.toppings === "none" || !order.toppings
-                              ? toppingText
-                              : `${order.toppings}, ${toppingText}`;
+                          newToppings = order.toppings === "none" || !order.toppings
+                            ? toppingText
+                            : `${order.toppings}, ${toppingText}`;
                           newPrice += price;
                         }
-                        return {
-                          ...order,
-                          toppings: newToppings,
-                          price: newPrice.toFixed(2),
-                        };
+                        return { ...order, toppings: newToppings, price: newPrice.toFixed(2) };
                       });
                     });
                   }
@@ -218,67 +173,44 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
         </div>
       </div>
 
-      {/* Order Results */}
+      {/*Order Summary*/}
       <div className="order">
         <h1>Order Summary</h1>
-        {/* loop through order items and display */}
-        {orderdetails && orderdetails.length > 0 ? ( 
+        {orderDetails.length > 0 ? (
           <>
-            {orderdetails.map((order, index) => (
-              <div className="order-item">
-                <div className = "order-left">
-                  {/* Delete button */}
-                  <functions.Button text="X" 
-                    onClick={() => {
-                      functions.deleteItem(index, orderdetails, setorderDetails, setScreen);
-                      console.log("Delete button clicked for", order.name);
-                    }} 
-                  />
-                  <div className = "quantity">
-                    <button
-                      onClick={() => {
-                        const updated = [...orderdetails];
-                        const currentQty = parseInt(order.quantity) || 1;
-                        updated[index].quantity = Math.max(1, currentQty - 1);
-                        setorderDetails(updated);
-                      }}
-                      style={{ backgroundColor: "#38bdf8"}}
-                    >
-                      –
-                    </button>
-
+            {orderDetails.map((order, index) => (
+              <div className="order-item" key={index}>
+                <div className="order-left">
+                  <functions.Button text="X" onClick={() => functions.deleteItem(index, orderDetails, setorderDetails, setScreen)} />
+                  <div className="quantity">
+                    <button onClick={() => {
+                      const updated = [...orderDetails];
+                      updated[index].quantity = Math.max(1, (parseInt(order.quantity) || 1) - 1);
+                      setorderDetails(updated);
+                    }} style={{ backgroundColor: "#38bdf8" }}>–</button>
                     <input
                       type="number"
                       min="1"
                       className="quantity-input"
                       value={order.quantity}
                       onChange={(e) => {
-                        const newQty = parseInt(e.target.value) || 1;
-                        const updated = [...orderdetails];
-                        updated[index].quantity = newQty;
+                        const updated = [...orderDetails];
+                        updated[index].quantity = parseInt(e.target.value) || 1;
                         setorderDetails(updated);
                       }}
                     />
-
-                    <button
-                      onClick={() => {
-                        const updated = [...orderdetails];
-                        const currentQty = parseInt(order.quantity) || 1;
-                        updated[index].quantity = currentQty + 1;
-                        setorderDetails(updated);
-                      }}
-                      style={{ backgroundColor: "#38bdf8"}}
-                    >
-                      +
-                    </button>
+                    <button onClick={() => {
+                      const updated = [...orderDetails];
+                      updated[index].quantity = (parseInt(order.quantity) || 1) + 1;
+                      setorderDetails(updated);
+                    }} style={{ backgroundColor: "#38bdf8" }}>+</button>
                   </div>
                 </div>
-                <div className = "order-content">
+                <div className="order-content">
                   <div className="order-header">
-                      <h3>{order.name}</h3>
-                      <h3>${order.price}</h3>
+                    <h3>{order.name}</h3>
+                    <h3>${order.price}</h3>
                   </div>
-                  { /* don't add options and edit if topping or misc */}
                   {order.ice !== "n/a" && order.ice !== "-" && (
                     <p>
                       <strong>Size:</strong> {order.size} <br />
@@ -288,43 +220,33 @@ function EmployeeToppingsScreen({ setScreen , selectedCategory, OrderDetails, se
                     </p>
                   )}
                 </div>
-                {/* Edit item button */}
                 {order.ice !== "n/a" && order.ice !== "-" && (
-                  <functions.Button text="Edit" 
-                    onClick={() => {
-                      functions.editItem(index, setCurrentEditIdx, setScreen);
-                      console.log("Edit button clicked for", order.name);
-                    }} 
-                  />
+                  <functions.Button text="Edit" onClick={() => functions.editItem(index, setCurrentEditIdx, setScreen)} />
                 )}
               </div>
             ))}
-            {/* display order totals */}
-            <div className = "order-total" style={{ textAlign: "right" }}>
-              <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
-              <h3>Tax: ${tax.toFixed(2)} </h3>
+            <div className="order-total" style={{ textAlign: "right" }}>
+              <h3>Subtotal: ${subtotal.toFixed(2)}</h3>
+              <h3>Tax: ${tax.toFixed(2)}</h3>
               <h2>Total: ${total.toFixed(2)}</h2>
             </div>
           </>
         ) : (
           <p>Add a Drink To Get Started!</p>
         )}
-        
-      <functions.Button text="Add More" 
-				onClick={() => {
-					setScreen("cashier"); 
-          functions.defaultVal(orderdetails, setorderDetails);
+        <functions.Button text="Add More" onClick={() => {
+          setScreen("cashier");
+          functions.defaultVal(orderDetails, setorderDetails);
           setCurrentEditIdx(null);
-				}} />
-        <functions.Button text="Checkout" 
-          onClick={() => {
-            const totalItems = orderdetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
-            functions.checkout(totalItems , total.toFixed(2));
-            functions.defaultVal(orderdetails, setorderDetails);
-            setScreen("cashier"); 
-            alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
-            setorderDetails([]);
-          }} />
+        }} />
+        <functions.Button text="Checkout" onClick={() => {
+          const totalItems = orderDetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
+          functions.checkout(totalItems, total.toFixed(2), orderDetails);
+          functions.defaultVal(orderDetails, setorderDetails);
+          setScreen("cashier");
+          alert("Thanks for the order!\n\nOrder Total: $" + total.toFixed(2));
+          setorderDetails([]);
+        }} />
       </div>
     </>
   );

@@ -180,33 +180,63 @@ export function defaultVal (orders, setOrders) {
     setOrders(updatedOrderDetails);
 }
 
-export function checkout (numItems, orderTotal) {
-    const executeCheckout = async () => {
+export async function checkout(numItems, orderTotal, orderDetails = []) {
     try {
         const orderDate = getCurrentDateTime();
-        console.log(orderDate);
         const employeeId = '123460';
+
+        const mappedDetails = [];
+
+        for (const item of orderDetails) {
+            if (item.size === "-" && item.ice === "-") {
+                //Miscellaneous Item
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/misc/id/${encodeURIComponent(item.name)}`);
+                const data = await res.json();
+                mappedDetails.push({
+                    drinkId: 0,
+                    otherId: data.otherid,
+                    quantity: parseInt(item.quantity) || 1
+                });
+            } else {
+                //Drink Item
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/drinks/id/${encodeURIComponent(item.name)}`);
+                const data = await res.json();
+                mappedDetails.push({
+                    drinkId: data.drinkid,
+                    otherId: 0,
+                    quantity: parseInt(item.quantity) || 1
+                });
+            }
+        }
+
+        console.log("Sending mapped order details:", mappedDetails);
+
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/checkout`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                numItems,
                 orderTotal,
                 orderDate,
                 employeeId,
+                orderDetails: mappedDetails,
             }),
         });
-        if (!response.ok) throw new Error ("Failed to place order");
-            const data = await response.json();
-            console.log(data);
-        } catch (error) {
-            console.error(error);
-        }
+
+        if (!response.ok) throw new Error("Failed to place order");
+        const data = await response.json();
+        console.log(data);
+
+    } catch (error) {
+        console.error(error);
     }
-    executeCheckout();
 }
+
+
+
+
+
+
+
 
 export function getCurrentDateTime() {
     const currentDate = new Date();
@@ -246,10 +276,10 @@ export function DrinkButton({ text, onClick }) {
     }}
     onClick={onClick}>{text}</button>;
 }
-export function CustomerDrinkButton({ text, image, onClick , selected}) {
+export function CustomerDrinkButton({ text, image, onClick, selected }) {
     return (
         <button
-            className="customerDrinkButton"
+            className={`customerDrinkButton ${selected ? "selected" : ""}`}
             onClick={onClick}
         >
         {/* IMAGE: Long you may need to edit this to get dimensions right for photos */}

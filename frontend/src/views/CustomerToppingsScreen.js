@@ -10,13 +10,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
     const [currentTime, setCurrentTime] = useState(new Date());
     const [toppings, setToppings] = useState([]);
     const [selectedToppings, setSelectedToppings] = useState([]);
-
-    // const categories = [
-    //     { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
-    //     { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
-    //     { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
-    // ];
-
+    
     const categories = [
             { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
             { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
@@ -133,7 +127,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
                 <functions.WeatherEntry/>
-                {categories.map((category) =>
+                {categories.map((category) => (
                     <functions.SideButton
                         key={category.name}
                         text={category.name}
@@ -154,7 +148,11 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     />
                 )}
 
-                <functions.SideButton onClick={() => setScreen("home")} />
+                {/* BUTTON THAT TAKES YOU BACK HOME */}
+                <functions.SideButton
+                    text="Home"
+                    onClick={() => setScreen("home")}
+                />
             </div>
 
 

@@ -8,7 +8,6 @@ import LargeTextButtons from "./LargeTextButton.js";
 function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDetails }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     // const [currentOrder, setState]=useState()
-    <LargeTextButtons/>
 
     // /// category list: hardcoded since categories won't change, only drinks
     // const categories = [{name: "Milk Tea"}, {name: "Brewed Tea"}, {name: "Ice Blended"}, {name: "Fresh Milk"},{name: "Fruit Tea"}, {name: "Tea Mojito"}, {name: "Crema"}, {name: "Seasonal"}, {name: "Miscellaneous"}];
@@ -32,10 +31,6 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
         // translate div style
         const newDiv = document.createElement("div");
         newDiv.id = "google_translate_element";
-        newDiv.style.position = "absolute";
-        newDiv.style.top = "50px";
-        newDiv.style.right = "25px";
-        newDiv.style.zIndex = "1000";
         document.body.appendChild(newDiv);
     
         // initialize translate widget
@@ -116,28 +111,26 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
             />
             
 
-            {/* BLANK BUTTON THAT TAKES YOU BACK HOME */}
+            {/* BUTTON THAT TAKES YOU BACK HOME */}
             <functions.SideButton
+                text="Home"
                 onClick={() => setScreen("home")}
             />
         </div>
     
 
-
-
         {/* Main content */}
         {/* Welcome if no items in order, else encouragement to add more */}
         {(OrderDetails.length === 0 ? (
             <div className="homeScreen">
+                <LargeTextButtons/>
                 <img src={logo} alt="Logo" style={{ width: "200px", marginBottom: "20px" }} />
                 <h1>Welcome!<br></br></h1>
                 <h3>Please click on the category on the left to get started with your order!</h3>
-
-                {/* ACCESSIBILITY BUTTON(LARGE TEXT) */}
-             <LargeTextButtons/>
             </div>
         ) : (
             <div className="homeScreen">
+                <LargeTextButtons/>
                 <img src={logo} alt="Logo" style={{ width: "200px", marginBottom: "20px" }} />
                 <h1>Click on a category to add more!<br></br></h1>
             </div>

@@ -28,13 +28,6 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
         }
     };
 
-    // //category list
-    // const categories = [
-    //     { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
-    //     { name: "Fresh Milk" }, { name: "Fruit Tea" }, { name: "Tea Mojito" },
-    //     { name: "Crema" }, { name: "Seasonal" }, { name: "Miscellaneous" }
-    // ];
-
     //category list
     const categories = [
         { name: "Milk Tea" }, { name: "Brewed Tea" }, { name: "Ice Blended" },
@@ -102,7 +95,11 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                     }}
                 />
 
-                <functions.SideButton onClick={() => setScreen("home")} />
+                {/* BUTTON THAT TAKES YOU BACK HOME */}
+                <functions.SideButton
+                    text="Home"
+                    onClick={() => setScreen("home")}
+                />
             </div>
 
             {/*Main content*/}
@@ -131,7 +128,8 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                                                 ice: "-",
                                                 sweetness: "-",
                                                 toppings: "-",
-                                                quantity: "1"
+                                                quantity: "1",
+                                                otherId: drink.otherid
                                             }
                                             : {
                                                 name: drink.drinkname,
@@ -140,12 +138,14 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                                                 ice: "",
                                                 sweetness: "",
                                                 toppings: "",
-                                                quantity: "1"
+                                                quantity: "1",
+                                                drinkId: drink.drinkid
                                             };
                                     
                                         setorderDetails(prevDetails => [...prevDetails, item]);
                                         setScreen(isMisc ? "confirm" : "customer-customization");
                                     }}
+                                              
                                 />
                             </div>
                         ))

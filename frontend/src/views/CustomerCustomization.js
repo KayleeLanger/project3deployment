@@ -17,7 +17,7 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 		return () => clearInterval(interval);
 	}, []);
 
-	// to make sure that correct item is edited (whether or not edit is clicked)
+	//to make sure that correct item is edited (whether or not edit is clicked)
 	useEffect(() => {
 		const idx = currentEditIdx != null ? currentEditIdx : OrderDetails.length - 1;
 		if (OrderDetails[idx]) {
@@ -30,7 +30,7 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 
 	return (
 		<div style={{ display: "flex", height: "100vh" }}>
-			{/* Sidebar */}
+			{/*Sidebar*/}
 			<div className="sidebar">
 				<div className="time-box">
 					<h2>{currentTime.toLocaleTimeString()}</h2>
@@ -45,7 +45,7 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 				</button>
 			</div>
 
-			{/* Main content */}
+			{/*Main content*/}
 			<div className="main" style={{ flex: 1, textAlign: "center", flexDirection:"column" }}>
 			
 				<table>
@@ -74,7 +74,7 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 						setorderDetails(updated);
 						functions.defaultVal(updated, setorderDetails);
 						setToppingMode("linked");
-						setScreen("customer-toppings"); // NEEDS TO GO TO CUSTOMER TOPPINGS PAGE
+						setScreen("customer-toppings"); //NEEDS TO GO TO CUSTOMER TOPPINGS PAGE
 						}}
 						style={{
 							padding: "10px 20px",

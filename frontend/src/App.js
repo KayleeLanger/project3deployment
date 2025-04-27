@@ -46,19 +46,19 @@ function App() { //main function, will be mostly imports eventually
 			{/*cashier*/}
 			{screen === "cashier" && <EmployeeCategoryScreen setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
-										OrderDetails={orderDetails}
+										orderDetails={orderDetails}
 										setorderDetails={setOrderDetails}
 										setCurrentEditIdx={setCurrentEditIdx} />}
 			{screen === "cashier-drinks" && <EmployeeDrinks setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
-										OrderDetails={orderDetails}
+										orderDetails={orderDetails}
 										setorderDetails={setOrderDetails}
 										setCurrentEditIdx={setCurrentEditIdx} />}
 			{screen === "cashier-customization" && <EmployeeCustomization setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}
 										selectedCategory={selectedCategory} 
-										OrderDetails={orderDetails}
+										orderDetails={orderDetails}
 										setorderDetails={setOrderDetails}
 										currentEditIdx={currentEditIdx}
 										setCurrentEditIdx={setCurrentEditIdx} />}
@@ -67,7 +67,7 @@ function App() { //main function, will be mostly imports eventually
 			{screen === "cashier-toppings" && <EmployeeToppingsScreen setScreen={setScreen}
 										setSelectedCategory={setSelectedCategory}	
 										selectedCategory={selectedCategory} 
-										OrderDetails={orderDetails}
+										orderDetails={orderDetails}
 										setorderDetails={setOrderDetails}
 										currentEditIdx={currentEditIdx}
 										setCurrentEditIdx={setCurrentEditIdx} />}
