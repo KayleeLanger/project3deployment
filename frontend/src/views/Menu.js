@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 
-function Menu({ setScreen }) { //menu
+function Menu({ setScreen }) {
   const [menu, setMenu] = useState([]);
+  const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newDrink, setNewDrink] = useState({ name: "", price: "", category: "Milk Tea", ingredients: [] });
 
   const fetchMenu = async () => {
     try {
@@ -19,26 +22,41 @@ function Menu({ setScreen }) { //menu
     }
   };
 
+  const fetchInventory = async () => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/invent`);
+      if (!res.ok) throw new Error("Failed to fetch inventory");
+      const data = await res.json();
+      setInventory(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     fetchMenu();
+    fetchInventory();
   }, []);
 
-  const handleAdd = async () => {
-    const name = prompt("Enter drink name:");
-    const price = prompt("Enter drink price:");
-    if (!name || !price) return alert("Name and price required");
-
-    const category = prompt("Enter drink category:", "Milk Tea");
+  const handleSubmitAdd = async () => {
+    if (!newDrink.name || !newDrink.price) return alert("Name and price required");
 
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/api/menu/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ drinkName: name, drinkPrice: parseFloat(price), drinkCategory: category })
+        body: JSON.stringify({
+          drinkName: newDrink.name,
+          drinkPrice: parseFloat(newDrink.price),
+          drinkCategory: newDrink.category,
+          inventoryItems: newDrink.ingredients.map(id => ({ inventoryId: id, quantityNeeded: 1 }))
+        })
       });
 
       if (!res.ok) throw new Error("Failed to add drink");
-      fetchMenu(); //refresh list
+      setShowAddForm(false);
+      setNewDrink({ name: "", price: "", category: "Milk Tea", ingredients: [] });
+      fetchMenu();
     } catch (err) {
       alert("Error adding drink");
       console.error(err);
@@ -55,7 +73,7 @@ function Menu({ setScreen }) { //menu
       });
 
       if (!res.ok) throw new Error("Failed to delete drink");
-      fetchMenu(); //refresh list
+      fetchMenu();
     } catch (err) {
       alert("Error deleting drink");
       console.error(err);
@@ -89,7 +107,55 @@ function Menu({ setScreen }) { //menu
         </tbody>
       </table>
 
-      <button onClick={handleAdd}>Add Drink</button>
+      {showAddForm ? (
+        <div style={{ marginTop: "20px" }}>
+          <h2>Add New Drink</h2>
+          <input
+            type="text"
+            placeholder="Drink Name"
+            value={newDrink.name}
+            onChange={(e) => setNewDrink({ ...newDrink, name: e.target.value })}
+          /><br />
+          <input
+            type="number"
+            placeholder="Price"
+            value={newDrink.price}
+            onChange={(e) => setNewDrink({ ...newDrink, price: e.target.value })}
+          /><br />
+          <select value={newDrink.category} onChange={(e) => setNewDrink({ ...newDrink, category: e.target.value })}>
+            <option>Milk Tea</option>
+            <option>Brewed Tea</option>
+            <option>Ice Blended</option>
+            <option>Fresh Milk</option>
+            <option>Fruit Tea</option>
+            <option>Tea Mojito</option>
+            <option>Seasonal</option>
+          </select><br />
+          <h3>Select Ingredients</h3>
+          {inventory.map(item => (
+            <div key={item.inventoryid}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={newDrink.ingredients.includes(item.inventoryid)}
+                  onChange={(e) => {
+                    const updatedIngredients = e.target.checked
+                      ? [...newDrink.ingredients, item.inventoryid]
+                      : newDrink.ingredients.filter(id => id !== item.inventoryid);
+                    setNewDrink({ ...newDrink, ingredients: updatedIngredients });
+                  }}
+                />
+                {item.itemname}
+              </label>
+            </div>
+          ))}
+          <button onClick={handleSubmitAdd}>Save</button>
+          <button onClick={() => setShowAddForm(false)}>Cancel</button>
+        </div>
+      ) : (
+        <button onClick={() => setShowAddForm(true)}>Add Drink</button>
+      )}
+
       <br />
       <button onClick={() => setScreen("manager")}>Back to Manager</button>
     </div>

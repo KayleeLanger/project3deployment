@@ -180,33 +180,56 @@ export function defaultVal (orders, setOrders) {
     setOrders(updatedOrderDetails);
 }
 
-export function checkout (numItems, orderTotal) {
+export function checkout(numItems, orderTotal, orderDetails = []) {
     const executeCheckout = async () => {
-    try {
-        const orderDate = getCurrentDateTime();
-        console.log(orderDate);
-        const employeeId = '123460';
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/checkout`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                numItems,
-                orderTotal,
-                orderDate,
-                employeeId,
-            }),
-        });
-        if (!response.ok) throw new Error ("Failed to place order");
+        try {
+            const orderDate = getCurrentDateTime();
+            const employeeId = '123460';
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/checkout`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    numItems,
+                    orderTotal,
+                    orderDate,
+                    employeeId,
+                    orderDetails,
+                }),
+            });
+            if (!response.ok) throw new Error("Failed to place order");
             const data = await response.json();
             console.log(data);
+
+            const getOrderIdRes = await fetch(`${process.env.REACT_APP_API_URL}/api/latest-orderid`);
+            const { orderId } = await getOrderIdRes.json();
+
+            for (const item of orderDetails) {
+                const payload = {
+                    orderId: orderId,
+                    drinkName: item.drinkId ? item.name : null,
+                    otherName: item.otherId ? item.name : null,
+                    quantity: item.quantity || 1,
+                };
+
+                await fetch(`${process.env.REACT_APP_API_URL}/api/orderitem`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+            }
+
         } catch (error) {
             console.error(error);
         }
-    }
+    };
     executeCheckout();
 }
+
+
 
 export function getCurrentDateTime() {
     const currentDate = new Date();

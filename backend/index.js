@@ -202,30 +202,47 @@ app.post('/api/prices/update', async (req, res) => {
 });
 
 app.post('/api/menu/add', async (req, res) => {
-    const { drinkName, drinkPrice, drinkCategory = 'Uncategorized' } = req.body;
+    const { drinkName, drinkPrice, drinkCategory = 'Uncategorized', inventoryItems = [] } = req.body;
 
     if (!drinkName || drinkPrice == null) {
         return res.status(400).json({ error: "Missing drinkName or drinkPrice" });
     }
 
+    const client = await pool.connect();
+
     try {
-        //get next available drinkId
-        const idResult = await pool.query('SELECT COALESCE(MAX(drinkId), 0) + 1 AS next_id FROM drink');
-        const nextId = idResult.rows[0].next_id;
+        await client.query('BEGIN'); //Start transaction
 
-        //insert into drink table
-        const insertQuery = `
-            INSERT INTO drink (drinkId, drinkName, drinkPrice, drinkCategory)
-            VALUES ($1, $2, $3, $4)
-        `;
-        await pool.query(insertQuery, [nextId, drinkName, drinkPrice, drinkCategory]);
+        //Get next drinkId
+        const idResult = await client.query('SELECT COALESCE(MAX(drinkId), 0) + 1 AS next_id FROM drink');
+        const nextDrinkId = idResult.rows[0].next_id;
 
-        res.json({ message: "Drink added" });
+        //Insert into drink table
+        await client.query(
+            `INSERT INTO drink (drinkId, drinkName, drinkPrice, drinkCategory) VALUES ($1, $2, $3, $4)`,
+            [nextDrinkId, drinkName, drinkPrice, drinkCategory]
+        );
+
+        //Insert into drink_to_inventory table if ingredients are provided
+        for (const item of inventoryItems) {
+            const { inventoryId, quantityNeeded } = item;
+            await client.query(
+                `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) VALUES ($1, $2, $3)`,
+                [nextDrinkId, inventoryId, quantityNeeded || 1]
+            );
+        }
+
+        await client.query('COMMIT'); //Everything succeeded
+        res.json({ message: "Drink and ingredients added successfully" });
     } catch (err) {
+        await client.query('ROLLBACK'); //Error, undo everything
         console.error("Add drink error:", err);
         res.status(500).json({ error: "Failed to add drink" });
+    } finally {
+        client.release();
     }
 });
+
 
 app.delete('/api/menu/delete/:name', async (req, res) => {
     const { name } = req.params;
@@ -357,32 +374,140 @@ app.get('/api/drinks/category/:category', async (req, res) => {
     }
 });
 
-// push order to database
-app.post('/api/checkout', async (req, res) => {
+// get latest orderId
+app.get('/api/latest-orderid', async (req, res) => {
     try {
-        const { numItems, orderTotal, orderDate, employeeId } = req.body;
-        console.log('Received data: ', req.body);
-
-        // get next orderId
-        const id = await pool.query('SELECT COALESCE(MAX(orderId), 0) + 1 AS next_order_id FROM orders');
-        const nextId = id.rows[0].next_order_id;
-
-        // insert into order table
-        const query = `
-                    INSERT INTO orders (orderId, numItems, orderPrice, orderDate, employeeId)
-                    VALUES ($1, $2, $3, $4, $5);`;
-
-        const result = await pool.query(query, [parseInt(nextId), parseInt(numItems), parseFloat(orderTotal), orderDate, parseInt(employeeId)]);
-
-        console.log("Order placed successfully");
-        res.status(200).json({message: 'Order successfully placed', result});
+        const result = await pool.query('SELECT MAX(orderId) AS orderId FROM orders;');
+        res.json(result.rows[0]);
     } catch (err) {
-        console.log('Database error: ' , err.message);
-        res.status(500).json({error: 'Database error: ' + err.message});
+        console.error('Latest orderId error:', err);
+        res.status(500).json({ error: 'Failed to get latest orderId' });
     }
 });
 
-// get all toppings directly (used by CustomerToppingsScreen) -Long
+// Push order to database and update inventory
+app.post('/api/checkout', async (req, res) => {
+    const client = await pool.connect();
+    try {
+        const { orderDetails, orderTotal, orderDate, employeeId } = req.body;
+        // orderDetails: array of { drinkId, otherId, quantity }
+
+        // Get next orderId
+        const idResult = await client.query('SELECT COALESCE(MAX(orderId), 0) + 1 AS next_order_id FROM orders');
+        const nextOrderId = idResult.rows[0].next_order_id;
+
+        await client.query('BEGIN'); // Start transaction
+
+        // Insert into orders table
+        await client.query(
+            `INSERT INTO orders (orderId, numItems, orderPrice, orderDate, employeeId)
+             VALUES ($1, $2, $3, $4, $5);`,
+            [nextOrderId, orderDetails.length, parseFloat(orderTotal), orderDate, parseInt(employeeId)]
+        );
+
+        // Insert into order_items and update inventory
+        for (const item of orderDetails) {
+            const { drinkId = 0, otherId = 0, quantity = 1 } = item;
+
+            // Insert into order_items
+            const orderItemIdResult = await client.query('SELECT COALESCE(MAX(order_item_id), 0) + 1 AS next_item_id FROM order_items');
+            const nextOrderItemId = orderItemIdResult.rows[0].next_item_id;
+
+            await client.query(
+                `INSERT INTO order_items (order_item_id, orderId, drinkId, otherId, quantity)
+                 VALUES ($1, $2, $3, $4, $5);`,
+                [nextOrderItemId, nextOrderId, drinkId, otherId, quantity]
+            );
+
+            if (drinkId !== 0) {
+                // If it's a drink, find its ingredients from drink_to_inventory
+                const ingredientsResult = await client.query(
+                    `SELECT inventoryId, quantityNeeded FROM drink_to_inventory WHERE drinkId = $1;`,
+                    [drinkId]
+                );
+                for (const ingredient of ingredientsResult.rows) {
+                    const inventoryId = ingredient.inventoryid;
+                    const quantityNeeded = ingredient.quantityneeded;
+                    await client.query(
+                        `UPDATE inventory SET remainingInStock = remainingInStock - $1 WHERE inventoryId = $2;`,
+                        [quantity * quantityNeeded, inventoryId]
+                    );
+                }
+            }
+
+            if (otherId !== 0) {
+                // If it's a topping/misc, directly decrement 1 unit
+                const toppingResult = await client.query(
+                    `SELECT otherName FROM toppings_other WHERE otherId = $1;`,
+                    [otherId]
+                );
+
+                const toppingName = toppingResult.rows[0]?.othername;
+
+                if (toppingName) {
+                    // Match topping name to inventory
+                    const inventoryResult = await client.query(
+                        `SELECT inventoryId FROM inventory WHERE itemName = $1;`,
+                        [toppingName]
+                    );
+
+                    if (inventoryResult.rows.length > 0) {
+                        const inventoryId = inventoryResult.rows[0].inventoryid;
+                        await client.query(
+                            `UPDATE inventory SET remainingInStock = remainingInStock - $1 WHERE inventoryId = $2;`,
+                            [quantity, inventoryId]
+                        );
+                    }
+                }
+            }
+        }
+
+        await client.query('COMMIT');
+        res.status(200).json({ message: 'Order successfully placed and inventory updated!' });
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('Checkout error:', err.message);
+        res.status(500).json({ error: 'Checkout failed: ' + err.message });
+    } finally {
+        client.release();
+    }
+});
+
+
+
+//push order_items individually (if needed separately)
+app.post('/api/orderitem', async (req, res) => {
+    const { orderId, drinkName, otherName, quantity } = req.body;
+
+    try {
+        let drinkId = null;
+        let otherId = null;
+
+        if (drinkName) {
+            const drinkRes = await pool.query('SELECT drinkId FROM drink WHERE drinkName = $1', [drinkName]);
+            if (drinkRes.rows.length > 0) drinkId = drinkRes.rows[0].drinkid;
+        }
+
+        if (otherName) {
+            const otherRes = await pool.query('SELECT otherId FROM toppings_other WHERE otherName = $1', [otherName]);
+            if (otherRes.rows.length > 0) otherId = otherRes.rows[0].otherid;
+        }
+
+        await pool.query(`
+            INSERT INTO order_items (order_item_id, orderId, drinkId, otherId, quantity)
+            VALUES (DEFAULT, $1, $2, $3, $4)
+        `, [orderId, drinkId, otherId, quantity]);
+
+        res.status(201).json({ message: "Order item added successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to add order item" });
+    }
+});
+
+
+
+//get all toppings directly (used by CustomerToppingsScreen) -Long
 app.get('/api/toppings', async (req, res) => {
     try {
         const query = "SELECT otherName, otherPrice, otherType FROM toppings_other WHERE otherType = 'topping';";
