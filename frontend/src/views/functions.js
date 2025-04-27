@@ -269,10 +269,10 @@ export function DrinkButton({ text, onClick }) {
     }}
     onClick={onClick}>{text}</button>;
 }
-export function CustomerDrinkButton({ text, image, onClick , selected}) {
+export function CustomerDrinkButton({ text, image, onClick, selected }) {
     return (
         <button
-            className="customerDrinkButton"
+            className={`customerDrinkButton ${selected ? "selected" : ""}`}
             onClick={onClick}
         >
         {/* IMAGE: Long you may need to edit this to get dimensions right for photos */}
