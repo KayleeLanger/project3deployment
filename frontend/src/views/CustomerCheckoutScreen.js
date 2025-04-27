@@ -90,9 +90,13 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 						}
 					}}
 				/>
+				
+				
 				<h1>Review Your Order</h1>
-
+				
+				
 				<div className="mainBody" style={{ width: "100%" }}>
+					
 					{OrderDetails.length > 0 ? (
 						OrderDetails.map((item, index) => (
 							<div key={index} className="order-item" style={{ display: "flex", marginBottom: "20px", alignItems: "center" }}>
@@ -131,6 +135,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 					)}
 
 					<hr />
+					
 
 					<div className="order-total-summary" style={{ textAlign: "right", paddingRight: "40px" }}>
 						<p><strong>Subtotal:</strong> ${subtotal.toFixed(2)}</p>
@@ -166,6 +171,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 						<functions.Button text="Place Order" onClick={handlePlaceOrder} />
 					</div>
 				</div>
+				
 			</div>
 		</div>
 	);

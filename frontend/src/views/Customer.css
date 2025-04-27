@@ -37,7 +37,7 @@ body.large-text .sidebar {
     flex-direction: column;
     /* justify-content: center; */
     align-items:center;
-    border-bottom: 20px solid black;
+    
 }
 body.large-text .main {
     margin-left: 350px;
@@ -60,7 +60,7 @@ body.large-text .main {
     flex-direction: column;
     justify-content: center;
     align-items:center;
-    border-bottom: 20px solid black;
+    /* border-bottom: 20px solid black; */
 }
 body.large-text .homeScreen {
     margin-left: 350px;
@@ -338,8 +338,8 @@ body.large-text .special-side-button {
 
 body.large-text .customerDrinkButton {  
     font-size: 40px; 
-    width: 400px;
-    height: 400px;
+    width: 320px;
+    height: 350px;
 }
 
 
