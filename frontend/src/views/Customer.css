@@ -458,6 +458,12 @@ body.large-text .customerDrinkButton {
 .customerDrinkButton.selected {
     background-color: #ffe680;
 }
+body.high-contrast .customerDrinkButton.selected {
+    background-color: white !important;
+    color: black !important;
+    border: 4px solid yellow !important;
+    box-shadow: 0 0 10px yellow;
+}
 
 /* Image inside CustomerDrinkButton */
 .customerDrinkImage {
