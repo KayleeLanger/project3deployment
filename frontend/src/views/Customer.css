@@ -102,7 +102,12 @@ body.large-text .homeScreen {
     color:rgb(0, 0, 0);
     font-family: Verdana, Tahoma, sans-serif;
 }
-
+.high-contrast h1 {
+    color: white;
+}
+.high-contrast h3 {
+    color: white;
+}
 
 /* main table (where all categories are) 3 columns*/
 
@@ -212,6 +217,9 @@ button {
     font-weight: bold;
     color: black;
     margin-right: 60px;
+}
+.high-contrast .option-label-customer {
+    color: white;
 }
 
 .option-buttons {
