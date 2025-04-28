@@ -201,6 +201,7 @@ app.post('/api/prices/update', async (req, res) => {
 	}
 });
 
+// Add a new drink with optional ingredients
 app.post('/api/menu/add', async (req, res) => {
     const { drinkName, drinkPrice, drinkCategory = 'Uncategorized', inventoryItems = [] } = req.body;
 
@@ -211,45 +212,47 @@ app.post('/api/menu/add', async (req, res) => {
     const client = await pool.connect();
 
     try {
-        await client.query('BEGIN'); //Start transaction
+        await client.query('BEGIN');
 
-        //Get next drinkId
+        // Get next drinkId
         const idResult = await client.query('SELECT COALESCE(MAX(drinkId), 0) + 1 AS next_id FROM drink');
         const nextDrinkId = idResult.rows[0].next_id;
 
-        //Insert into drink table
+        // Insert into drink table
         await client.query(
-            `INSERT INTO drink (drinkId, drinkName, drinkPrice, drinkCategory) VALUES ($1, $2, $3, $4)`,
+            `INSERT INTO drink (drinkId, drinkName, drinkPrice, drinkCategory) 
+             VALUES ($1, $2, $3, $4)`,
             [nextDrinkId, drinkName, drinkPrice, drinkCategory]
         );
 
-        //Insert into drink_to_inventory table if ingredients are provided
+        // Insert into drink_to_inventory
         for (const item of inventoryItems) {
+            if (!item || typeof item !== 'object') continue;
             const { inventoryId, quantityNeeded } = item;
-        
-            if (!inventoryId) {
-                console.error("Missing inventoryId for item:", item);
+
+            if (inventoryId == null || quantityNeeded == null) {
+                console.error("Invalid inventory item during add:", item);
                 continue;
             }
-        
+
             await client.query(
                 `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
                  VALUES ($1, $2, $3)`,
-                [nextDrinkId, inventoryId, quantityNeeded || 1]
+                [nextDrinkId, inventoryId, quantityNeeded]
             );
         }
-        
 
-        await client.query('COMMIT'); //Everything succeeded
+        await client.query('COMMIT');
         res.json({ message: "Drink and ingredients added successfully" });
     } catch (err) {
-        await client.query('ROLLBACK'); //Error, undo everything
-        console.error("Add drink error:", err);
+        await client.query('ROLLBACK');
+        console.error("Add drink error:", err.message, err.detail || '', err.code || '');
         res.status(500).json({ error: "Failed to add drink" });
     } finally {
         client.release();
     }
 });
+
 
 app.delete('/api/menu/delete/:name', async (req, res) => {
     const { name } = req.params;
@@ -564,7 +567,7 @@ app.get('/api/drinks', async (req, res) => {
     }
 });
 
-// Update an existing drink
+// Update an existing drink and its ingredients
 app.put('/api/menu/update', async (req, res) => {
     const { originalName, drinkName, drinkPrice, drinkCategory = 'Uncategorized', inventoryItems = [] } = req.body;
 
@@ -580,11 +583,12 @@ app.put('/api/menu/update', async (req, res) => {
         const drinkIdResult = await client.query('SELECT drinkId FROM drink WHERE drinkName = $1', [originalName]);
         if (drinkIdResult.rows.length === 0) {
             await client.query('ROLLBACK');
-            return res.status(404).json({ error: "Drink not found" });
+            return res.status(404).json({ error: "Original drink not found" });
         }
 
         const drinkId = drinkIdResult.rows[0].drinkid;
 
+        // Update drink basic info
         await client.query(
             `UPDATE drink 
              SET drinkName = $1, drinkPrice = $2, drinkCategory = $3 
@@ -592,21 +596,18 @@ app.put('/api/menu/update', async (req, res) => {
             [drinkName, drinkPrice, drinkCategory, drinkId]
         );
 
+        // Delete old ingredients
         await client.query('DELETE FROM drink_to_inventory WHERE drinkId = $1', [drinkId]);
 
+        // Insert updated ingredients
         for (const item of inventoryItems) {
-            let inventoryId, quantityNeeded;
+            if (!item || typeof item !== 'object') continue;
+            const { inventoryId, quantityNeeded } = item;
 
-            if (typeof item === 'number') {
-                inventoryId = item;
-                quantityNeeded = 1;
-            } else {
-                inventoryId = item.inventoryId;
-                quantityNeeded = item.quantityNeeded || 1;
+            if (inventoryId == null || quantityNeeded == null) {
+                console.error("Invalid inventory item during update:", item);
+                continue;
             }
-
-            // Fix here: do NOT check falsy, only null or undefined
-            if (inventoryId == null) continue;
 
             await client.query(
                 `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
@@ -619,12 +620,13 @@ app.put('/api/menu/update', async (req, res) => {
         res.json({ message: "Drink updated successfully" });
     } catch (err) {
         await client.query('ROLLBACK');
-        console.error("Update drink error:", err);
+        console.error("Update drink error:", err.message, err.detail || '', err.code || '');
         res.status(500).json({ error: "Failed to update drink" });
     } finally {
         client.release();
     }
 });
+
 
 
 // Get drink names + their inventory IDs
