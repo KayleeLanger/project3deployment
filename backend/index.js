@@ -201,6 +201,56 @@ app.post('/api/prices/update', async (req, res) => {
 	}
 });
 
+// app.post('/api/menu/add', async (req, res) => {
+//     const { drinkName, drinkPrice, drinkCategory = 'Uncategorized', inventoryItems = [] } = req.body;
+
+//     if (!drinkName || drinkPrice == null) {
+//         return res.status(400).json({ error: "Missing drinkName or drinkPrice" });
+//     }
+
+//     const client = await pool.connect();
+
+//     try {
+//         await client.query('BEGIN'); //Start transaction
+
+//         //Get next drinkId
+//         const idResult = await client.query('SELECT COALESCE(MAX(drinkId), 0) + 1 AS next_id FROM drink');
+//         const nextDrinkId = idResult.rows[0].next_id;
+
+//         //Insert into drink table
+//         await client.query(
+//             `INSERT INTO drink (drinkId, drinkName, drinkPrice, drinkCategory) VALUES ($1, $2, $3, $4)`,
+//             [nextDrinkId, drinkName, drinkPrice, drinkCategory]
+//         );
+
+//         //Insert into drink_to_inventory table if ingredients are provided
+//         for (const item of inventoryItems) {
+//             const { inventoryId, quantityNeeded } = item;
+        
+//             if (!inventoryId) {
+//                 console.error("Missing inventoryId for item:", item);
+//                 continue;
+//             }
+        
+//             await client.query(
+//                 `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
+//                  VALUES ($1, $2, $3)`,
+//                 [nextDrinkId, inventoryId, quantityNeeded || 1]
+//             );
+//         }
+        
+
+//         await client.query('COMMIT'); //Everything succeeded
+//         res.json({ message: "Drink and ingredients added successfully" });
+//     } catch (err) {
+//         await client.query('ROLLBACK'); //Error, undo everything
+//         console.error("Add drink error:", err);
+//         res.status(500).json({ error: "Failed to add drink" });
+//     } finally {
+//         client.release();
+//     }
+// });
+
 app.post('/api/menu/add', async (req, res) => {
     const { drinkName, drinkPrice, drinkCategory = 'Uncategorized', inventoryItems = [] } = req.body;
 
@@ -226,19 +276,11 @@ app.post('/api/menu/add', async (req, res) => {
         //Insert into drink_to_inventory table if ingredients are provided
         for (const item of inventoryItems) {
             const { inventoryId, quantityNeeded } = item;
-        
-            if (!inventoryId) {
-                console.error("Missing inventoryId for item:", item);
-                continue;
-            }
-        
             await client.query(
-                `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
-                 VALUES ($1, $2, $3)`,
+                `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) VALUES ($1, $2, $3)`,
                 [nextDrinkId, inventoryId, quantityNeeded || 1]
             );
         }
-        
 
         await client.query('COMMIT'); //Everything succeeded
         res.json({ message: "Drink and ingredients added successfully" });
