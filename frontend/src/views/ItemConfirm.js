@@ -83,22 +83,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
         { name: "Seasonal" }, { name: "Miscellaneous" }
     ];
 
-    const drinkIngredients = lastItem?.name && drinkIngredientsMap[lastItem.name] ? drinkIngredientsMap[lastItem.name] : [];
-    const toppingList = lastItem?.toppings && lastItem.toppings !== "none"
-        ? lastItem.toppings.split(", ").map(name => name.split(" (" )[0].trim())
-        : [];
-
-    let toppingIngredients = [];
-    toppingList.forEach(topping => {
-        if (drinkIngredientsMap[topping]) {
-            toppingIngredients = toppingIngredients.concat(drinkIngredientsMap[topping]);
-        }
-    });
-
-    const combinedIngredients = [...drinkIngredients, ...toppingIngredients];
-
-    const allergens = getAllergenWarnings([...combinedIngredients, ...toppingList]);
-
     return (
         <div style={{ display: "flex", height: "100vh" }}>
             <div className="sidebar">
@@ -171,7 +155,12 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     />
                     <div style={{ textAlign: "left", fontSize: "18px" }}>
                         {ice === "n/a" && sweetness === "n/a" && (
-                            <p><strong>Type:</strong> Individual Topping</p>
+                            <>
+                                <p><strong>Type:</strong> Individual Topping</p>
+                                {(lastItem.name === "Ice Cream" || lastItem.name === "Crema") && (
+                                    <p style={{ color: "#b91c1c", fontSize: "14px", marginTop: "5px" }}>⚠️ Contains Dairy</p>
+                                )}
+                            </>
                         )}
                         {ice === "-" && (
                             <p><strong>Type:</strong> Miscellaneous Item</p>
@@ -183,32 +172,40 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                 <p><strong>Ice:</strong> {ice}</p>
                                 <p><strong>Toppings:</strong> {toppings.join(", ") || "None"}</p>
                                 <p><strong>Calories:</strong> {sizeCalories}</p>
-                                {allergens && (
-                                    <p style={{ color: "#b91c1c", fontSize: "14px", marginTop: "5px" }}>
-                                        ⚠️ {allergens}
-                                    </p>
-                                )}
-                                <div style={{ marginTop: "30px", display: "flex", flexDirection: "column", gap: "15px", width: "300px" }}>
-                                    <button
-                                        onClick={() => setScreen("customer-customization")}
-                                        style={{ backgroundColor: "#ccc", padding: "15px", fontSize: "18px", borderRadius: "15px" }}
-                                    >
-                                        Edit Customizations
-                                    </button>
-                                </div>
+
+                                {(() => {
+                                    let allergens = "";
+                                    if (lastItem) {
+                                        const drinkIngredients = lastItem.name && drinkIngredientsMap[lastItem.name] ? drinkIngredientsMap[lastItem.name] : [];
+                                        const toppingList = lastItem.toppings && lastItem.toppings !== "none"
+                                            ? lastItem.toppings.split(", ").map(name => name.split(" (" )[0].trim())
+                                            : [];
+
+                                        let toppingIngredients = [];
+                                        toppingList.forEach(topping => {
+                                            if (drinkIngredientsMap[topping]) {
+                                                toppingIngredients = toppingIngredients.concat(drinkIngredientsMap[topping]);
+                                            }
+                                        });
+
+                                        const combinedIngredients = [...drinkIngredients, ...toppingIngredients];
+
+                                        allergens = getAllergenWarnings([...combinedIngredients, ...toppingList]);
+                                    }
+                                    return allergens ? (
+                                        <p style={{ color: "#b91c1c", fontSize: "14px", marginTop: "5px" }}>⚠️ {allergens}</p>
+                                    ) : null;
+                                })()}
                             </>
                         )}
                     </div>
                 </div>
-
             </div>
 
             <div className="order">
                 <h1>Order Details</h1>
                 {OrderDetails && OrderDetails.length > 0 ? (
                     OrderDetails.map((order, index) => {
-                        const baseCaloriesOrder = order.baseCalories || 300;
-                        const sizeCaloriesOrder = order.size?.toLowerCase() === "large" ? baseCaloriesOrder + 300 : baseCaloriesOrder;
                         return (
                             <div key={index} className="order-item">
                                 <div className="order-left">

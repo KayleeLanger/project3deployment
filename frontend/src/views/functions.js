@@ -498,5 +498,12 @@ export function getAllergenWarnings(input) {
     return warnings.join(", ");
 }
 
+export function getStandaloneAllergenWarnings(itemName) {
+    if (itemName === "Ice Cream" || itemName === "Crema") {
+        return "Contains Dairy";
+    }
+    return "";
+}
+
 
 

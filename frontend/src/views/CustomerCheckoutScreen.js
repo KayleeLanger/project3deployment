@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./Customer.css";
 import * as functions from "./functions.js";
 import logo from "./Images/team_00_logo.png";
-import { getDrinkImage, getToppingImage, getAllergenWarnings } from "./functions.js";
+import { getDrinkImage, getToppingImage, getAllergenWarnings, getStandaloneAllergenWarnings } from "./functions.js";
 import LargeTextButtons from "./LargeTextButton.js";
 
 function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
@@ -120,22 +120,24 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
                 <div style={{ flex: "1 1 auto", overflowY: "auto", padding: "10px 20px", marginBottom: "20px" }}>
                     {OrderDetails.length > 0 ? (
                         OrderDetails.map((item, index) => {
-                            const drinkIngredients = drinkIngredientsMap[item.name] || [];
                             const toppingList = item.toppings && item.toppings !== "none"
-                            ? item.toppings.split(", ").map(name => name.split(" (")[0].trim())
-                            : [];
-                        
-                        let toppingIngredients = [];
-                        toppingList.forEach(topping => {
-                            if (drinkIngredientsMap[topping]) {
-                                toppingIngredients = toppingIngredients.concat(drinkIngredientsMap[topping]);
+                                ? item.toppings.split(", ").map(name => name.split(" (")[0].trim())
+                                : [];
+
+                            let allergens = "";
+                            if (item.ice === "n/a") {
+                                allergens = getStandaloneAllergenWarnings(item.name);
+                            } else {
+                                const drinkIngredients = drinkIngredientsMap[item.name] || [];
+                                let toppingIngredients = [];
+                                toppingList.forEach(topping => {
+                                    if (drinkIngredientsMap[topping]) {
+                                        toppingIngredients = toppingIngredients.concat(drinkIngredientsMap[topping]);
+                                    }
+                                });
+                                const combinedIngredients = [...drinkIngredients, ...toppingIngredients, ...toppingList];
+                                allergens = getAllergenWarnings(combinedIngredients);
                             }
-                        });
-                        
-                        const combinedIngredients = [...drinkIngredients, ...toppingIngredients];
-                        
-                        const allergens = getAllergenWarnings([...combinedIngredients, ...toppingList]);
-                        
 
                             return (
                                 <div key={index} className="order-item" style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
@@ -163,7 +165,14 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
                                                 )}
                                             </>
                                         )}
-                                        {item.ice === "n/a" && <p>Standalone Topping</p>}
+                                        {item.ice === "n/a" && (
+                                            <>
+                                                <p>Type: Individual Topping</p>
+                                                {allergens && (
+                                                    <p style={{ color: "#b91c1c", fontSize: "14px" }}>⚠️ {allergens}</p>
+                                                )}
+                                            </>
+                                        )}
                                         {item.ice === "-" && <p>Miscellaneous Item</p>}
                                         <p>Quantity: {item.quantity || 1}</p>
                                         <p>Price: ${item.price}</p>
@@ -179,19 +188,16 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
                 <div style={{ flexShrink: 0, padding: "10px 40px", textAlign: "right" }}>
                     <hr />
                     <p><strong>Subtotal:</strong> ${subtotal.toFixed(2)}</p>
-
                     {freeToppingsEarned > 0 && (
                         <p style={{ color: "#22c55e" }}>
                             <strong>Free Toppings:</strong> {freeToppingsEarned} (-${freeToppingDiscount.toFixed(2)})
                         </p>
                     )}
-
                     {amountToNextFreeTopping > 0 && (
                         <p style={{ color: "#b91c1c" }}>
                             Spend ${amountToNextFreeTopping.toFixed(2)} more (pre-tax) to unlock another free topping!
                         </p>
                     )}
-
                     <p><strong>Tax (8%):</strong> ${tax.toFixed(2)}</p>
                     <h2><strong>Total:</strong> ${total.toFixed(2)}</h2>
                 </div>
