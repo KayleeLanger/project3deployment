@@ -83,9 +83,21 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
         { name: "Seasonal" }, { name: "Miscellaneous" }
     ];
 
-    const allergens = lastItem && drinkIngredientsMap[lastItem.name]
-        ? getAllergenWarnings(drinkIngredientsMap[lastItem.name])
-        : "";
+    const drinkIngredients = lastItem?.name && drinkIngredientsMap[lastItem.name] ? drinkIngredientsMap[lastItem.name] : [];
+    const toppingList = lastItem?.toppings && lastItem.toppings !== "none"
+        ? lastItem.toppings.split(", ").map(name => name.split(" (" )[0].trim())
+        : [];
+
+    let toppingIngredients = [];
+    toppingList.forEach(topping => {
+        if (drinkIngredientsMap[topping]) {
+            toppingIngredients = toppingIngredients.concat(drinkIngredientsMap[topping]);
+        }
+    });
+
+    const combinedIngredients = [...drinkIngredients, ...toppingIngredients];
+
+    const allergens = getAllergenWarnings([...combinedIngredients, ...toppingList]);
 
     return (
         <div style={{ display: "flex", height: "100vh" }}>
@@ -197,7 +209,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     OrderDetails.map((order, index) => {
                         const baseCaloriesOrder = order.baseCalories || 300;
                         const sizeCaloriesOrder = order.size?.toLowerCase() === "large" ? baseCaloriesOrder + 300 : baseCaloriesOrder;
-                        const allergensOrder = drinkIngredientsMap[order.name] ? getAllergenWarnings(drinkIngredientsMap[order.name]) : "";
                         return (
                             <div key={index} className="order-item">
                                 <div className="order-left">

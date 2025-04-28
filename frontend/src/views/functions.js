@@ -453,26 +453,50 @@ export function getMiscImage(miscName) {
     }
 }
 
-export function getAllergenWarnings(inventoryIds) {
+export function getAllergenWarnings(input) {
     const allergenMap = {
-        dairy: [14, 19, 20, 25],    // milk powder, fresh milk, whipped cream
-        nuts: [], // empty for now since we don't got any nuts rn
-        gluten: [32],         // cake or similar items
+        dairy: [14, 19, 20, 25],  // IDs for milk, ice cream, crema, fresh milk, etc
+        nuts: [],                      // IDs for nut items if we will ever have any
+        gluten: [32]                       // ID for oreos
+    };
+
+    const toppingAllergens = {
+        "Ice Cream": "dairy",
+        "Crema": "dairy",
+        "Oreo": "gluten"
     };
 
     const warnings = [];
 
-    if (inventoryIds.some(id => allergenMap.dairy.includes(id))) {
-        warnings.push("Contains Dairy");
+    // Check inventory IDs
+    if (Array.isArray(input)) {
+        if (input.some(id => allergenMap.dairy.includes(id))) {
+            warnings.push("Contains Dairy");
+        }
+        if (input.some(id => allergenMap.nuts.includes(id))) {
+            warnings.push("Contains Nuts");
+        }
+        if (input.some(id => allergenMap.gluten.includes(id))) {
+            warnings.push("Contains Gluten");
+        }
     }
-    if (inventoryIds.some(id => allergenMap.nuts.includes(id))) {
-        warnings.push("Contains Nuts");
-    }
-    if (inventoryIds.some(id => allergenMap.gluten.includes(id))) {
-        warnings.push("Contains Gluten");
+
+    // Also check topping names manually
+    if (Array.isArray(input)) {
+        input.forEach(nameOrId => {
+            if (typeof nameOrId === "string") {
+                if (toppingAllergens[nameOrId] === "dairy" && !warnings.includes("Contains Dairy")) {
+                    warnings.push("Contains Dairy");
+                }
+                if (toppingAllergens[nameOrId] === "gluten" && !warnings.includes("Contains Gluten")) {
+                    warnings.push("Contains Gluten");
+                }
+            }
+        });
     }
 
     return warnings.join(", ");
 }
+
 
 
