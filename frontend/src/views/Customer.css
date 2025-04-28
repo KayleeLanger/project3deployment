@@ -13,6 +13,7 @@
     color: white;
     overflow-y: auto;
     overflow-x: hidden;
+    box-sizing: border-box;
 }
 table{width:100%;
 margin:10px;}
@@ -102,10 +103,10 @@ body.large-text .homeScreen {
     color:rgb(0, 0, 0);
     font-family: Verdana, Tahoma, sans-serif;
 }
-.high-contrast h1 {
+.high-contrast .homeScreen h1{
     color: white;
 }
-.high-contrast h3 {
+.high-contrast .homeScreen h3 {
     color: white;
 }
 
