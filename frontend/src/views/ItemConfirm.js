@@ -144,7 +144,17 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     />
                     <div style={{ textAlign: "left", fontSize: "18px" }}>
                         {ice === "n/a" && sweetness === "n/a" && (
-                            <p><strong>Type:</strong> Individual Topping</p>
+                            <div>
+                                <p><strong>Type:</strong> Individual Topping</p>
+                                <div style={{ marginTop: "30px", display: "flex", flexDirection: "column", gap: "15px", width: "300px" }}>
+                                    <button
+                                        onClick={() => setScreen("customer-customization")}
+                                        style={{ backgroundColor: "#ccc", padding: "15px", fontSize: "18px", borderRadius: "15px" }}
+                                    >
+                                        Edit Customizations
+                                    </button>
+                                </div>
+                            </div>
                         )}
                         {ice === "-" && (
                             <p><strong>Type:</strong> Miscellaneous Item</p>
@@ -166,14 +176,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     </div>
                 </div>
 
-                <div style={{ marginTop: "30px", display: "flex", flexDirection: "column", gap: "15px", width: "300px" }}>
-                    <button
-                        onClick={() => setScreen("customer-customization")}
-                        style={{ backgroundColor: "#ccc", padding: "15px", fontSize: "18px", borderRadius: "15px" }}
-                    >
-                        Edit Customizations
-                    </button>
-                </div>
             </div>
 
             <div className="order">
