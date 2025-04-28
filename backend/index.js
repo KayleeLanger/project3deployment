@@ -226,11 +226,19 @@ app.post('/api/menu/add', async (req, res) => {
         //Insert into drink_to_inventory table if ingredients are provided
         for (const item of inventoryItems) {
             const { inventoryId, quantityNeeded } = item;
+        
+            if (!inventoryId) {
+                console.error("Missing inventoryId for item:", item);
+                continue;
+            }
+        
             await client.query(
-                `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) VALUES ($1, $2, $3)`,
+                `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
+                 VALUES ($1, $2, $3)`,
                 [nextDrinkId, inventoryId, quantityNeeded || 1]
             );
         }
+        
 
         await client.query('COMMIT'); //Everything succeeded
         res.json({ message: "Drink and ingredients added successfully" });
@@ -594,12 +602,19 @@ app.put('/api/menu/update', async (req, res) => {
         // Insert new drink-to-inventory relationships
         for (const item of inventoryItems) {
             const { inventoryId, quantityNeeded } = item;
+        
+            if (!inventoryId) {
+                console.error("Missing inventoryId for item:", item);
+                continue;
+            }
+        
             await client.query(
                 `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
                  VALUES ($1, $2, $3)`,
-                [drinkId, inventoryId, quantityNeeded || 1]
+                [nextDrinkId, inventoryId, quantityNeeded || 1]
             );
         }
+        
 
         await client.query('COMMIT');
         res.json({ message: "Drink updated successfully" });
