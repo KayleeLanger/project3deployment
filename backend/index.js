@@ -275,12 +275,28 @@ app.post('/api/menu/add', async (req, res) => {
 
         //Insert into drink_to_inventory table if ingredients are provided
         for (const item of inventoryItems) {
-            const { inventoryId, quantityNeeded } = item;
+            let inventoryId, quantityNeeded;
+        
+            if (typeof item === 'number') {
+                inventoryId = item;
+                quantityNeeded = 1;
+            } else {
+                inventoryId = item.inventoryId;
+                quantityNeeded = item.quantityNeeded || 1;
+            }
+        
+            if (!inventoryId) {
+                console.error("Missing inventoryId for item:", item);
+                continue;
+            }
+        
             await client.query(
-                `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) VALUES ($1, $2, $3)`,
-                [nextDrinkId, inventoryId, quantityNeeded || 1]
+                `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
+                 VALUES ($1, $2, $3)`,
+                [drinkId, inventoryId, quantityNeeded]
             );
         }
+        
 
         await client.query('COMMIT'); //Everything succeeded
         res.json({ message: "Drink and ingredients added successfully" });
@@ -643,7 +659,15 @@ app.put('/api/menu/update', async (req, res) => {
 
         // Insert new drink-to-inventory relationships
         for (const item of inventoryItems) {
-            const { inventoryId, quantityNeeded } = item;
+            let inventoryId, quantityNeeded;
+        
+            if (typeof item === 'number') {
+                inventoryId = item;
+                quantityNeeded = 1;
+            } else {
+                inventoryId = item.inventoryId;
+                quantityNeeded = item.quantityNeeded || 1;
+            }
         
             if (!inventoryId) {
                 console.error("Missing inventoryId for item:", item);
@@ -653,10 +677,10 @@ app.put('/api/menu/update', async (req, res) => {
             await client.query(
                 `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
                  VALUES ($1, $2, $3)`,
-                [drinkId, inventoryId, quantityNeeded || 1]
+                [drinkId, inventoryId, quantityNeeded]
             );
-            
         }
+        
         
 
         await client.query('COMMIT');
