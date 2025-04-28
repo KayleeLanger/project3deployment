@@ -577,17 +577,14 @@ app.put('/api/menu/update', async (req, res) => {
     try {
         await client.query('BEGIN');
 
-        // Get the drinkId for original drink name
         const drinkIdResult = await client.query('SELECT drinkId FROM drink WHERE drinkName = $1', [originalName]);
-        
         if (drinkIdResult.rows.length === 0) {
             await client.query('ROLLBACK');
             return res.status(404).json({ error: "Drink not found" });
         }
-        
+
         const drinkId = drinkIdResult.rows[0].drinkid;
 
-        // Update drink details
         await client.query(
             `UPDATE drink 
              SET drinkName = $1, drinkPrice = $2, drinkCategory = $3 
@@ -595,13 +592,11 @@ app.put('/api/menu/update', async (req, res) => {
             [drinkName, drinkPrice, drinkCategory, drinkId]
         );
 
-        // Delete existing drink-to-inventory relationships
         await client.query('DELETE FROM drink_to_inventory WHERE drinkId = $1', [drinkId]);
 
-        // Insert new drink-to-inventory relationships
         for (const item of inventoryItems) {
             let inventoryId, quantityNeeded;
-        
+
             if (typeof item === 'number') {
                 inventoryId = item;
                 quantityNeeded = 1;
@@ -609,20 +604,16 @@ app.put('/api/menu/update', async (req, res) => {
                 inventoryId = item.inventoryId;
                 quantityNeeded = item.quantityNeeded || 1;
             }
-        
-            if (!inventoryId) {
-                console.error("Missing inventoryId for item:", item);
-                continue;
-            }
-        
+
+            // Fix here: do NOT check falsy, only null or undefined
+            if (inventoryId == null) continue;
+
             await client.query(
                 `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
                  VALUES ($1, $2, $3)`,
                 [drinkId, inventoryId, quantityNeeded]
             );
         }
-        
-        
 
         await client.query('COMMIT');
         res.json({ message: "Drink updated successfully" });
@@ -634,6 +625,7 @@ app.put('/api/menu/update', async (req, res) => {
         client.release();
     }
 });
+
 
 // Get drink names + their inventory IDs
 app.get('/api/drink-ingredients', async (req, res) => {

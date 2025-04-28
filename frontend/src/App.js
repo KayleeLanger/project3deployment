@@ -30,7 +30,7 @@ function App() { //main function, will be mostly imports eventually
 	const [selectedCategory, setSelectedCategory] = useState(""); 
 	const [orderDetails, setOrderDetails] = useState([]); 
 	const [currentEditIdx, setCurrentEditIdx] = useState(null);
-	const [toppingMode, setToppingMode] = useState("standalone"); // standalone means toppings by itself, linked will be toppings linked to a drink
+	const [toppingMode, setToppingMode] = useState("standalone"); //standalone means toppings by itself, linked will be toppings linked to a drink
 	const clientId = "460671222657-14blmgvc58epn677ovrfvlc68i3c7ddt.apps.googleusercontent.com";
 
 
@@ -131,42 +131,6 @@ function App() { //main function, will be mostly imports eventually
 		</div>
 	);
 }
-
-
-/////////////////////// Home Screen ///////////////////////
-// function HomeScreen({ setScreen }) {
-// 	return (
-// 		<>
-// 		<img src={logo} className="App-logo" alt="logo" />
-// 		<p>Edit <code>src/App.js</code> and save to reload. (THIS WILL BE THE HOMESCREEN EVENTUALLY)</p>
-
-// 		<Button text="Go to Cashier" onClick={() => setScreen("cashier")} />
-// 		<Button text="Go to Manager" onClick={() => setScreen("manager")} />
-// 		<Button text="Go to Customer" onClick={() => setScreen("customer")} />
-
-// 		<a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-// 			Learn React
-// 		</a>
-// 		</>
-// 	);
-// }
-// /////////////////////// Reusable Design Components ///////////////////////
-// function Button({ text, onClick }) {
-// 	return <button onClick={onClick}>{text}</button>;
-// }
-
-
-/////////////////////// Cashier Pages ///////////////////////
-// function CashierCategoriesScreen({ setScreen }) {
-// 	return (
-// 		<>
-// 		<h1>Cashier Categories</h1>
-		
-// 		<Button text="Logout" onClick={() => setScreen("home")} />
-// 		<Button text="Go to Drinks" onClick={() => setScreen("cashier-drinks")} />
-// 		</>
-// 	);
-// }
 
 
 
