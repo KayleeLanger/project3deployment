@@ -415,6 +415,10 @@ button:hover {
     box-sizing: border-box;
 }
 
+.high-contrast .special-side-button {
+    background-color: white !important;
+}
+
 body.large-text .side-button,
 body.large-text .special-side-button {
     width: 330px;
