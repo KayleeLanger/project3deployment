@@ -632,3 +632,21 @@ app.put('/api/menu/update', async (req, res) => {
         client.release();
     }
 });
+
+// Get drink names + their inventory IDs
+app.get('/api/drink-ingredients', async (req, res) => {
+    try {
+        const query = `
+            SELECT d.drinkName, dti.inventoryId
+            FROM drink d
+            JOIN drink_to_inventory dti ON d.drinkId = dti.drinkId
+            ORDER BY d.drinkName;
+        `;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Drink ingredients fetch error:', err);
+        res.status(500).json({ error: 'Failed to load drink ingredients: ' + err.message });
+    }
+});
+

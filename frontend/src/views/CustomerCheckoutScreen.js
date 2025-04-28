@@ -2,19 +2,22 @@ import { useEffect, useState } from "react";
 import "./Customer.css";
 import * as functions from "./functions.js";
 import logo from "./Images/team_00_logo.png";
-import { getDrinkImage, getToppingImage } from "./functions.js";
+import { getDrinkImage, getToppingImage, getAllergenWarnings } from "./functions.js";
 import LargeTextButtons from "./LargeTextButton.js";
 
 function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
 	const [seasonalDrink, setSeasonalDrink] = useState(null);
 	const [offerUsed, setOfferUsed] = useState(false);
+	const [drinkIngredientsMap, setDrinkIngredientsMap] = useState({});
 
+	// Clock setup
 	useEffect(() => {
 		const interval = setInterval(() => setCurrentTime(new Date()), 1000);
 		return () => clearInterval(interval);
 	}, []);
 
+	// Fetch seasonal drink
 	useEffect(() => {
 		fetch(`${process.env.REACT_APP_API_URL}/api/drinks/category/Seasonal`)
 			.then(res => res.json())
@@ -24,16 +27,37 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 			.catch(err => console.error("Failed to fetch seasonal drink:", err));
 	}, []);
 
+	// Fetch drink ingredients map
+	useEffect(() => {
+		async function fetchIngredients() {
+			try {
+				const res = await fetch(`${process.env.REACT_APP_API_URL}/api/drink-ingredients`);
+				const data = await res.json();
+				const newMap = {};
+				data.forEach(entry => {
+					if (!newMap[entry.drinkname]) {
+						newMap[entry.drinkname] = [];
+					}
+					newMap[entry.drinkname].push(entry.inventoryid);
+				});
+				setDrinkIngredientsMap(newMap);
+			} catch (err) {
+				console.error("Failed to fetch drink ingredients:", err);
+			}
+		}
+		fetchIngredients();
+	}, []);
+
 	const subtotal = OrderDetails.reduce((subtotal, order) => {
 		const price = parseFloat(order.price);
 		const qty = parseInt(order.quantity || 1);
 		return !isNaN(price) ? subtotal + price * qty : subtotal;
 	}, 0);
 
-	const freeToppingsEarned = Math.floor(subtotal / 25); //1 free topping per $25
-	const nextThreshold = (freeToppingsEarned + 1) * 25; //next unlocking point
+	const freeToppingsEarned = Math.floor(subtotal / 25);
+	const nextThreshold = (freeToppingsEarned + 1) * 25;
 	const amountToNextFreeTopping = nextThreshold - subtotal;
-	const freeToppingDiscount = freeToppingsEarned * 0.50; //$0.50 per topping discount
+	const freeToppingDiscount = freeToppingsEarned * 0.50;
 	const tax = (subtotal - freeToppingDiscount) * 0.08;
 	const total = subtotal - freeToppingDiscount + tax;
 	const seasonalDiscountPercent = 0.10;
@@ -41,7 +65,6 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 
 	const handlePlaceOrder = () => {
 		const totalItems = OrderDetails.reduce((sum, order) => sum + parseInt(order.quantity || 1), 0);
-		console.log("Sending order details:", OrderDetails);
 		functions.checkout(totalItems, total.toFixed(2), OrderDetails);
 		alert(`Thanks for your order!\n\nTotal: $${total.toFixed(2)}`);
 		setorderDetails([]);
@@ -50,10 +73,8 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 
 	const handleAddSeasonalDrink = () => {
 		if (!seasonalDrink || offerUsed) return;
-
 		const discountedPrice = parseFloat(seasonalDrink.drinkprice) - seasonalDiscount;
 		const rounded = Math.max(0, discountedPrice).toFixed(2);
-
 		const newItem = {
 			name: seasonalDrink.drinkname,
 			price: rounded,
@@ -63,7 +84,6 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 			toppings: "none",
 			quantity: 1
 		};
-
 		setorderDetails(prev => [...prev, newItem]);
 		setOfferUsed(true);
 	};
@@ -71,9 +91,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 	const seasonalInOrder = OrderDetails.some(item => item.name === seasonalDrink?.drinkname);
 
 	return (
-		
 		<div style={{ display: "flex", height: "100vh" }}>
-			{/* Sidebar */}
 			<div className="sidebar">
 				<div className="time-box">
 					<h2>{currentTime.toLocaleTimeString()}</h2>
@@ -85,11 +103,10 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 				<functions.SideButton text="Home" onClick={() => setScreen("customer")} />
 			</div>
 
-			{/* Main Content */}
 			<div className="homeScreenCheckout" style={{ flex: 1, display: "flex", flexDirection: "column", padding: "20px", overflow: "hidden" }}>
 				<div style={{ display: "flex", justifyContent: "flex-end" }}>
 					<LargeTextButtons/>
-				<functions.XButton
+					<functions.XButton
 						text="X"
 						onClick={() => {
 							const confirmClear = window.confirm("Are you sure you want to cancel your order and return to the home screen?");
@@ -101,89 +118,74 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 					/>
 				</div>
 
-				
-				
 				<h1 style={{ textAlign: "center" }}>Review Your Order</h1>
-				
-				
-				{/*Scrollable order list*/}
+
 				<div style={{ flex: "1 1 auto", overflowY: "auto", padding: "10px 20px", marginBottom: "20px" }}>
-					
 					{OrderDetails.length > 0 ? (
-						OrderDetails.map((item, index) => (
-							<div key={index} className="order-item" style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
-								<img src={
-									item.image ||
-									(item.ice === "n/a"
-										? functions.getToppingImage(item.name)
-										: item.ice === "-"
-											? functions.getMiscImage(item.name)
-											: functions.getDrinkImage(item.name)
-									) || logo
-								}
-								alt={item.name}
-								style={{ width: "80px", height: "80px", marginRight: "20px", objectFit: "contain" }}
-								/>
-								<div style={{ textAlign: "left", flexGrow: 1 }}>
-									<strong>{item.name}</strong>
+						OrderDetails.map((item, index) => {
+							const allergens = drinkIngredientsMap[item.name] ? getAllergenWarnings(drinkIngredientsMap[item.name]) : "";
+							const baseCalories = item.baseCalories || 300;
+							const sizeCalories = item.size?.toLowerCase() === "large" ? baseCalories + 300 : baseCalories;
 
-									{/*Apply free topping badge only on first N items*/}
-									{index < freeToppingsEarned && (
-										<span style={{
-											display: "inline-block",
-											marginLeft: "8px",
-											backgroundColor: "#22c55e",
-											color: "white",
-											fontSize: "12px",
-											padding: "2px 6px",
-											borderRadius: "10px"
-										}}>
-											+ Free Topping
-										</span>
-									)}
-
-									{item.ice !== "n/a" && item.ice !== "-" && (
-										<>
-											<p>Size: {item.size}</p>
-											<p>Sweetness: {item.sweetness}</p>
-											<p>Ice: {item.ice}</p>
-											<p>Toppings: {item.toppings}</p>
-										</>
-									)}
-									{item.ice === "n/a" && <p>Standalone Topping</p>}
-									{item.ice === "-" && <p>Miscellaneous Item</p>}
-									<p>Quantity: {item.quantity || 1}</p>
-									<p>Price: ${item.price}</p>
+							return (
+								<div key={index} className="order-item" style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+									<img src={
+										item.image ||
+										(item.ice === "n/a"
+											? functions.getToppingImage(item.name)
+											: item.ice === "-"
+												? functions.getMiscImage(item.name)
+												: getDrinkImage(item.name)) || logo
+									}
+									alt={item.name}
+									style={{ width: "80px", height: "80px", marginRight: "20px", objectFit: "contain" }}
+									/>
+									<div style={{ textAlign: "left", flexGrow: 1 }}>
+										<strong>{item.name}</strong>
+										{item.ice !== "n/a" && item.ice !== "-" && (
+											<>
+												<p>Size: {item.size} {item.size?.toLowerCase() === "large" ? "(+300 calories)" : ""}</p>
+												<p>Sweetness: {item.sweetness}</p>
+												<p>Ice: {item.ice}</p>
+												<p>Toppings: {item.toppings}</p>
+												<p><em>Calories: {sizeCalories}</em></p>
+												{allergens && (
+													<p style={{ color: "#b91c1c", fontSize: "14px", marginTop: "5px" }}>
+														⚠️ {allergens}
+													</p>
+												)}
+											</>
+										)}
+										{item.ice === "n/a" && <p>Standalone Topping</p>}
+										{item.ice === "-" && <p>Miscellaneous Item</p>}
+										<p>Quantity: {item.quantity || 1}</p>
+										<p>Price: ${item.price}</p>
+									</div>
 								</div>
-							</div>
-						))
+							);
+						})
 					) : (
 						<p>Your cart is empty.</p>
 					)}
 				</div>
 
-				{/*Totals and free topping info*/}
 				<div style={{ flexShrink: 0, padding: "10px 40px", textAlign: "right" }}>
 					<hr />
 					<p><strong>Subtotal:</strong> ${subtotal.toFixed(2)}</p>
-
 					{freeToppingsEarned > 0 && (
 						<p style={{ color: "#22c55e" }}>
 							<strong>Free Toppings:</strong> {freeToppingsEarned} (-${freeToppingDiscount.toFixed(2)})
 						</p>
 					)}
-					
 					{amountToNextFreeTopping > 0 && (
 						<p style={{ color: "#b91c1c" }}>
 							Spend ${amountToNextFreeTopping.toFixed(2)} more (pre-tax) to unlock another free topping!
 						</p>
 					)}
-
 					<p><strong>Tax (8%):</strong> ${tax.toFixed(2)}</p>
 					<h2><strong>Total:</strong> ${total.toFixed(2)}</h2>
 				</div>
 
-				{/*Seasonal drink upsell offer*/}
 				{seasonalDrink && !seasonalInOrder && !offerUsed && (
 					<div style={{ marginTop: "20px", textAlign: "center" }}>
 						<p style={{ fontSize: "18px", fontWeight: "bold", color: "#b91c1c" }}>
@@ -191,15 +193,7 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 						</p>
 						<button
 							onClick={handleAddSeasonalDrink}
-							style={{
-								padding: "12px 24px",
-								backgroundColor: "#fbbf24",
-								color: "black",
-								fontWeight: "bold",
-								borderRadius: "10px",
-								fontSize: "16px",
-								marginTop: "10px"
-							}}
+							style={{ padding: "12px 24px", backgroundColor: "#fbbf24", color: "black", fontWeight: "bold", borderRadius: "10px", fontSize: "16px", marginTop: "10px" }}
 						>
 							Add Seasonal Drink
 						</button>
@@ -209,7 +203,6 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 				<div style={{ marginTop: "20px", textAlign: "center" }}>
 					<functions.Button text="Place Order" onClick={handlePlaceOrder} />
 				</div>
-				
 			</div>
 		</div>
 	);
