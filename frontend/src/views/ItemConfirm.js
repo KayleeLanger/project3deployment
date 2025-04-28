@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./Customer.css";
 import logo from "./Images/team_00_logo.png";
 import * as functions from "./functions.js";
-import { getDrinkImage } from "./functions.js";
+import { getDrinkImage, getAllergenWarnings } from "./functions.js";
 import LargeTextButtons from "./LargeTextButton.js";
 
 function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditIdx, selectedCategory, setSelectedCategory, setToppingMode }) {
@@ -13,6 +13,10 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
     const [sweetness, setSweetness] = useState("");
     const [ice, setIce] = useState("");
     const [toppings, setToppings] = useState([]);
+    const [drinkIngredientsMap, setDrinkIngredientsMap] = useState({});
+
+    const baseCalories = lastItem?.baseCalories || 300;
+    const sizeCalories = lastItem?.size?.toLowerCase() === "large" ? baseCalories + 300 : baseCalories;
 
     useEffect(() => {
         const interval = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -31,6 +35,26 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
             }
         }
     }, [lastItem]);
+
+    useEffect(() => {
+        async function fetchIngredients() {
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/drink-ingredients`);
+                const data = await res.json();
+                const newMap = {};
+                data.forEach(entry => {
+                    if (!newMap[entry.drinkname]) {
+                        newMap[entry.drinkname] = [];
+                    }
+                    newMap[entry.drinkname].push(entry.inventoryid);
+                });
+                setDrinkIngredientsMap(newMap);
+            } catch (err) {
+                console.error("Failed to fetch drink ingredients:", err);
+            }
+        }
+        fetchIngredients();
+    }, []);
 
     const handleAddToOrder = () => {
         const updated = [...OrderDetails];
@@ -59,10 +83,12 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
         { name: "Seasonal" }, { name: "Miscellaneous" }
     ];
 
+    const allergens = lastItem && drinkIngredientsMap[lastItem.name]
+        ? getAllergenWarnings(drinkIngredientsMap[lastItem.name])
+        : "";
+
     return (
-        
         <div style={{ display: "flex", height: "100vh" }}>
-            
             <div className="sidebar">
                 <div className="time-box">
                     <h2>{currentTime.toLocaleTimeString()}</h2>
@@ -90,7 +116,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                         />
                     )
                 )}
-
                 <functions.SideButton
                     text="Individual Toppings"
                     onClick={() => {
@@ -98,27 +123,25 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                         setScreen("customer-toppings");
                     }}
                 />
-
-                {/* BUTTON THAT TAKES YOU BACK HOME */}
                 <functions.SideButton
                     text="Home"
                     onClick={() => setScreen("home")}
                 />
             </div>
 
-            <div className="mainCustomization" >
-            <LargeTextButtons/>
+            <div className="mainCustomization">
+                <LargeTextButtons/>
                 <h1 style={{ color: "black", fontSize: "40px", marginBottom: "100px" }}>{lastItem.name}</h1>
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
-                <img
-                    src={
-                        lastItem.ice === "-"
-                            ? functions.getMiscImage(lastItem.name) //Misc item
-                            : functions.getDrinkImage(lastItem.name) //Regular drink
-                    }
-                    alt={lastItem.name}
-                    style={{ width: "150px", height: "150px", objectFit: "contain" }}
-                />
+                    <img
+                        src={
+                            lastItem.ice === "-"
+                                ? functions.getMiscImage(lastItem.name)
+                                : getDrinkImage(lastItem.name)
+                        }
+                        alt={lastItem.name}
+                        style={{ width: "150px", height: "150px", objectFit: "contain" }}
+                    />
                     <div style={{ textAlign: "left", fontSize: "18px" }}>
                         {ice === "n/a" && sweetness === "n/a" && (
                             <p><strong>Type:</strong> Individual Topping</p>
@@ -128,10 +151,16 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                         )}
                         {ice !== "n/a" && ice !== "-" && (
                             <>
-                                <p><strong>Size:</strong> {lastItem.size}</p>
+                                <p><strong>Size:</strong> {lastItem.size} {lastItem.size?.toLowerCase() === "large" ? "(+300 calories)" : ""}</p>
                                 <p><strong>Sweetness:</strong> {sweetness}</p>
                                 <p><strong>Ice:</strong> {ice}</p>
                                 <p><strong>Toppings:</strong> {toppings.join(", ") || "None"}</p>
+                                <p><strong>Calories:</strong> {sizeCalories}</p>
+                                {allergens && (
+                                    <p style={{ color: "#b91c1c", fontSize: "14px", marginTop: "5px" }}>
+                                        ⚠️ {allergens}
+                                    </p>
+                                )}
                             </>
                         )}
                     </div>
@@ -149,19 +178,17 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
 
             <div className="order">
                 <h1>Order Details</h1>
-         
                 {OrderDetails && OrderDetails.length > 0 ? (
-                    OrderDetails.map((order, index) => (
-                        <>
-                        
-                            <div className="order-item">
+                    OrderDetails.map((order, index) => {
+                        const baseCaloriesOrder = order.baseCalories || 300;
+                        const sizeCaloriesOrder = order.size?.toLowerCase() === "large" ? baseCaloriesOrder + 300 : baseCaloriesOrder;
+                        const allergensOrder = drinkIngredientsMap[order.name] ? getAllergenWarnings(drinkIngredientsMap[order.name]) : "";
+                        return (
+                            <div key={index} className="order-item">
                                 <div className="order-left">
                                     <functions.Button
                                         text="X"
-                                        onClick={() => {
-                                            functions.deleteItem(index, OrderDetails, setorderDetails, setScreen, "customer");
-                                            console.log("Delete button clicked for", order.name);
-                                        }}
+                                        onClick={() => functions.deleteItem(index, OrderDetails, setorderDetails, setScreen, "customer")}
                                     />
                                     <div className="quantity">
                                         <button
@@ -171,7 +198,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                                 updated[index].quantity = Math.max(1, currentQty - 1);
                                                 setorderDetails(updated);
                                             }}
-                                            style={{ backgroundColor: "#38bdf8"}}
+                                            style={{ backgroundColor: "#38bdf8" }}
                                         >–</button>
 
                                         <input
@@ -194,7 +221,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                                 updated[index].quantity = currentQty + 1;
                                                 setorderDetails(updated);
                                             }}
-                                            style={{ backgroundColor: "#38bdf8"}}
+                                            style={{ backgroundColor: "#38bdf8" }}
                                         >+</button>
                                     </div>
                                 </div>
@@ -206,32 +233,32 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                     </div>
                                     {order.ice !== "n/a" && order.ice !== "-" && (
                                         <p>
-                                            <strong>Size:</strong> {order.size} <br />
+                                            <strong>Size:</strong> {order.size} {order.size?.toLowerCase() === "large" ? "(+300 calories)" : ""}<br />
                                             <strong>Ice:</strong> {order.ice} <br />
                                             <strong>Sweetness:</strong> {order.sweetness} <br />
-                                            <strong>Toppings:</strong> {order.toppings}
+                                            <strong>Toppings:</strong> {order.toppings} <br />
+                                            <strong>Calories:</strong> {sizeCaloriesOrder} <br />
+                                            {allergensOrder && (
+                                                <span style={{ color: "#b91c1c", fontSize: "14px" }}>⚠️ {allergensOrder}</span>
+                                            )}
                                         </p>
                                     )}
                                 </div>
 
                                 <functions.Button
                                     text="Edit"
-                                    onClick={() => {
-                                        functions.editItem(index, setCurrentEditIdx, setScreen, "customer");
-                                        console.log("Edit button clicked for", order.name);
-                                    }}
+                                    onClick={() => functions.editItem(index, setCurrentEditIdx, setScreen, "customer")}
                                 />
                             </div>
-                            
-                        </>
-                    ))
+                        );
+                    })
                 ) : (
                     <p>No items</p>
                 )}
 
-                <div className="order-total" style={{ textAlign: "right", color: "black" }}>                    
-                    <h3>Subtotal: ${subtotal.toFixed(2)} </h3>
-                    <h3>Tax: ${tax.toFixed(2)} </h3>
+                <div className="order-total" style={{ textAlign: "right", color: "black" }}>
+                    <h3>Subtotal: ${subtotal.toFixed(2)}</h3>
+                    <h3>Tax: ${tax.toFixed(2)}</h3>
                     <h2>Total: ${total.toFixed(2)}</h2>
                 </div>
 
@@ -246,9 +273,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
 
                 <functions.Button
                     text="Checkout"
-                    onClick={() => {
-                        setScreen("customer-checkout");
-                    }}
+                    onClick={() => setScreen("customer-checkout")}
                 />
             </div>
         </div>

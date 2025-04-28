@@ -452,3 +452,27 @@ export function getMiscImage(miscName) {
         return require("./Images/team_00_logo.png"); //fallback if not found
     }
 }
+
+export function getAllergenWarnings(inventoryIds) {
+    const allergenMap = {
+        dairy: [14, 19, 20, 25],    // milk powder, fresh milk, whipped cream
+        nuts: [], // empty for now since we don't got any nuts rn
+        gluten: [32],         // cake or similar items
+    };
+
+    const warnings = [];
+
+    if (inventoryIds.some(id => allergenMap.dairy.includes(id))) {
+        warnings.push("Contains Dairy");
+    }
+    if (inventoryIds.some(id => allergenMap.nuts.includes(id))) {
+        warnings.push("Contains Nuts");
+    }
+    if (inventoryIds.some(id => allergenMap.gluten.includes(id))) {
+        warnings.push("Contains Gluten");
+    }
+
+    return warnings.join(", ");
+}
+
+
