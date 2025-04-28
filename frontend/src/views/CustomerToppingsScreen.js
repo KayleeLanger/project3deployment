@@ -133,7 +133,10 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
  
                  <functions.SpecialSideButton
                      text="Individual Toppings"
-                     onClick={() => setScreen("customer-toppings")}
+                     onClick={() => {
+                        setScreen("customer-toppings");
+                        setSelectedCategory("toppings");
+                     }}
                  />
  
                  {/*Add checkout button if there are order details*/}

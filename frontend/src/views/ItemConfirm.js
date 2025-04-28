@@ -116,13 +116,26 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                         />
                     )
                 )}
-                <functions.SideButton
+                {selectedCategory === "toppings" ? (
+                    <functions.SpecialSideButton
+                        text="Individual Toppings"
+                        onClick={() => {
+                            setSelectedCategory("toppings");
+                            setToppingMode("standalone");
+                            setScreen("customer-toppings");
+                        }}
+                    />
+                ) : (
+                    <functions.SideButton
                     text="Individual Toppings"
                     onClick={() => {
+                        setSelectedCategory("toppings");
                         setToppingMode("standalone");
                         setScreen("customer-toppings");
                     }}
                 />
+                )}
+
                 <functions.SideButton
                     text="Home"
                     onClick={() => setScreen("home")}
