@@ -50,6 +50,9 @@ body.large-text .sidebar {
     align-items: center;
     justify-content: center;
 }
+.high-contrast .mainCustomization h1{
+    color: white !important;
+}
 
 body.large-text .main {
     margin-left: 350px;
@@ -90,6 +93,10 @@ body.large-text .homeScreen {
     overflow-y: auto;
     margin-left:500px;
 }
+.high-contrast .homeScreenCheckout p{
+    color: white !important;
+}
+
 .homeScreen h1{
     color:rgb(0, 0, 0);
     font-family: Georgia, serif;
@@ -104,6 +111,7 @@ body.large-text .homeScreen {
 .high-contrast .homeScreen h3 {
     color: white;
 }
+
 
 /* main table (where all categories are) 3 columns*/
 
@@ -294,7 +302,9 @@ body.high-contrast .topping-button.selected {
 	margin-bottom: 20px;
     color: black !important;
 }
-
+.high-contrast .order-item{
+    color: white !important;
+}
 
 .order-item img {
 	width: 80px;
