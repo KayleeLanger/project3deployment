@@ -108,7 +108,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     image: getToppingImage(name)
                 }];
             });
-            
+
             setScreen("confirm");
         }
     };
@@ -155,7 +155,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
  
              <div className="homeScreen">
                  <functions.XButton text="X" onClick={() => setScreen("customer")} />
-                 <h1>Single Topping</h1>
+                 <h1> Toppings </h1>
                  <div className="mainBody">
                      {toppings.length > 0 ? (
                          toppings.map(topping => (
