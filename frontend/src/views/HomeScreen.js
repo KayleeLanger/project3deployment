@@ -34,7 +34,7 @@ function HomeScreen({ setScreen }) {
 				<img src={logo} className="App-logo" alt="logo" />
 			</div>
 			<h1>Welcome to Our POS System</h1>
-			<h3>Employees Sign In Here:</h3>
+			<h2>Employees Sign In Here:</h2>
 			{!user && (
 				
 				<GoogleLogin
