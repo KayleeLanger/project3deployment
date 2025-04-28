@@ -144,24 +144,14 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     />
                     <div style={{ textAlign: "left", fontSize: "18px" }}>
                         {ice === "n/a" && sweetness === "n/a" && (
-                            <div>
-                                <p><strong>Type:</strong> Individual Topping</p>
-                                <div style={{ marginTop: "30px", display: "flex", flexDirection: "column", gap: "15px", width: "300px" }}>
-                                    <button
-                                        onClick={() => setScreen("customer-customization")}
-                                        style={{ backgroundColor: "#ccc", padding: "15px", fontSize: "18px", borderRadius: "15px" }}
-                                    >
-                                        Edit Customizations
-                                    </button>
-                                </div>
-                            </div>
+                            <p><strong>Type:</strong> Individual Topping</p>
                         )}
                         {ice === "-" && (
                             <p><strong>Type:</strong> Miscellaneous Item</p>
                         )}
                         {ice !== "n/a" && ice !== "-" && (
                             <>
-                                <p><strong>Size:</strong> {lastItem.size} {lastItem.size?.toLowerCase() === "large" ? "(+300 calories)" : ""}</p>
+                                <p><strong>Size:</strong> {lastItem.size}</p>
                                 <p><strong>Sweetness:</strong> {sweetness}</p>
                                 <p><strong>Ice:</strong> {ice}</p>
                                 <p><strong>Toppings:</strong> {toppings.join(", ") || "None"}</p>
@@ -171,6 +161,14 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                         ⚠️ {allergens}
                                     </p>
                                 )}
+                                <div style={{ marginTop: "30px", display: "flex", flexDirection: "column", gap: "15px", width: "300px" }}>
+                                    <button
+                                        onClick={() => setScreen("customer-customization")}
+                                        style={{ backgroundColor: "#ccc", padding: "15px", fontSize: "18px", borderRadius: "15px" }}
+                                    >
+                                        Edit Customizations
+                                    </button>
+                                </div>
                             </>
                         )}
                     </div>
@@ -235,7 +233,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                     </div>
                                     {order.ice !== "n/a" && order.ice !== "-" && (
                                         <p>
-                                            <strong>Size:</strong> {order.size} {order.size?.toLowerCase() === "large" ? "(+300 calories)" : ""}<br />
+                                            <strong>Size:</strong> {order.size} <br />
                                             <strong>Ice:</strong> {order.ice} <br />
                                             <strong>Sweetness:</strong> {order.sweetness} <br />
                                             <strong>Toppings:</strong> {order.toppings} <br />
