@@ -94,12 +94,12 @@ body.large-text .homeScreen {
     color:rgb(0, 0, 0);
     font-family: Georgia, serif;
 }
+.high-contrast .homeScreen h1{
+    color: white !important;
+}
 .homeScreen h3{
     color:rgb(0, 0, 0);
     font-family: Verdana, Tahoma, sans-serif;
-}
-.high-contrast .homeScreen h1{
-    color: white;
 }
 .high-contrast .homeScreen h3 {
     color: white;
