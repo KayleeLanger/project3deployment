@@ -545,3 +545,90 @@ app.get('/api/toppings', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
+
+
+app.get('/api/drink-ingredients', async (req, res) => {
+    try {
+        const query = `
+            SELECT d.drinkName, dti.inventoryId
+            FROM drink d
+            JOIN drink_to_inventory dti ON d.drinkId = dti.drinkId
+            ORDER BY d.drinkName;
+        `;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Drink ingredients fetch error:', err);
+        res.status(500).json({ error: 'Failed to load drink ingredients: ' + err.message });
+    }
+});
+
+app.get('/api/drinks', async (req, res) => {
+    try {
+        const query = `
+            SELECT drinkId, drinkName, drinkPrice, drinkCategory 
+            FROM drink 
+            ORDER BY drinkName;
+        `;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Drinks fetch error:', err);
+        res.status(500).json({ error: 'Failed to load drinks: ' + err.message });
+    }
+});
+
+// Update an existing drink
+app.put('/api/menu/update', async (req, res) => {
+    const { originalName, drinkName, drinkPrice, drinkCategory = 'Uncategorized', inventoryItems = [] } = req.body;
+
+    if (!originalName || !drinkName || drinkPrice == null) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        // Get the drinkId for original drink name
+        const drinkIdResult = await client.query('SELECT drinkId FROM drink WHERE drinkName = $1', [originalName]);
+        
+        if (drinkIdResult.rows.length === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: "Drink not found" });
+        }
+        
+        const drinkId = drinkIdResult.rows[0].drinkid;
+
+        // Update drink details
+        await client.query(
+            `UPDATE drink 
+             SET drinkName = $1, drinkPrice = $2, drinkCategory = $3 
+             WHERE drinkId = $4`,
+            [drinkName, drinkPrice, drinkCategory, drinkId]
+        );
+
+        // Delete existing drink-to-inventory relationships
+        await client.query('DELETE FROM drink_to_inventory WHERE drinkId = $1', [drinkId]);
+
+        // Insert new drink-to-inventory relationships
+        for (const item of inventoryItems) {
+            const { inventoryId, quantityNeeded } = item;
+            await client.query(
+                `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
+                 VALUES ($1, $2, $3)`,
+                [drinkId, inventoryId, quantityNeeded || 1]
+            );
+        }
+
+        await client.query('COMMIT');
+        res.json({ message: "Drink updated successfully" });
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error("Update drink error:", err);
+        res.status(500).json({ error: "Failed to update drink" });
+    } finally {
+        client.release();
+    }
+});
