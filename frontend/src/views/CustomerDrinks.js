@@ -78,6 +78,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                 <functions.SideButton
                     text="Individual Toppings"
                     onClick={() => {
+                        setSelectedCategory("toppings");
                         setToppingMode("standalone");
                         setScreen("customer-toppings");
                     }}
