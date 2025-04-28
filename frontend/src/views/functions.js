@@ -99,7 +99,7 @@ export function AccessButton({ text = "Aa", onClick }) {
                 position: "absolute",
                 top: "50px",
                 left: "370px",
-                backgroundColor: "rgb(19, 90, 120)",
+                backgroundColor: "#33b5ed",
                 color: "black",
                 border: "10px",
                 borderColor: "black",

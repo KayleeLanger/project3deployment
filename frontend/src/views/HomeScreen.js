@@ -33,6 +33,7 @@ function HomeScreen({ setScreen }) {
 			<div className="logo-section">
 				<img src={logo} className="App-logo" alt="logo" />
 			</div>
+			<h1>Welcome to Our POS System</h1>
 			<h3>Employees Sign In Here:</h3>
 			{!user && (
 				
