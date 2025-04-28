@@ -148,7 +148,6 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
 												<p>Sweetness: {item.sweetness}</p>
 												<p>Ice: {item.ice}</p>
 												<p>Toppings: {item.toppings}</p>
-												<p><em>Calories: {sizeCalories}</em></p>
 												{allergens && (
 													<p style={{ color: "#b91c1c", fontSize: "14px", marginTop: "5px" }}>
 														⚠️ {allergens}

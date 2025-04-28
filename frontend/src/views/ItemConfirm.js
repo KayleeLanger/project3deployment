@@ -237,10 +237,6 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                             <strong>Ice:</strong> {order.ice} <br />
                                             <strong>Sweetness:</strong> {order.sweetness} <br />
                                             <strong>Toppings:</strong> {order.toppings} <br />
-                                            <strong>Calories:</strong> {sizeCaloriesOrder} <br />
-                                            {allergensOrder && (
-                                                <span style={{ color: "#b91c1c", fontSize: "14px" }}>⚠️ {allergensOrder}</span>
-                                            )}
                                         </p>
                                     )}
                                 </div>
