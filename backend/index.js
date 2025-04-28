@@ -611,8 +611,9 @@ app.put('/api/menu/update', async (req, res) => {
             await client.query(
                 `INSERT INTO drink_to_inventory (drinkId, inventoryId, quantityNeeded) 
                  VALUES ($1, $2, $3)`,
-                [nextDrinkId, inventoryId, quantityNeeded || 1]
+                [drinkId, inventoryId, quantityNeeded || 1]
             );
+            
         }
         
 
