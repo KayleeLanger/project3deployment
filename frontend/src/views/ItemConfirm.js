@@ -135,10 +135,12 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
                     <img
                         src={
-                            lastItem.ice === "-"
-                                ? functions.getMiscImage(lastItem.name)
-                                : getDrinkImage(lastItem.name)
-                        }
+                            lastItem.ice === "n/a"
+                              ? functions.getToppingImage(lastItem.name)
+                              : lastItem.ice === "-"
+                              ? functions.getMiscImage(lastItem.name)
+                              : getDrinkImage(lastItem.name)
+                          }
                         alt={lastItem.name}
                         style={{ width: "150px", height: "150px", objectFit: "contain" }}
                     />
