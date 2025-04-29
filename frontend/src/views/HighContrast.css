@@ -22,3 +22,23 @@ body.high-contrast button {
 	background-color: yellow !important;
 	color: black !important;
 }
+
+/*High contrast styling for drink name and price in order summary*/
+body.high-contrast .order-item h3 {
+    color: rgb(0, 0, 0) !important;
+}
+
+body.high-contrast .order-item p {
+    color: rgb(0, 0, 0) !important;
+}
+
+/*High contrast styling for checkout*/
+body.high-contrast .homeScreenCheckout h1,
+body.high-contrast .homeScreenCheckout h2,
+body.high-contrast .homeScreenCheckout h3,
+body.high-contrast .homeScreenCheckout p,
+body.high-contrast .homeScreenCheckout span,
+body.high-contrast .homeScreenCheckout strong,
+body.high-contrast .homeScreenCheckout div {
+    color: white !important;
+}
