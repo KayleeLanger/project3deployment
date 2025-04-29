@@ -77,8 +77,8 @@
 }
 .order-total, .order-total h2, .order-total h3 {
     color: black !important;
-  }
-  
+}
+
 .order-content {
     flex-grow: 1;
     border-radius: 8px;

@@ -302,6 +302,11 @@ body.high-contrast .topping-button.selected {
 	margin-bottom: 20px;
     color: black !important;
 }
+
+.high-contrast .order-header h3 {
+    color: black !important;
+}
+
 .high-contrast .order-item{
     color: white !important;
 }
