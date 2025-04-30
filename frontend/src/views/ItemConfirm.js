@@ -91,6 +91,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
                 <functions.WeatherEntry/>
+
                 {categories.map((category) =>
                     category.name === selectedCategory ? (
                         <functions.SpecialSideButton
@@ -112,6 +113,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                         />
                     )
                 )}
+                
                 {selectedCategory === "toppings" ? (
                     <functions.SpecialSideButton
                         text="Individual Toppings"

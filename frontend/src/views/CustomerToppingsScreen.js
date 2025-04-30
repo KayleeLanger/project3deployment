@@ -123,71 +123,104 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     <strong>{currentTime.toLocaleDateString()}</strong>
                 </div>
                 <functions.WeatherEntry/>
-                {categories.map((category) => (
-                     <functions.SideButton
-                         key={category.name}
-                         text={category.name}
-                         onClick={() => setScreen("customer-drinks")}
-                     />
-                 ))}
- 
-                 <functions.SpecialSideButton
-                     text="Individual Toppings"
-                     onClick={() => {
+                
+                {categories.map((category) =>
+                    category.name === selectedCategory ? (
+                        <functions.SpecialSideButton
+                            key={category.name}
+                            text={category.name}
+                            onClick={() => {
+                                setSelectedCategory(category.name);
+                                setScreen("customer-drinks");
+                            }}
+                        />
+                    ) : (
+                        <functions.SideButton
+                            key={category.name}
+                            text={category.name}
+                            onClick={() => {
+                                setSelectedCategory(category.name);
+                                setScreen("customer-drinks");
+                            }}
+                        />
+                    )
+                )}
+
+                {selectedCategory === "toppings" ? (
+                    <functions.SpecialSideButton
+                        text="Individual Toppings"
+                        onClick={() => {
+                            setScreen("customer-toppings");
+                            setSelectedCategory("toppings");
+                        }}
+                    />
+                ) : (
+                    <functions.SideButton
+                        text="Individual Toppings"
+                        onClick={() => {
+                            setScreen("customer-toppings");
+                            setSelectedCategory("toppings");
+                        }}
+                    />
+                )}
+
+                {/* <functions.SpecialSideButton
+                    text="Individual Toppings"
+                    onClick={() => {
                         setScreen("customer-toppings");
                         setSelectedCategory("toppings");
-                     }}
-                 />
- 
-                 {/*Add checkout button if there are order details*/}
-                 {OrderDetails.length > 0 && (
-                     <functions.SideButton
-                         text="Checkout"
-                         onClick={() => setScreen("confirm")}
-                     />
-                 )}
- 
-                 
-                 {/* BUTTON THAT TAKES YOU BACK HOME */}
-                 <functions.SideButton
-                     text="Home"
-                     onClick={() => setScreen("home")}
-                 />
-             </div>
- 
- 
-             <div className="homeScreen">
-                 <functions.XButton text="X" onClick={() => setScreen("customer")} />
-                 <h1> Toppings </h1>
-                 <div className="mainBody">
-                     {toppings.length > 0 ? (
-                         toppings.map(topping => (
-                             <div className="buttonBox" key={topping.othername}>
-                                 <functions.CustomerDrinkButton
-                                     text={`${topping.othername} (+$${parseFloat(topping.otherprice).toFixed(2)})`}
-                                     image={getToppingImage(topping.othername)}
-                                     selected={selectedToppings.includes(topping.othername)}
-                                     onClick={() => toggleTopping(topping.othername, topping.otherprice)}
-                                 />
-                             </div>
-                         ))
-                     ) : (
-                         <p>No toppings available. Please check back later!</p>
-                     )}
-                 </div>
- 
-                 {cameFromCustomization && (
-                     <div style={{ marginTop: "20px", textAlign: "center" }}>
-                         <functions.Button
-                             text="Done"
-                             onClick={() => setScreen("confirm")}
-                         />
-                     </div>
-                 )}
-             </div>
-             <LargeTextButtons/>
-         </>
-     );
- }
- 
- export default CustomerToppingsScreen;
+                    }}
+                /> */}
+
+                {/*Add checkout button if there are order details*/}
+                {OrderDetails.length > 0 && (
+                    <functions.SideButton
+                        text="Checkout"
+                        onClick={() => setScreen("confirm")}
+                    />
+                )}
+
+                
+                {/* BUTTON THAT TAKES YOU BACK HOME */}
+                <functions.SideButton
+                    text="Home"
+                    onClick={() => setScreen("home")}
+                />
+            </div>
+
+
+            <div className="homeScreen">
+                <functions.XButton text="X" onClick={() => setScreen("customer")} />
+                <h1> Toppings </h1>
+                <div className="mainBody">
+                    {toppings.length > 0 ? (
+                        toppings.map(topping => (
+                            <div className="buttonBox" key={topping.othername}>
+                                <functions.CustomerDrinkButton
+                                    text={`${topping.othername} (+$${parseFloat(topping.otherprice).toFixed(2)})`}
+                                    image={getToppingImage(topping.othername)}
+                                    selected={selectedToppings.includes(topping.othername)}
+                                    onClick={() => toggleTopping(topping.othername, topping.otherprice)}
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <p>No toppings available. Please check back later!</p>
+                    )}
+                </div>
+
+                {cameFromCustomization && (
+                    <div style={{ marginTop: "20px", textAlign: "center" }}>
+                        <functions.Button
+                            text="Done"
+                            onClick={() => setScreen("confirm")}
+                        />
+                    </div>
+                )}
+            </div>
+            <LargeTextButtons/>
+        </>
+    );
+}
+
+export default CustomerToppingsScreen;

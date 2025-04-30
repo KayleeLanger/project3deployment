@@ -99,6 +99,8 @@ function App() { //main function, will be mostly imports eventually
 										setToppingMode={setToppingMode}
 									/>}
 			{screen === "customer-toppings" && <CustomerToppingsScreen setScreen={setScreen}
+										setSelectedCategory={setSelectedCategory}
+										selectedCategory={selectedCategory}
 										OrderDetails={orderDetails}
 										setorderDetails={setOrderDetails}
 										cameFromCustomization={toppingMode === "linked"}

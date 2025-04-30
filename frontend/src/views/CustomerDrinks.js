@@ -146,7 +146,7 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                                         setorderDetails(prevDetails => [...prevDetails, item]);
                                         setScreen(isMisc ? "confirm" : "customer-customization");
                                     }}
-                                              
+                                            
                                 />
                             </div>
                         ))

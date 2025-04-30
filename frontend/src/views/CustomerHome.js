@@ -83,19 +83,22 @@ function CustomerHome({ setScreen, setSelectedCategory, OrderDetails, setorderDe
             {/* DRINK CATEGORIES */}
             {categories.map(category => (
                 <functions.SideButton
-                key={category.name}
-                text={category.name}
-                onClick={() => {
-                setSelectedCategory(category.name);
-                setScreen("customer-drinks");
-            }}
-            />
+                    key={category.name}
+                    text={category.name}
+                    onClick={() => {
+                        setSelectedCategory(category.name);
+                        setScreen("customer-drinks");
+                    }}
+                />
             ))}
 
             {/* ONLY TOPPINGS BUTTON (goes to a different screen ) */}
             <functions.SideButton
                 text="Individual Toppings"
-                onClick={() => setScreen("customer-toppings")}
+                onClick={() => {
+                    setScreen("customer-toppings");
+                    setSelectedCategory("toppings");
+                }}
             />
 
             {/*Checkout*/}
