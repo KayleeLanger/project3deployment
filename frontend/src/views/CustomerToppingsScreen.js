@@ -6,7 +6,7 @@ import { getToppingImage } from "./functions";
 import LargeTextButtons from "./LargeTextButton.js";
 
 
-function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCategory, OrderDetails, setorderDetails, cameFromCustomization }) {
+function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCategory, OrderDetails, setorderDetails, currentEditIdx, setCurrentEditIdx, cameFromCustomization, setToppingMode }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [toppings, setToppings] = useState([]);
     const [selectedToppings, setSelectedToppings] = useState([]);
@@ -41,21 +41,23 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
     }, []);
 
     useEffect(() => {
-        if (!cameFromCustomization) return;
-        const lastOrder = OrderDetails[OrderDetails.length - 1];
-        if (lastOrder && lastOrder.toppings && lastOrder.toppings !== "none") {
-            const toppingsList = lastOrder.toppings.split(", ").map(t => t.split(" (+")[0]);
+        const idx = currentEditIdx != null ? currentEditIdx : OrderDetails.length - 1;
+        const currentItem = OrderDetails[idx];
+        if (!cameFromCustomization || !currentItem) return;
+    
+        if (currentItem.toppings && currentItem.toppings !== "none") {
+            const toppingsList = currentItem.toppings.split(", ").map(t => t.split(" (+")[0]);
             setSelectedToppings(toppingsList);
         } else {
             setSelectedToppings([]);
         }
-    }, [cameFromCustomization, OrderDetails]);
+    }, [cameFromCustomization, OrderDetails, currentEditIdx]);
 
     const toggleTopping = (name, price) => {
         if (cameFromCustomization) {
             setorderDetails(prevDetails => {
                 const updated = [...prevDetails];
-                const idx = updated.length - 1;
+                const idx = currentEditIdx != null ? currentEditIdx : updated.length - 1;
 
                 let toppingsList = updated[idx].toppings && updated[idx].toppings !== "none"
                     ? updated[idx].toppings.split(", ")
@@ -151,7 +153,9 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                         text="Individual Toppings"
                         onClick={() => {
                             setScreen("customer-toppings");
+                            setToppingMode("standalone");
                             setSelectedCategory("toppings");
+                            setSelectedToppings([]);
                         }}
                     />
                 ) : (
@@ -159,7 +163,9 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                         text="Individual Toppings"
                         onClick={() => {
                             setScreen("customer-toppings");
+                            setToppingMode("standalone");
                             setSelectedCategory("toppings");
+                            setSelectedToppings([]);
                         }}
                     />
                 )}
@@ -188,7 +194,10 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     <div style={{ position: "absolute", top: "300px", right: "80px" }}>
                         <functions.Button
                             text="Done"
-                            onClick={() => setScreen("confirm")}
+                            onClick={() => {
+                                setCurrentEditIdx(null);
+                                setScreen("confirm");
+                            }}
                             style={{ padding: "20px 50px" }}
                         />
                     </div>

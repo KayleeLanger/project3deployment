@@ -96,7 +96,6 @@ function CustomerCheckoutScreen({ setScreen, OrderDetails, setorderDetails }) {
                 </div>
                 <functions.WeatherEntry/>
                 <functions.SideButton text="Back to Item Confirmation" onClick={() => setScreen("confirm")} />
-                <functions.SideButton text="Back to Drinks" onClick={() => setScreen("customer-drinks")} />
                 <functions.SideButton text="Home" onClick={() => setScreen("customer")} />
             </div>
 

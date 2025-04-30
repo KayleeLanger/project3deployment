@@ -113,7 +113,7 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                         />
                     )
                 )}
-                
+
                 {selectedCategory === "toppings" ? (
                     <functions.SpecialSideButton
                         text="Individual Toppings"
@@ -201,7 +201,10 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
 
                                 <div style={{ marginTop: "30px", display: "flex", flexDirection: "column", gap: "15px", width: "300px" }}>
                                     <button
-                                        onClick={() => setScreen("customer-customization")}
+                                        onClick={() => {
+                                            setScreen("customer-customization");
+                                            functions.editItem(OrderDetails.length - 1, setCurrentEditIdx, setScreen, "customer");
+                                        }}
                                         style={{ backgroundColor: "#ccc", padding: "15px", fontSize: "18px", borderRadius: "15px" }}
                                     >
                                         Edit Customizations

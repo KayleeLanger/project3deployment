@@ -37,12 +37,14 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 					<strong>{currentTime.toLocaleDateString()}</strong>
 				</div>
 				<functions.WeatherEntry/>
-				<button onClick={() => {
-									setScreen("customer-drinks");
-									functions.deleteItem(OrderDetails.length-1, OrderDetails, setorderDetails, setScreen, "customer");
-								}}>
-								Back
-				</button>
+				{currentEditIdx === OrderDetails.length - 1 || currentEditIdx === null && (
+					<button onClick={() => {
+						setScreen("customer-drinks");
+						functions.deleteItem(OrderDetails.length-1, OrderDetails, setorderDetails, setScreen, "customer");
+					}}>
+						Back
+					</button>
+				)}
 			</div>
 
 			{/*Main content*/}
@@ -95,6 +97,7 @@ function CustomerCustomization({ setScreen, selectedCategory, OrderDetails, seto
 					onClick={() => {
 						setScreen("confirm");
 						functions.defaultVal(OrderDetails, setorderDetails);
+						setCurrentEditIdx(null);
 					}}
 					style={{
 						marginTop: "40px",

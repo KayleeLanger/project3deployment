@@ -103,7 +103,10 @@ function App() { //main function, will be mostly imports eventually
 										selectedCategory={selectedCategory}
 										OrderDetails={orderDetails}
 										setorderDetails={setOrderDetails}
+										currentEditIdx={currentEditIdx}
+										setCurrentEditIdx={setCurrentEditIdx} 
 										cameFromCustomization={toppingMode === "linked"}
+										setToppingMode={setToppingMode}
 									/>}
 			
 			{screen === "confirm" && <ItemConfirm setScreen={setScreen}
