@@ -263,20 +263,27 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                         <h3>{order.name}</h3>
                                         <h3>${order.price}</h3>
                                     </div>
-                                    {order.ice !== "n/a" && order.ice !== "-" && (
+                                    {order.ice !== "n/a" && order.ice !== "-" ? (
                                         <p>
                                             <strong>Size:</strong> {order.size} <br />
                                             <strong>Ice:</strong> {order.ice} <br />
                                             <strong>Sweetness:</strong> {order.sweetness} <br />
                                             <strong>Toppings:</strong> {order.toppings} <br />
                                         </p>
+                                    ) : (
+                                        <p>
+                                            <br />
+                                            <br />
+                                        </p>
                                     )}
                                 </div>
 
-                                <functions.Button
-                                    text="Edit"
-                                    onClick={() => functions.editItem(index, setCurrentEditIdx, setScreen, "customer")}
-                                />
+                                {order.ice !== "n/a" && order.ice !== "-" && (
+                                    <functions.Button
+                                        text="Edit"
+                                        onClick={() => functions.editItem(index, setCurrentEditIdx, setScreen, "customer")}
+                                    />
+                                )}
                             </div>
                         );
                     })
