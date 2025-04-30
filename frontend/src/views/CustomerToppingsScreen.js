@@ -191,16 +191,14 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                 <functions.XButton text="X" onClick={() => setScreen("customer")} />
 
                 {cameFromCustomization && (
-                    <div style={{ position: "absolute", top: "300px", right: "80px" }}>
                         <functions.Button
                             text="Done"
                             onClick={() => {
                                 setCurrentEditIdx(null);
                                 setScreen("confirm");
                             }}
-                            style={{ padding: "20px 50px" }}
+                            style={{ padding: "20px 50px", marginTop: "30px" }}
                         />
-                    </div>
                 )}
 
                 <h1> Toppings </h1>
@@ -227,6 +225,17 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                         <p>No toppings available. Please check back later!</p>
                     )}
                 </div>
+                
+                {cameFromCustomization && (
+                    <functions.Button
+                        text="Done"
+                        onClick={() => {
+                            setCurrentEditIdx(null);
+                            setScreen("confirm");
+                        }}
+                        style={{ padding: "20px 50px", marginTop: "30px" }}
+                    />
+                )}
 
             </div>
         </>
