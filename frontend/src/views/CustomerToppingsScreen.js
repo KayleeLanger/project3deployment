@@ -164,14 +164,6 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     />
                 )}
 
-                {/* <functions.SpecialSideButton
-                    text="Individual Toppings"
-                    onClick={() => {
-                        setScreen("customer-toppings");
-                        setSelectedCategory("toppings");
-                    }}
-                /> */}
-
                 {/*Add checkout button if there are order details*/}
                 {OrderDetails.length > 0 && (
                     <functions.SideButton
@@ -191,6 +183,17 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
 
             <div className="homeScreen">
                 <functions.XButton text="X" onClick={() => setScreen("customer")} />
+
+                {cameFromCustomization && (
+                    <div style={{ position: "absolute", top: "300px", right: "80px" }}>
+                        <functions.Button
+                            text="Done"
+                            onClick={() => setScreen("confirm")}
+                            style={{ padding: "20px 50px" }}
+                        />
+                    </div>
+                )}
+
                 <h1> Toppings </h1>
                 <div className="mainBody">
                     {toppings.length > 0 ? (
@@ -209,16 +212,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                     )}
                 </div>
 
-                {cameFromCustomization && (
-                    <div style={{ marginTop: "20px", textAlign: "center" }}>
-                        <functions.Button
-                            text="Done"
-                            onClick={() => setScreen("confirm")}
-                        />
-                    </div>
-                )}
             </div>
-            <LargeTextButtons/>
         </>
     );
 }
