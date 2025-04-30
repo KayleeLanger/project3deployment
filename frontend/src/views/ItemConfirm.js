@@ -196,6 +196,15 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                                         <p style={{ color: "#b91c1c", fontSize: "14px", marginTop: "5px" }}>⚠️ {allergens}</p>
                                     ) : null;
                                 })()}
+
+                                <div style={{ marginTop: "30px", display: "flex", flexDirection: "column", gap: "15px", width: "300px" }}>
+                                    <button
+                                        onClick={() => setScreen("customer-customization")}
+                                        style={{ backgroundColor: "#ccc", padding: "15px", fontSize: "18px", borderRadius: "15px" }}
+                                    >
+                                        Edit Customizations
+                                    </button>
+                                </div>
                             </>
                         )}
                     </div>
