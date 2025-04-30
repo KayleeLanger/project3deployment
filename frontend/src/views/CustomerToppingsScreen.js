@@ -200,7 +200,14 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                         toppings.map(topping => (
                             <div className="buttonBox" key={topping.othername}>
                                 <functions.CustomerDrinkButton
-                                    text={`${topping.othername} (+$${parseFloat(topping.otherprice).toFixed(2)})`}
+                                    text={
+                                        <>
+                                            {topping.othername}
+                                            <br />
+                                            <br />
+                                            (+${parseFloat(topping.otherprice).toFixed(2)})
+                                        </>
+                                    }
                                     image={getToppingImage(topping.othername)}
                                     selected={selectedToppings.includes(topping.othername)}
                                     onClick={() => toggleTopping(topping.othername, topping.otherprice)}

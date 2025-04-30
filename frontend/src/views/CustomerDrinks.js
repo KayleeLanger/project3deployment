@@ -113,7 +113,14 @@ function CustomerDrinks({ setScreen, setSelectedCategory, selectedCategory, Orde
                         drinks.map(drink => (
                             <div className="buttonBox" key={drink.drinkname}>
                                 <functions.CustomerDrinkButton
-                                    text = {drink.drinkname || drink.othername} 
+                                    text={
+                                        <>
+                                            {drink.drinkname || drink.othername}
+                                            <br />
+                                            <br />
+                                            ${parseFloat(drink.drinkprice || drink.otherprice).toFixed(2)}
+                                        </>
+                                    }
                                     image={
                                         drink.othername
                                             ? functions.getMiscImage(drink.othername)  //if misc item
