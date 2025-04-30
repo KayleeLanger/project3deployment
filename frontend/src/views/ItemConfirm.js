@@ -145,11 +145,11 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                     <img
                         src={
                             lastItem.ice === "n/a"
-                              ? functions.getToppingImage(lastItem.name)
-                              : lastItem.ice === "-"
-                              ? functions.getMiscImage(lastItem.name)
-                              : getDrinkImage(lastItem.name)
-                          }
+                                ? functions.getToppingImage(lastItem.name)
+                                : lastItem.ice === "-"
+                                ? functions.getMiscImage(lastItem.name)
+                                : getDrinkImage(lastItem.name)
+                        }
                         alt={lastItem.name}
                         style={{ width: "150px", height: "150px", objectFit: "contain" }}
                     />
@@ -288,11 +288,13 @@ function ItemConfirm({ setScreen, OrderDetails, setorderDetails, setCurrentEditI
                         functions.defaultVal(OrderDetails, setorderDetails);
                         setCurrentEditIdx(null);
                     }}
+                    style = {{marginTop: "40px" }}
                 />
 
                 <functions.Button
                     text="Checkout"
                     onClick={() => setScreen("customer-checkout")}
+                    style={{ marginBottom: "100px"}}
                 />
             </div>
         </div>

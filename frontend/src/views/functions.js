@@ -72,7 +72,7 @@ export function WeatherEntry() {
 
 
 
-export function Button({ text, onClick }) {
+export function Button({ text, onClick, style = {} }) {
     return (
         <button
             style={{
@@ -82,7 +82,8 @@ export function Button({ text, onClick }) {
                 border: "none",
                 borderRadius: "5px",
                 fontSize: "16px",
-                cursor: "pointer"
+                cursor: "pointer",
+                ...style
             }}
             onClick={onClick}
         >
