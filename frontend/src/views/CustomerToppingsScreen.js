@@ -197,7 +197,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                                 setCurrentEditIdx(null);
                                 setScreen("confirm");
                             }}
-                            style={{ padding: "20px 50px", marginTop: "30px" }}
+                            style={{ padding: "20px 50px", marginTop: "30px", marginBottom: "10px" }}
                         />
                 )}
 
@@ -233,7 +233,7 @@ function CustomerToppingsScreen({ setScreen, setSelectedCategory, selectedCatego
                             setCurrentEditIdx(null);
                             setScreen("confirm");
                         }}
-                        style={{ padding: "20px 50px", marginTop: "30px" }}
+                        style={{ padding: "20px 50px", marginTop: "30px", marginBottom: "40px" }}
                     />
                 )}
 
